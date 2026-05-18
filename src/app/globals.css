@@ -1,26 +1,122 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "NordDisplay";
+  font-style: normal;
+  font-weight: 300 600;
+  font-display: swap;
+  src: local("Cormorant Garamond"), local("Georgia");
+}
+
+@font-face {
+  font-family: "NordSans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: local("DM Sans"), local("Segoe UI"), local("system-ui");
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f7f5f2;
+  --foreground: #1a1a1a;
+  --muted: #6b6560;
+  --muted-bg: #edeae6;
+  --sand: #e8e4df;
+  --graphite: #2d2d2d;
+  --wood: #8b7355;
+  --accent: #1a1a1a;
+  --glass: rgba(247, 245, 242, 0.72);
+  --glass-border: rgba(26, 26, 26, 0.08);
+  --radius: 0.5rem;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-muted: var(--muted);
+  --color-muted-bg: var(--muted-bg);
+  --color-sand: var(--sand);
+  --color-graphite: var(--graphite);
+  --color-wood: var(--wood);
+  --color-accent: var(--accent);
+  --color-glass: var(--glass);
+  --font-sans: "NordSans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "NordDisplay", ui-serif, Georgia, serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    @apply border-graphite/10;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-sans);
+    font-feature-settings: "kern" 1, "liga" 1;
+  }
+
+  .font-display {
+    font-family: var(--font-display), Georgia, serif;
+  }
+
+  ::selection {
+    @apply bg-graphite text-background;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-graphite;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .glass {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+  }
+
+  .section-padding {
+    @apply px-5 py-20 md:px-10 md:py-28 lg:px-16 lg:py-32;
+  }
+
+  .container-narrow {
+    @apply mx-auto max-w-7xl;
+  }
+
+  .heading-display {
+    @apply font-display text-4xl font-light tracking-tight md:text-5xl lg:text-6xl xl:text-7xl;
+  }
+
+  .heading-section {
+    @apply font-display text-3xl font-light tracking-tight md:text-4xl lg:text-5xl;
+  }
+
+  .label-caps {
+    @apply text-xs font-medium uppercase tracking-[0.2em] text-muted;
+  }
+
+  .mask-reveal {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

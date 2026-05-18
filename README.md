@@ -1,36 +1,86 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NordHaus — премиальный сайт строительства домов
 
-## Getting Started
+Production-ready Next.js приложение для компании по строительству малоэтажных домов под ключ (Иркутск).
 
-First, run the development server:
+## Стек
+
+- **Next.js 16** (App Router, SSG/SSR)
+- **React 19** + **TypeScript**
+- **Tailwind CSS v4**
+- **Framer Motion** — reveal, stagger, gallery
+- **Lenis** — smooth scroll
+- **Radix UI** — accordion, slider, dialog-ready
+- **CMS adapter** — локальные данные, готово к Sanity / Strapi / Payload
+
+## Запуск
 
 ```bash
+npm install
+cp .env.example .env.local
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Откройте [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build
+npm start
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Структура
 
-## Learn More
+```
+src/
+├── app/                    # Страницы (App Router)
+│   ├── page.tsx            # Главная
+│   ├── catalog/            # Каталог + [slug]
+│   ├── about/              # О компании
+│   ├── process/            # Этапы стройки
+│   ├── calculator/         # Калькулятор
+│   ├── blog/               # SEO-блог + [slug]
+│   ├── faq/
+│   ├── sitemap.ts
+│   └── robots.ts
+├── components/
+│   ├── animations/         # Reveal, counter, magnetic
+│   ├── catalog/            # Карточки, фильтры
+│   ├── project/            # Галерея, планировки
+│   ├── home/               # Hero + калькулятор
+│   ├── forms/              # Лид-форма, квиз
+│   ├── widgets/            # Sticky CTA, мессенджеры
+│   ├── seo/                # JSON-LD, breadcrumbs
+│   └── ui/                 # Design system
+├── data/                   # Mock CMS (projects, blog, faq)
+├── lib/
+│   ├── cms/                # Adapter pattern
+│   ├── calculator.ts
+│   ├── filters.ts
+│   └── seo.ts
+├── hooks/                  # favorites, recently viewed, autosave
+└── types/
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Ключевые фичи
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Раздел | Реализация |
+|--------|------------|
+| Hero | Cinematic bg, калькулятор площади, CTA, stats |
+| Каталог | SEO URL-параметры, фильтры, сортировка, избранное, сравнение |
+| Проект | Fullscreen gallery, интерактивные планировки, комплектации, FAQ |
+| О компании | Команда, timeline, карта объектов |
+| Калькулятор | Полный расчёт + лид на PDF |
+| SEO | Schema.org, sitemap, meta, breadcrumbs, блог SILO |
+| CRO | Квиз, sticky CTA, WhatsApp/Telegram, многошаговая форма |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## CMS
 
-## Deploy on Vercel
+Подключение внешней CMS — замените `localCMS` в `src/lib/cms/local.ts` на адаптер Sanity/Strapi/Payload, реализовав интерфейс `CMSAdapter`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Дизайн
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Палитра: sand, graphite, off-white, wood accents.  
+Принципы: воздух, крупная типографика, минимализм, glassmorphism.
+
+## Лицензия
+
+Private — NordHaus.
