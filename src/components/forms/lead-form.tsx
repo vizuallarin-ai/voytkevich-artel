@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useFormAutosave } from "@/hooks/use-form-autosave";
+import { trackEvent } from "@/lib/analytics";
 
 type FormData = { name: string; phone: string; area: string; comment: string };
 
@@ -14,27 +15,67 @@ export function LeadForm({
   id = "lead",
   title = "Получить расчёт",
   subtitle = "Перезвоним в течение 15 минут с ориентировочной сметой",
+  prefilledArea,
+  prefilledComment,
+  source,
 }: {
   id?: string;
   title?: string;
   subtitle?: string;
+  prefilledArea?: string;
+  prefilledComment?: string;
+  /** Analytics source label, e.g. "calc", "planner", "quiz" */
+  source?: string;
 }) {
-  const [data, setData] = useState<FormData>(empty);
+  const [data, setData] = useState<FormData>({
+    ...empty,
+    area: prefilledArea ?? "",
+    comment: prefilledComment ?? "",
+  });
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(0);
+
+  useEffect(() => {
+    setData((prev) => ({
+      ...prev,
+      ...(prefilledArea !== undefined ? { area: prefilledArea } : {}),
+      ...(prefilledComment !== undefined ? { comment: prefilledComment } : {}),
+    }));
+  }, [prefilledArea, prefilledComment]);
 
   useFormAutosave(`lead-${id}`, data, setData);
 
   const progress = step === 0 ? 33 : step === 1 ? 66 : 100;
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (step < 2) {
       setStep(step + 1);
       return;
     }
-    setSent(true);
-    localStorage.removeItem(`lead-${id}`);
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const res = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...data, source: source ?? id }),
+      });
+
+      if (!res.ok) throw new Error("server");
+
+      setSent(true);
+      localStorage.removeItem(`lead-${id}`);
+      trackEvent("lead_submit", { source: source ?? id });
+    } catch {
+      setError("Не удалось отправить заявку. Позвоните нам напрямую или попробуйте снова.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (sent) {
@@ -123,8 +164,14 @@ export function LeadForm({
         )}
       </div>
 
-      <Button type="submit" className="mt-6 w-full" size="lg">
-        {step < 2 ? "Далее" : "Отправить заявку"}
+      {error && (
+        <p role="alert" className="mt-4 rounded-sm border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+          {error}
+        </p>
+      )}
+
+      <Button type="submit" className="mt-6 w-full" size="lg" disabled={loading}>
+        {loading ? "Отправляем…" : step < 2 ? "Далее" : "Отправить заявку"}
       </Button>
       <p className="mt-3 text-center text-xs text-muted">
         Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности

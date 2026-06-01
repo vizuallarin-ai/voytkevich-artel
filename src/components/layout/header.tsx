@@ -7,11 +7,13 @@ import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { MagneticButton } from "@/components/animations/magnetic-button";
+import { brand } from "@/data/brand";
 
 const nav = [
   { href: "/catalog", label: "Каталог" },
-  { href: "/process", label: "Процесс" },
   { href: "/calculator", label: "Калькулятор" },
+  { href: "/planirovka", label: "Планировщик" },
+  { href: "/process", label: "Процесс" },
   { href: "/about", label: "О компании" },
   { href: "/blog", label: "Блог" },
 ];
@@ -39,10 +41,15 @@ export function Header() {
       <div className="container-narrow flex items-center justify-between px-5 md:px-10 lg:px-16">
         <Link
           href="/"
-          className="font-display text-xl tracking-tight md:text-2xl"
-          aria-label="NordHaus — на главную"
+          className="max-w-[11rem] leading-tight sm:max-w-none sm:text-left"
+          aria-label={`${brand.name} — на главную`}
         >
-          Nord<span className="text-wood">Haus</span>
+          <span className="block text-[0.65rem] font-medium uppercase tracking-[0.12em] text-muted sm:text-xs">
+            {brand.logoLine1}
+          </span>
+          <span className="font-display text-base tracking-tight text-foreground sm:text-xl md:text-2xl">
+            {brand.logoLine2}
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-8 lg:flex" aria-label="Основная навигация">
@@ -63,7 +70,7 @@ export function Header() {
         <div className="hidden items-center gap-3 lg:flex">
           <MagneticButton>
             <Button asChild variant="outline" size="sm">
-              <Link href="/#quiz">Подобрать дом</Link>
+              <Link href="/planirovka">Планировщик</Link>
             </Button>
           </MagneticButton>
           <MagneticButton>

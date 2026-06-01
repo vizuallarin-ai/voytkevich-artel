@@ -13,9 +13,10 @@ import {
   licenses,
 } from "@/data/company";
 import { pageMetadata } from "@/lib/seo";
+import { brand } from "@/data/brand";
 
 export const metadata: Metadata = pageMetadata({
-  title: "О компании NordHaus — строительство домов в Иркутске",
+  title: `О компании — ${brand.nameShort}`,
   description:
     "12 лет опыта, 127 домов, команда архитекторов и строителей. Лицензии, гарантии, карта объектов.",
   path: "/about",
@@ -30,8 +31,9 @@ export default function AboutPage() {
           <p className="label-caps">О компании</p>
           <h1 className="heading-section mt-2">Архитектура и строительство в одной команде</h1>
           <p className="mt-6 max-w-3xl text-lg text-muted">
-            NordHaus — это не «типовой застройщик». Мы проектируем и строим дома, в которых
-            продумана каждая деталь: свет, планировка, материалы, инженерия.
+            {brand.name} — это не «типовой застройщик». Под руководством {brand.founder} мы
+            проектируем и строим дома, в которых продумана каждая деталь: свет, планировка,
+            материалы, инженерия.
           </p>
         </Reveal>
       </div>

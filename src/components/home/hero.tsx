@@ -22,8 +22,8 @@ export function Hero() {
     <section className="relative min-h-screen overflow-hidden">
       <div className="absolute inset-0">
         <Image
-          src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&h=1080&fit=crop&q=85"
-          alt="Современный загородный дом NordHaus"
+          src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1920&h=1080&q=85"
+          alt="Современный загородный дом — строительная артель Александра Войткевича"
           fill
           priority
           className="object-cover"

@@ -1,4 +1,5 @@
 import type { BuiltHome, Partner, TeamMember } from "@/types";
+import { photos, unsplash } from "@/data/images";
 
 export const companyStats = [
   { value: 12, suffix: "+", label: "лет на рынке" },
@@ -12,14 +13,14 @@ export const timeline = [
   { year: 2017, title: "Собственное производство", description: "Цех деревянных конструкций и СИП-панелей" },
   { year: 2020, title: "100-й дом", description: "Сотый объект сдан с актом и гарантией 5 лет" },
   { year: 2023, title: "BIM-проектирование", description: "Полный цифровой цикл от эскиза до сдачи" },
-  { year: 2026, title: "Премиум-линейка", description: "Запуск коллекции NordHaus Signature" },
+  { year: 2026, title: "Премиум-линейка", description: "Запуск флагманской линейки резиденций артели" },
 ];
 
 export const team: TeamMember[] = [
-  { name: "Алексей Воронов", role: "Основатель, главный архитектор", image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=500&fit=crop" },
-  { name: "Мария Соколова", role: "Руководитель строительства", image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=500&fit=crop" },
-  { name: "Дмитрий Козлов", role: "Инженер-проектировщик", image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=500&fit=crop" },
-  { name: "Елена Петрова", role: "Клиентский сервис", image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=500&fit=crop" },
+  { name: "Алексей Воронов", role: "Основатель, главный архитектор", image: unsplash(photos.teamFounder, { w: 400, h: 500 }) },
+  { name: "Мария Соколова", role: "Руководитель строительства", image: unsplash(photos.teamBuild, { w: 400, h: 500 }) },
+  { name: "Дмитрий Козлов", role: "Инженер-проектировщик", image: unsplash(photos.teamEngineer, { w: 400, h: 500 }) },
+  { name: "Елена Петрова", role: "Клиентский сервис", image: unsplash(photos.teamSupport, { w: 400, h: 500 }) },
 ];
 
 export const partners: Partner[] = [
@@ -30,11 +31,11 @@ export const partners: Partner[] = [
 ];
 
 export const builtHomes: BuiltHome[] = [
-  { id: "1", name: "Дом «Север»", lat: 52.28, lng: 104.28, year: 2025, area: 186, image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&h=400&fit=crop" },
-  { id: "2", name: "Резиденция «Байкал»", lat: 52.35, lng: 104.15, year: 2024, area: 240, image: "https://images.unsplash.com/photo-1600585154340-be6162a9af0f?w=600&h=400&fit=crop" },
-  { id: "3", name: "Вилла «Песок»", lat: 52.22, lng: 104.35, year: 2024, area: 165, image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&h=400&fit=crop" },
-  { id: "4", name: "Дом «Графит»", lat: 52.31, lng: 104.22, year: 2023, area: 142, image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&h=400&fit=crop" },
-  { id: "5", name: "Шале «Лес»", lat: 52.18, lng: 104.42, year: 2023, area: 198, image: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=600&h=400&fit=crop" },
+  { id: "1", name: "Дом «Север»", lat: 52.28, lng: 104.28, year: 2025, area: 186, image: unsplash(photos.houseModern, { w: 600, h: 400 }) },
+  { id: "2", name: "Резиденция «Байкал»", lat: 52.35, lng: 104.15, year: 2024, area: 240, image: unsplash(photos.houseVilla, { w: 600, h: 400 }) },
+  { id: "3", name: "Вилла «Песок»", lat: 52.22, lng: 104.35, year: 2024, area: 165, image: unsplash(photos.houseVilla, { w: 600, h: 400 }) },
+  { id: "4", name: "Дом «Графит»", lat: 52.31, lng: 104.22, year: 2023, area: 142, image: unsplash(photos.houseBright, { w: 600, h: 400 }) },
+  { id: "5", name: "Шале «Лес»", lat: 52.18, lng: 104.42, year: 2023, area: 198, image: unsplash(photos.houseChalet, { w: 600, h: 400 }) },
 ];
 
 export const guarantees = [

@@ -4,10 +4,15 @@ import { MessageCircle, Send } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { brand } from "@/data/brand";
 
 const channels = [
-  { href: "https://wa.me/73952000000", label: "WhatsApp", icon: MessageCircle },
-  { href: "https://t.me/nordhaus", label: "Telegram", icon: Send },
+  {
+    href: `https://wa.me/${brand.phoneMobile.replace(/\D/g, "")}`,
+    label: "WhatsApp",
+    icon: MessageCircle,
+  },
+  { href: brand.telegram, label: "Telegram", icon: Send },
 ];
 
 export function MessengerWidget() {

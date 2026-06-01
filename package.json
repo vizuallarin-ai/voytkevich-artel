@@ -1,12 +1,13 @@
 {
-  "name": "nordhaus",
+  "name": "voytkevich-artel",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "scrape:megaartel": "node scripts/scrape-megaartel-projects.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

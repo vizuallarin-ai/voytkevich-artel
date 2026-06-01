@@ -1,22 +1,30 @@
 import type { Metadata } from "next";
+import { brand } from "@/data/brand";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://nordhaus.ru";
-const SITE_NAME = "NordHaus";
+// Prefer explicit env var; fall back to production domain from brand config.
+// The brand.website value already ends with "/", so strip the trailing slash.
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  brand.website.replace(/\/$/, "");
+const SITE_NAME = brand.name;
+const SITE_NAME_SHORT = brand.nameShort;
 
 export const defaultMetadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "NordHaus — строительство домов под ключ в Иркутске",
-    template: "%s | NordHaus",
+    default: `${SITE_NAME} — строительство домов под ключ в Иркутске`,
+    template: `%s | ${SITE_NAME_SHORT}`,
   },
   description:
-    "Премиальное строительство малоэтажных домов под ключ. Прозрачные сроки, фиксированная смета, архитектурный подход. Более 120 реализованных проектов.",
+    "Строительство малоэтажных домов под ключ. Прозрачные сроки, фиксированная смета, архитектурный подход. Более 120 реализованных проектов в Иркутской области.",
   keywords: [
     "строительство домов Иркутск",
     "дома под ключ",
     "малоэтажное строительство",
     "каркасные дома",
     "проекты домов",
+    "Войткевич",
+    "строительная артель",
   ],
   openGraph: {
     type: "website",
@@ -47,4 +55,4 @@ export function pageMetadata(opts: {
   };
 }
 
-export { SITE_URL, SITE_NAME };
+export { SITE_URL, SITE_NAME, SITE_NAME_SHORT };

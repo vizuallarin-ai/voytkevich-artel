@@ -2,7 +2,9 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-const KEY = "nordhaus-favorites";
+import { brand } from "@/data/brand";
+
+const KEY = `${brand.storagePrefix}-favorites`;
 
 export function useFavorites() {
   const [favorites, setFavorites] = useState<string[]>([]);

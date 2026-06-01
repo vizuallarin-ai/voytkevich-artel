@@ -4,6 +4,8 @@ import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
 import { ProjectCard } from "@/components/catalog/project-card";
+import { CompareBar } from "@/components/catalog/compare-bar";
+import { CompareModal } from "@/components/catalog/compare-modal";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { filterProjects, filtersToSearchParams, parseCatalogFilters } from "@/lib/filters";
@@ -18,9 +20,14 @@ export function CatalogClient({ projects }: { projects: Project[] }) {
   const searchParams = useSearchParams();
   const filters = parseCatalogFilters(Object.fromEntries(searchParams.entries()));
   const [compare, setCompare] = useState<string[]>([]);
+  const [compareOpen, setCompareOpen] = useState(false);
   const [mobileFilters, setMobileFilters] = useState(false);
 
   const filtered = useMemo(() => filterProjects(projects, filters), [projects, filters]);
+  const compareProjects = useMemo(
+    () => projects.filter((p) => compare.includes(p.id)),
+    [projects, compare],
+  );
 
   const update = (patch: Partial<CatalogFilters>) => {
     const next = { ...filters, ...patch };
@@ -184,7 +191,13 @@ export function CatalogClient({ projects }: { projects: Project[] }) {
               Фильтры
             </Button>
             {compare.length > 0 && (
-              <p className="text-sm">Сравнение: {compare.length} из 3</p>
+              <button
+                type="button"
+                className="text-sm underline-offset-4 hover:underline"
+                onClick={() => setCompareOpen(true)}
+              >
+                Сравнение: {compare.length} из 3
+              </button>
             )}
           </div>
 
@@ -220,6 +233,26 @@ export function CatalogClient({ projects }: { projects: Project[] }) {
           <FilterSidebar />
         </div>
       )}
+
+      <CompareBar
+        projects={compareProjects}
+        onRemove={(id) => setCompare((prev) => prev.filter((x) => x !== id))}
+        onClear={() => setCompare([])}
+        onOpen={() => setCompareOpen(true)}
+      />
+
+      <CompareModal
+        projects={compareProjects}
+        open={compareOpen}
+        onOpenChange={setCompareOpen}
+        onRemove={(id) => {
+          setCompare((prev) => {
+            const next = prev.filter((x) => x !== id);
+            if (next.length < 2) setCompareOpen(false);
+            return next;
+          });
+        }}
+      />
     </div>
   );
 }

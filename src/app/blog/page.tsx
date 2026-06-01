@@ -6,7 +6,7 @@ import { cms } from "@/lib/cms/local";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Блог о строительстве домов — NordHaus",
+  title: "Блог о строительстве домов",
   description: "Статьи о выборе дома, стоимости, технологиях, ипотеке и энергоэффективности.",
   path: "/blog",
 });

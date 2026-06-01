@@ -1,3 +1,6 @@
+import { brand } from "@/data/brand";
+import { SITE_URL } from "@/lib/seo";
+
 export function JsonLd({ data }: { data: Record<string, unknown> | Record<string, unknown>[] }) {
   return (
     <script
@@ -11,10 +14,11 @@ export function organizationSchema() {
   return {
     "@context": "https://schema.org",
     "@type": "HomeAndConstructionBusiness",
-    name: "NordHaus",
-    description: "Строительство малоэтажных домов под ключ в Иркутске",
-    url: "https://nordhaus.ru",
-    telephone: "+7-3952-00-00-00",
+    name: brand.name,
+    description: brand.tagline,
+    url: SITE_URL,
+    telephone: brand.phoneDisplay,
+    founder: { "@type": "Person", name: brand.founder },
     address: {
       "@type": "PostalAddress",
       addressLocality: "Иркутск",
@@ -45,7 +49,7 @@ export function projectSchema(project: {
       priceCurrency: "RUB",
       availability: "https://schema.org/InStock",
     },
-    url: `https://nordhaus.ru/catalog/${project.slug}`,
+    url: `${SITE_URL}/catalog/${project.slug}`,
   };
 }
 

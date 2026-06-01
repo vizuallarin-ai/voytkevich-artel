@@ -66,16 +66,24 @@ export default async function BlogPostPage({ params }: Props) {
           <Image src={post.coverImage} alt="" fill className="object-cover" priority />
         </div>
         <div
-          className="prose prose-neutral mt-10 max-w-none prose-headings:font-display prose-p:text-muted"
+          className="prose prose-neutral mt-10 max-w-none prose-headings:font-display prose-a:text-wood prose-a:underline-offset-4 prose-p:text-muted"
           dangerouslySetInnerHTML={{
             __html: post.content
               .split("\n")
               .map((line) => {
+                const parsed = line
+                  // **bold**
+                  .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+                  // [text](url) — internal links as Next.js-friendly <a>
+                  .replace(
+                    /\[([^\]]+)\]\(([^)]+)\)/g,
+                    '<a href="$2" class="text-wood underline underline-offset-4 hover:opacity-80 transition-opacity">$1</a>',
+                  );
                 if (line.startsWith("## "))
-                  return `<h2>${line.slice(3)}</h2>`;
+                  return `<h2>${parsed.slice(3)}</h2>`;
                 if (line.startsWith("- "))
-                  return `<li>${line.slice(2)}</li>`;
-                if (line.trim()) return `<p>${line}</p>`;
+                  return `<li>${parsed.slice(2)}</li>`;
+                if (line.trim()) return `<p>${parsed}</p>`;
                 return "";
               })
               .join(""),

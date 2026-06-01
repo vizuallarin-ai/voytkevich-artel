@@ -6,8 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { calculateHouseCost } from "@/lib/calculator";
 import { formatPrice } from "@/lib/utils";
+import { trackEvent } from "@/lib/analytics";
 import type { CalculatorInput, Material } from "@/types";
 import { LeadForm } from "@/components/forms/lead-form";
+import { PlannerPromo } from "@/components/planner/planner-promo";
 
 const materials: Material[] = ["каркас", "газобетон", "кирпич", "брус", "клееный брус"];
 
@@ -139,9 +141,23 @@ export function CalculatorForm() {
               </li>
             ))}
           </ul>
-          <Button className="mt-8 w-full" size="lg" onClick={() => setShowLead(true)}>
+          <Button
+            className="mt-8 w-full"
+            size="lg"
+            onClick={() => {
+              setShowLead(true);
+              trackEvent("calculator_submit", {
+                area: input.area,
+                material: input.material,
+                total: result.total,
+              });
+            }}
+          >
             Получить PDF-смету
           </Button>
+          <div className="mt-6 border-t border-graphite/10 pt-6">
+            <PlannerPromo variant="compact" />
+          </div>
         </div>
         {showLead && (
           <div className="mt-8">
@@ -149,6 +165,13 @@ export function CalculatorForm() {
               id="calc-lead"
               title="Коммерческое предложение"
               subtitle="Отправим детальную смету на почту или в мессенджер"
+              source="calculator"
+              prefilledArea={String(input.area)}
+              prefilledComment={[
+                `Параметры расчёта: ${input.area} м², ${input.floors} эт., материал — ${input.material}, фундамент — ${input.foundation}, отделка — ${input.finish}.`,
+                `Итог: ${formatPrice(result.total)} (~${formatPrice(result.perSqm)}/м², ${result.buildMonths} мес.)`,
+                result.breakdown.map((b) => `  ${b.label}: ${formatPrice(b.amount)}`).join("\n"),
+              ].join("\n")}
             />
           </div>
         )}

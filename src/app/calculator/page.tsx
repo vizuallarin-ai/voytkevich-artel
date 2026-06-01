@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/seo/breadcrumbs";
 import { CalculatorForm } from "@/components/calculator/calculator-form";
+import { FunnelHint } from "@/components/planner/funnel-hint";
+import { PlannerPromo } from "@/components/planner/planner-promo";
 import { Reveal } from "@/components/animations/reveal";
 import { pageMetadata } from "@/lib/seo";
 
@@ -23,6 +25,10 @@ export default function CalculatorPage() {
             Ориентировочный расчёт за 1 минуту. Точную смету подготовим после консультации.
           </p>
         </Reveal>
+        <FunnelHint page="calculator" />
+        <div className="mt-8">
+          <PlannerPromo />
+        </div>
         <div className="mt-12">
           <CalculatorForm />
         </div>

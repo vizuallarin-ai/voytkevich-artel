@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Phone, Mail, MapPin } from "lucide-react";
+import { brand } from "@/data/brand";
 
 const links = {
   catalog: [
@@ -11,6 +12,7 @@ const links = {
     { href: "/about", label: "О компании" },
     { href: "/process", label: "Процесс" },
     { href: "/calculator", label: "Калькулятор" },
+    { href: "/planirovka", label: "Схема планировки" },
   ],
   seo: [
     { href: "/blog", label: "Блог" },
@@ -25,22 +27,22 @@ export function Footer() {
       <div className="container-narrow section-padding !py-16">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
           <div>
-            <p className="font-display text-2xl">NordHaus</p>
+            <p className="font-display text-xl leading-snug">{brand.name}</p>
             <p className="mt-4 text-sm text-background/70">
-              Премиальное строительство домов под ключ в Иркутске и области с 2014 года.
+              {brand.tagline}. {brand.officeHours}
             </p>
             <ul className="mt-6 space-y-3 text-sm text-background/80">
               <li className="flex items-center gap-2">
-                <Phone className="h-4 w-4" aria-hidden />
-                <a href="tel:+73952000000">+7 (3952) 00-00-00</a>
+                <Phone className="h-4 w-4 shrink-0" aria-hidden />
+                <a href={`tel:${brand.phone}`}>{brand.phoneDisplay}</a>
               </li>
               <li className="flex items-center gap-2">
-                <Mail className="h-4 w-4" aria-hidden />
-                <a href="mailto:hello@nordhaus.ru">hello@nordhaus.ru</a>
+                <Mail className="h-4 w-4 shrink-0" aria-hidden />
+                <a href={`mailto:${brand.email}`}>{brand.email}</a>
               </li>
               <li className="flex items-center gap-2">
-                <MapPin className="h-4 w-4" aria-hidden />
-                <span>Иркутск, ул. Архитектурная, 12</span>
+                <MapPin className="h-4 w-4 shrink-0" aria-hidden />
+                <span>{brand.address}</span>
               </li>
             </ul>
           </div>
@@ -62,7 +64,7 @@ export function Footer() {
           ))}
         </div>
         <div className="mt-12 flex flex-col gap-4 border-t border-background/10 pt-8 text-xs text-background/50 md:flex-row md:justify-between">
-          <p>© {new Date().getFullYear()} NordHaus. Все права защищены.</p>
+          <p>© {new Date().getFullYear()} {brand.name}. Все права защищены.</p>
           <p>Строительство домов в Иркутске · ИЖС · Ипотека</p>
         </div>
       </div>

@@ -137,3 +137,32 @@ export interface QuizAnswer {
   step: number;
   value: string | string[];
 }
+
+export type PlannerLayoutVariant = "classic" | "linear";
+
+export interface PlannerInput {
+  area: number;
+  floors: 1 | 2;
+  bedrooms: number;
+  bathrooms: number;
+  hasGarage: boolean;
+  hasTerrace: boolean;
+  material: Material;
+  finish: CalculatorInput["finish"];
+  layoutVariant?: PlannerLayoutVariant;
+}
+
+export interface PlannerRoomArea {
+  id: string;
+  name: string;
+  area: number;
+  floor: number;
+}
+
+export interface PlannerResult {
+  floorPlans: FloorPlan[];
+  roomAreas: PlannerRoomArea[];
+  calculator: CalculatorResult;
+  matchedProject: Project | null;
+  matchScore: number;
+}

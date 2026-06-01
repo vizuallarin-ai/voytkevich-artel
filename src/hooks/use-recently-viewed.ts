@@ -2,7 +2,9 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-const KEY = "nordhaus-recent";
+import { brand } from "@/data/brand";
+
+const KEY = `${brand.storagePrefix}-recent`;
 const MAX = 6;
 
 export function useRecentlyViewed() {

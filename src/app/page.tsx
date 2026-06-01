@@ -107,8 +107,8 @@ export default async function HomePage() {
           <Reveal delay={0.2}>
             <div className="relative aspect-[4/5] overflow-hidden rounded-sm">
               <Image
-                src="https://images.unsplash.com/photo-1590725170758-36adc9c4e3b0?w=800&h=1000&fit=crop"
-                alt="Строительство дома NordHaus"
+                src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=800&h=1000&q=80"
+                alt="Строительство дома — строительная артель Александра Войткевича"
                 fill
                 className="object-cover"
               />

@@ -16,7 +16,7 @@ export function BuiltHomesMap({ homes }: { homes: BuiltHome[] }) {
   return (
     <div className="grid gap-8 lg:grid-cols-2">
       <div className="relative aspect-square overflow-hidden rounded-sm bg-sand">
-        <div className="absolute inset-0 opacity-30 bg-[url('https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&h=800&fit=crop')] bg-cover" />
+        <div className="absolute inset-0 opacity-30 bg-[url('https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=800&h=800&q=80')] bg-cover" />
         {homes.map((h) => (
           <button
             key={h.id}
