@@ -45,7 +45,9 @@ export function Hero() {
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               transition={{ duration: 0.9, delay: 0.1 }}
             >
-              {heroCopy.headline}
+              {heroCopy.headlineLine1}
+              <br />
+              <span className="text-wood">{heroCopy.headlineAccent}</span>
             </motion.h1>
             <motion.p
               className="mt-6 max-w-xl text-lg text-muted"
