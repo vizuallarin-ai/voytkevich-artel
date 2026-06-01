@@ -1,4 +1,5 @@
 import type { Material, Project, Style } from "@/types";
+import { projectDescriptionDefault } from "@/data/copy";
 import scraped from "@/data/megaartel-scraped.json";
 
 type Scraped = {
@@ -83,7 +84,7 @@ function toProject(item: Scraped, index: number): Project {
     slug: item.slug,
     name: shortName(item.name),
     tagline: `${area} м² · ${material} · ${floors} ${floors === 1 ? "этаж" : "этажа"}`,
-    description: `Реальный проект строительной артели Александра Войткевича. Подробности и актуальную смету уточняйте у менеджера — исходный проект на ${item.url.replace("https://www.", "https://")}`,
+    description: projectDescriptionDefault,
     price,
     pricePerSqm: Math.round(price / area),
     specs: {
@@ -109,7 +110,8 @@ function toProject(item: Scraped, index: number): Project {
     ].filter(Boolean) as string[],
     advantages: [
       "Проект с реализованных объектов артели",
-      `Площадь ${area} м² — как на megaartel.ru`,
+      `Площадь ${area} м² — можно увеличить или уменьшить`,
+      "Планировка, фасад и комплектация под ваш участок",
     ],
     buildStages: [
       { title: "Проектирование", duration: "7–30 дн.", description: "Адаптация под участок" },

@@ -142,14 +142,8 @@ export function PlannerWizard() {
             <h2 className="heading-section mt-2">Нужна точная планировка?</h2>
             <p className="mt-4 text-muted">
               Схему можно двигать и подстроить под себя. Архитектор артели подготовит рабочий
-              проект с учётом участка — как на{" "}
-              <a
-                href="https://www.megaartel.ru/"
-                className="text-wood underline-offset-4 hover:underline"
-              >
-                megaartel.ru
-              </a>
-              .
+              проект с учётом участка, геологии и выбранной комплектации — с понятной сметой по
+              этапам.
             </p>
           </div>
           <LeadForm

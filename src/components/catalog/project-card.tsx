@@ -87,9 +87,19 @@ export function ProjectCard({
           {project.specs.buildTimeMonths} мес. · {project.specs.material}
         </p>
 
-        <Button asChild variant="outline" className="mt-5 w-full">
-          <Link href={`/catalog/${project.slug}`}>Подробнее</Link>
-        </Button>
+        <div className="mt-5 flex flex-col gap-2">
+          <Button asChild variant="outline" className="w-full">
+            <Link href={`/catalog/${project.slug}#project-lead`}>
+              Получить смету по этому проекту
+            </Link>
+          </Button>
+          <Link
+            href={`/catalog/${project.slug}`}
+            className="text-center text-xs text-muted underline-offset-4 hover:text-foreground hover:underline"
+          >
+            Параметры и планировки
+          </Link>
+        </div>
       </div>
     </article>
   );

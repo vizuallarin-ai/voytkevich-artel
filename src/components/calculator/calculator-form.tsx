@@ -10,6 +10,7 @@ import { trackEvent } from "@/lib/analytics";
 import type { CalculatorInput, Material } from "@/types";
 import { LeadForm } from "@/components/forms/lead-form";
 import { PlannerPromo } from "@/components/planner/planner-promo";
+import { calculatorDisclaimer, cta } from "@/data/copy";
 
 const materials: Material[] = ["каркас", "газобетон", "кирпич", "брус", "клееный брус"];
 
@@ -153,8 +154,9 @@ export function CalculatorForm() {
               });
             }}
           >
-            Получить PDF-смету
+            {cta.preliminaryPdf}
           </Button>
+          <p className="mt-3 text-center text-xs text-muted">{calculatorDisclaimer}</p>
           <div className="mt-6 border-t border-graphite/10 pt-6">
             <PlannerPromo variant="compact" />
           </div>
@@ -163,8 +165,8 @@ export function CalculatorForm() {
           <div className="mt-8">
             <LeadForm
               id="calc-lead"
-              title="Коммерческое предложение"
-              subtitle="Отправим детальную смету на почту или в мессенджер"
+              title={cta.stagedEstimate}
+              subtitle="Отправим смету с разбивкой по этапам на почту или в мессенджер"
               source="calculator"
               prefilledArea={String(input.area)}
               prefilledComment={[

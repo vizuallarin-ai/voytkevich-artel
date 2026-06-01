@@ -5,11 +5,17 @@ import { HouseQuiz } from "@/components/forms/quiz";
 import { LeadForm } from "@/components/forms/lead-form";
 import { ProjectCard } from "@/components/catalog/project-card";
 import { Reveal, Stagger, StaggerItem } from "@/components/animations/reveal";
-import { AnimatedCounter } from "@/components/animations/counter";
-import { companyStats, guarantees } from "@/data/company";
+import { StatDisplay } from "@/components/animations/stat-display";
+import { companyStats } from "@/data/company";
 import { faqItems } from "@/data/faq";
 import { blogPosts } from "@/data/blog";
 import { buildProcessSteps } from "@/data/process";
+import {
+  audienceCards,
+  cta,
+  trustBenefits,
+  turnkeyIncluded,
+} from "@/data/copy";
 import { Button } from "@/components/ui/button";
 import {
   Accordion,
@@ -32,7 +38,8 @@ export default async function HomePage() {
             <p className="label-caps">Каталог проектов</p>
             <h2 className="heading-section mt-2">Дома с прозрачной сметой</h2>
             <p className="mt-4 max-w-2xl text-muted">
-              Реальные цены, сроки и технологии — без «от…» и скрытых доплат.
+              Реальные цены, сроки и технологии — без «от…» и скрытых доплат. Каждый проект можно
+              адаптировать под участок и бюджет.
             </p>
           </Reveal>
           <Stagger className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -44,7 +51,7 @@ export default async function HomePage() {
           </Stagger>
           <div className="mt-10 text-center">
             <Button asChild variant="outline" size="lg">
-              <Link href="/catalog">Весь каталог</Link>
+              <Link href="/catalog">{cta.viewCatalog}</Link>
             </Button>
           </div>
         </div>
@@ -56,12 +63,58 @@ export default async function HomePage() {
             {companyStats.map((s) => (
               <Reveal key={s.label}>
                 <p className="font-display text-4xl md:text-5xl">
-                  <AnimatedCounter value={s.value} suffix={s.suffix} decimals={s.value % 1 ? 1 : 0} />
+                  <StatDisplay
+                    value={s.value}
+                    suffix={s.suffix}
+                    decimals={s.decimals}
+                  />
                 </p>
                 <p className="mt-2 text-sm text-background/70">{s.label}</p>
               </Reveal>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="section-padding">
+        <div className="container-narrow">
+          <Reveal>
+            <p className="label-caps">Для кого</p>
+            <h2 className="heading-section mt-2">Кому подойдёт работа с артелью</h2>
+          </Reveal>
+          <Stagger className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {audienceCards.map((card) => (
+              <StaggerItem key={card.title}>
+                <div className="h-full rounded-sm border border-graphite/10 bg-background p-6">
+                  <h3 className="font-display text-xl">{card.title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted">{card.description}</p>
+                </div>
+              </StaggerItem>
+            ))}
+          </Stagger>
+        </div>
+      </section>
+
+      <section className="section-padding bg-muted-bg">
+        <div className="container-narrow">
+          <Reveal>
+            <p className="label-caps">Комплектация</p>
+            <h2 className="heading-section mt-2">{turnkeyIncluded.title}</h2>
+            <p className="mt-4 max-w-2xl text-muted">{turnkeyIncluded.footnote}</p>
+          </Reveal>
+          <ul className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {turnkeyIncluded.items.map((item) => (
+              <li
+                key={item}
+                className="flex gap-2 rounded-sm border border-graphite/10 bg-background px-4 py-3 text-sm capitalize"
+              >
+                <span className="text-wood" aria-hidden>
+                  —
+                </span>
+                {item}
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
@@ -86,7 +139,7 @@ export default async function HomePage() {
             ))}
           </div>
           <Button asChild className="mt-8" variant="outline">
-            <Link href="/process">Все этапы</Link>
+            <Link href="/process">{cta.allProcess}</Link>
           </Button>
         </div>
       </section>
@@ -96,10 +149,11 @@ export default async function HomePage() {
           <Reveal>
             <p className="label-caps">Гарантии</p>
             <h2 className="heading-section mt-2">Почему нам доверяют</h2>
-            <ul className="mt-8 space-y-4">
-              {guarantees.map((g) => (
-                <li key={g} className="flex gap-3 text-muted">
-                  <span className="text-wood">—</span> {g}
+            <ul className="mt-8 space-y-6">
+              {trustBenefits.map((g) => (
+                <li key={g.title}>
+                  <p className="font-medium">{g.title}</p>
+                  <p className="mt-1 text-sm text-muted">{g.description}</p>
                 </li>
               ))}
             </ul>
@@ -123,9 +177,10 @@ export default async function HomePage() {
         <div className="container-narrow grid gap-12 lg:grid-cols-2">
           <Reveal>
             <p className="label-caps">Консультация</p>
-            <h2 className="heading-section mt-2">Рассчитаем дом за 24 часа</h2>
+            <h2 className="heading-section mt-2">Предварительный расчёт за 24 часа</h2>
             <p className="mt-4 text-muted">
-              Оставьте заявку — подготовим смету, подберём проект и расскажем про ипотеку на ИЖС.
+              Оставьте контакты — подготовим смету с разбивкой по этапам, подберём проект под участок
+              и бюджет и ответим на вопросы по срокам и комплектации.
             </p>
           </Reveal>
           <LeadForm />
@@ -146,7 +201,7 @@ export default async function HomePage() {
             ))}
           </Accordion>
           <Button asChild variant="ghost" className="mt-4">
-            <Link href="/faq">Все вопросы</Link>
+            <Link href="/faq">{cta.allFaq}</Link>
           </Button>
         </div>
       </section>

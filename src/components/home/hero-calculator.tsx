@@ -6,6 +6,7 @@ import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { quickHeroEstimate } from "@/lib/calculator";
 import { formatPrice, pluralize } from "@/lib/utils";
+import { cta } from "@/data/copy";
 
 export function HeroCalculator() {
   const [area, setArea] = useState([150]);
@@ -38,7 +39,7 @@ export function HeroCalculator() {
         </div>
       </div>
       <Button asChild className="mt-6 w-full" size="lg">
-        <Link href="/#lead">Получить точный расчёт</Link>
+        <Link href="/#lead">{cta.preliminaryEstimate}</Link>
       </Button>
     </div>
   );

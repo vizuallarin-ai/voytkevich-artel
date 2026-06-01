@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { faqItems } from "@/data/faq";
+import { cta } from "@/data/copy";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -83,7 +84,7 @@ export default async function ProjectPage({ params }: Props) {
               {project.specs.area} м² · {project.specs.buildTimeMonths} мес. · {project.specs.bedrooms} спален
             </p>
             <Button asChild className="mt-4" size="lg">
-              <Link href="#project-lead">Заказать расчёт</Link>
+              <Link href="#project-lead">{cta.projectEstimateThis}</Link>
             </Button>
           </div>
         </header>
@@ -157,7 +158,11 @@ export default async function ProjectPage({ params }: Props) {
         </section>
 
         <section id="project-lead" className="mt-16 max-w-lg">
-          <LeadForm title={`Расчёт «${project.name}»`} subtitle="Персональная смета за 24 часа" />
+          <LeadForm
+            title={cta.projectEstimateThis}
+            subtitle={`Смета по проекту «${project.name}» с разбивкой по этапам — в течение рабочего дня`}
+            source={`project-${slug}`}
+          />
         </section>
       </div>
     </article>

@@ -21,7 +21,7 @@ const copy: Record<FunnelPage, { title: string; body: ReactNode }> = {
         </Link>
         , это не обязательно. Чтобы обсудить стройку —{" "}
         <Link href="/#lead" className="font-medium text-wood underline-offset-4 hover:underline">
-          заявка
+          предварительный расчёт
         </Link>{" "}
         или{" "}
         <Link href={`tel:${brand.phone}`} className="font-medium text-wood underline-offset-4 hover:underline">
@@ -41,11 +41,11 @@ const copy: Record<FunnelPage, { title: string; body: ReactNode }> = {
         </Link>{" "}
         или{" "}
         <Link href="/planirovka" className="font-medium text-wood underline-offset-4 hover:underline">
-          поиграть со схемой
+          собрать предварительную схему планировки
         </Link>{" "}
         (необязательно). Готовы обсудить —{" "}
         <Link href="/#lead" className="font-medium text-wood underline-offset-4 hover:underline">
-          оставьте заявку
+          получить предварительный расчёт
         </Link>
         .
       </>
@@ -69,7 +69,7 @@ const copy: Record<FunnelPage, { title: string; body: ReactNode }> = {
         </Link>{" "}
         или{" "}
         <Link href="/#lead" className="font-medium text-wood underline-offset-4 hover:underline">
-          заявка на главной
+          предварительный расчёт на главной
         </Link>
         .
       </>

@@ -3,17 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowDown, Shield, Clock, Award } from "lucide-react";
+import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MagneticButton } from "@/components/animations/magnetic-button";
 import { HeroCalculator } from "@/components/home/hero-calculator";
-import { AnimatedCounter } from "@/components/animations/counter";
-
-const stats = [
-  { icon: Shield, label: "Гарантия 5 лет" },
-  { icon: Clock, label: "Сдача в срок" },
-  { icon: Award, label: "127 домов" },
-];
+import { StatDisplay } from "@/components/animations/stat-display";
+import { cta, heroCopy, microTrust } from "@/data/copy";
 
 export function Hero() {
   const reduced = useReducedMotion();
@@ -41,7 +36,7 @@ export function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              Иркутск · Дома под ключ с 2014
+              {heroCopy.label}
             </motion.p>
             <motion.h1
               className="heading-display mt-4 text-balance"
@@ -49,9 +44,7 @@ export function Hero() {
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               transition={{ duration: 0.9, delay: 0.1 }}
             >
-              Строим дома,
-              <br />
-              <span className="text-wood">в которых хочется жить</span>
+              {heroCopy.headline}
             </motion.h1>
             <motion.p
               className="mt-6 max-w-xl text-lg text-muted"
@@ -59,7 +52,7 @@ export function Hero() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3, duration: 0.8 }}
             >
-              Фиксированная смета. Прозрачные сроки. Архитектурный подход — без типовых «коробок».
+              {heroCopy.subheadline}
             </motion.p>
 
             <motion.div
@@ -70,35 +63,35 @@ export function Hero() {
             >
               <MagneticButton>
                 <Button asChild size="lg">
-                  <Link href="/catalog">Смотреть проекты</Link>
+                  <Link href="/#lead">{cta.preliminaryEstimate}</Link>
                 </Button>
               </MagneticButton>
               <MagneticButton>
                 <Button asChild variant="outline" size="lg">
-                  <Link href="/#lead">Получить расчёт</Link>
+                  <Link href="/catalog">{cta.viewProjects}</Link>
                 </Button>
               </MagneticButton>
             </motion.div>
 
-            <div className="mt-10 flex flex-wrap gap-6">
-              {stats.map((s) => (
-                <div key={s.label} className="flex items-center gap-2 text-sm">
-                  <s.icon className="h-4 w-4 text-wood" aria-hidden />
-                  {s.label}
-                </div>
-              ))}
-            </div>
+            <motion.p
+              className="mt-6 text-sm text-muted"
+              initial={reduced ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.55 }}
+            >
+              {microTrust}
+            </motion.p>
 
-            <div className="mt-8 hidden gap-8 md:flex">
+            <div className="mt-8 flex gap-8">
               <div>
                 <p className="font-display text-3xl">
-                  <AnimatedCounter value={127} />
+                  <StatDisplay value={127} />
                 </p>
                 <p className="text-xs text-muted">домов сдано</p>
               </div>
               <div>
                 <p className="font-display text-3xl">
-                  <AnimatedCounter value={98} suffix="%" />
+                  <StatDisplay value={98} suffix="%" />
                 </p>
                 <p className="text-xs text-muted">в срок</p>
               </div>

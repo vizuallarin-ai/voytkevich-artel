@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { cta } from "@/data/copy";
 
 export function StickyCta() {
   const [visible, setVisible] = useState(false);
@@ -22,7 +23,7 @@ export function StickyCta() {
       aria-label="Быстрый заказ расчёта"
     >
       <Button asChild className="w-full" size="lg">
-        <Link href="/#lead">Получить расчёт — бесплатно</Link>
+        <Link href="/#lead">{cta.preliminaryEstimate}</Link>
       </Button>
     </div>
   );

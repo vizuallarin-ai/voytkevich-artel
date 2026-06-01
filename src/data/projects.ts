@@ -1,5 +1,5 @@
 /**
- * Каталог проектов — фото и площади с megaartel.ru
+ * Каталог проектов артели (импорт из scraped JSON).
  * Обновление: npm run scrape:megaartel
  */
 export {

@@ -5,8 +5,9 @@ export const brand = {
   logoLine2: "Александра Войткевича",
   founder: "Александр Войткевич",
   tagline: "Строительство домов под ключ в Иркутске и области",
-  /** Официальный сайт компании */
-  website: "https://www.megaartel.ru/",
+  /** Публичный сайт (Vercel / продакшен) */
+  website: "https://voytkevich-artel.vercel.app/",
+  foundedYear: 2014,
   phone: "+73952640134",
   phoneDisplay: "+7 (3952) 64-01-34",
   /** Мобильный (для WhatsApp; в каталогах и как почта на mail.ru) */

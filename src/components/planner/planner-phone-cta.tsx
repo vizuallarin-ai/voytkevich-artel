@@ -7,7 +7,7 @@ export function PlannerPhoneCta() {
   return (
     <div className="mb-8 flex flex-col gap-4 rounded-sm border border-wood/25 bg-wood/5 p-5 sm:flex-row sm:items-center sm:justify-between">
       <p className="text-sm text-muted">
-        <span className="font-medium text-foreground">Нужен расчёт без игры со схемой?</span>{" "}
+        <span className="font-medium text-foreground">Нужен расчёт без планировщика?</span>{" "}
         Позвоните — обсудим участок и подберём проект из каталога.
       </p>
       <Button asChild size="sm" className="shrink-0">

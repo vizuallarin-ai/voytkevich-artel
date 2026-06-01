@@ -22,7 +22,8 @@ export default function CalculatorPage() {
           <p className="label-caps">Калькулятор</p>
           <h1 className="heading-section mt-2">Стоимость вашего дома</h1>
           <p className="mt-4 max-w-2xl text-muted">
-            Ориентировочный расчёт за 1 минуту. Точную смету подготовим после консультации.
+            Ориентировочный расчёт за минуту. После уточнения проекта и участка подготовим смету с
+            разбивкой по этапам — до подписания договора.
           </p>
         </Reveal>
         <FunnelHint page="calculator" />

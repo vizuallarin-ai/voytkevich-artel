@@ -8,7 +8,7 @@ export function PlannerPromo({ variant = "default" }: { variant?: "default" | "c
       <p className="text-sm text-muted">
         Уже знаете площадь и число комнат?{" "}
         <Link href="/planirovka" className="font-medium text-wood underline-offset-4 hover:underline">
-          Собрать схему планировки
+          Собрать предварительную схему планировки
         </Link>{" "}
         (необязательно, ~1 мин).
       </p>

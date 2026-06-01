@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { MagneticButton } from "@/components/animations/magnetic-button";
 import { brand } from "@/data/brand";
+import { cta } from "@/data/copy";
 
 const nav = [
   { href: "/catalog", label: "Каталог" },
@@ -75,7 +76,7 @@ export function Header() {
           </MagneticButton>
           <MagneticButton>
             <Button asChild size="sm">
-              <Link href="/#lead">Получить расчёт</Link>
+              <Link href="/#lead">{cta.preliminaryEstimate}</Link>
             </Button>
           </MagneticButton>
         </div>
@@ -100,7 +101,7 @@ export function Header() {
               </Link>
             ))}
             <Button asChild className="mt-4 w-full">
-              <Link href="/#lead">Получить расчёт</Link>
+              <Link href="/#lead">{cta.preliminaryEstimate}</Link>
             </Button>
           </nav>
         </div>

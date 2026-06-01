@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useFormAutosave } from "@/hooks/use-form-autosave";
 import { trackEvent } from "@/lib/analytics";
+import { cta, privacyConsent } from "@/data/copy";
 
 type FormData = { name: string; phone: string; area: string; comment: string };
 
@@ -13,8 +14,8 @@ const empty: FormData = { name: "", phone: "", area: "", comment: "" };
 
 export function LeadForm({
   id = "lead",
-  title = "Получить расчёт",
-  subtitle = "Перезвоним в течение 15 минут с ориентировочной сметой",
+  title = cta.preliminaryEstimate,
+  subtitle = "Перезвоним в течение рабочего дня с ориентировочной сметой и вопросами по участку",
   prefilledArea,
   prefilledComment,
   source,
@@ -171,11 +172,9 @@ export function LeadForm({
       )}
 
       <Button type="submit" className="mt-6 w-full" size="lg" disabled={loading}>
-        {loading ? "Отправляем…" : step < 2 ? "Далее" : "Отправить заявку"}
+        {loading ? "Отправляем…" : step < 2 ? "Далее" : cta.preliminaryEstimate}
       </Button>
-      <p className="mt-3 text-center text-xs text-muted">
-        Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности
-      </p>
+      <p className="mt-3 text-center text-xs text-muted">{privacyConsent}</p>
     </form>
   );
 }
