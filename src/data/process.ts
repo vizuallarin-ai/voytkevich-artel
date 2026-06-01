@@ -30,7 +30,7 @@ export const buildProcessSteps = [
     title: "Кровля",
     duration: "2–3 недели",
     description: "Стропильная система, гидроизоляция, утепление, финишное покрытие.",
-    image: step(photos.houseModern),
+    image: step(photos.houseTimber),
   },
   {
     id: "engineering",

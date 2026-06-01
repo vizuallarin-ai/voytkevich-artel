@@ -1,21 +1,5 @@
 @import "tailwindcss";
 
-@font-face {
-  font-family: "NordDisplay";
-  font-style: normal;
-  font-weight: 300 600;
-  font-display: swap;
-  src: local("Cormorant Garamond"), local("Georgia");
-}
-
-@font-face {
-  font-family: "NordSans";
-  font-style: normal;
-  font-weight: 400 700;
-  font-display: swap;
-  src: local("DM Sans"), local("Segoe UI"), local("system-ui");
-}
-
 :root {
   --background: #f7f5f2;
   --foreground: #1a1a1a;
@@ -40,8 +24,8 @@
   --color-wood: var(--wood);
   --color-accent: var(--accent);
   --color-glass: var(--glass);
-  --font-sans: "NordSans", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "NordDisplay", ui-serif, Georgia, serif;
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-cormorant), ui-serif, Georgia, serif;
 }
 
 @layer base {
@@ -54,7 +38,7 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-background text-foreground antialiased leading-relaxed;
     font-family: var(--font-sans);
     font-feature-settings: "kern" 1, "liga" 1;
   }
@@ -93,15 +77,15 @@
   }
 
   .heading-display {
-    @apply font-display text-4xl font-light tracking-tight md:text-5xl lg:text-6xl xl:text-7xl;
+    @apply font-display text-4xl font-light leading-[1.08] tracking-tight md:text-5xl lg:text-6xl xl:text-7xl;
   }
 
   .heading-section {
-    @apply font-display text-3xl font-light tracking-tight md:text-4xl lg:text-5xl;
+    @apply font-display text-3xl font-light leading-tight tracking-tight md:text-4xl lg:text-5xl;
   }
 
   .label-caps {
-    @apply text-xs font-medium uppercase tracking-[0.2em] text-muted;
+    @apply font-sans text-xs font-medium uppercase tracking-[0.2em] text-muted;
   }
 
   .mask-reveal {

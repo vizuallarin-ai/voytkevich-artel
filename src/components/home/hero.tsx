@@ -9,6 +9,7 @@ import { MagneticButton } from "@/components/animations/magnetic-button";
 import { HeroCalculator } from "@/components/home/hero-calculator";
 import { StatDisplay } from "@/components/animations/stat-display";
 import { cta, heroCopy, microTrust } from "@/data/copy";
+import { heroHome } from "@/data/images";
 
 export function Hero() {
   const reduced = useReducedMotion();
@@ -17,11 +18,11 @@ export function Hero() {
     <section className="relative min-h-screen overflow-hidden">
       <div className="absolute inset-0">
         <Image
-          src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1920&h=1080&q=85"
-          alt="Современный загородный дом — строительная артель Александра Войткевича"
+          src={heroHome.src}
+          alt={heroHome.alt}
           fill
           priority
-          className="object-cover"
+          className="object-cover object-center"
           sizes="100vw"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/50 to-background" />
@@ -82,18 +83,18 @@ export function Hero() {
               {microTrust}
             </motion.p>
 
-            <div className="mt-8 flex gap-8">
-              <div>
-                <p className="font-display text-3xl">
+            <div className="mt-8 flex flex-wrap gap-x-10 gap-y-4">
+              <div className="min-w-[7rem]">
+                <p className="font-display text-3xl leading-none tabular-nums">
                   <StatDisplay value={127} />
                 </p>
-                <p className="text-xs text-muted">домов сдано</p>
+                <p className="mt-1.5 text-xs leading-snug text-muted">домов сдано</p>
               </div>
-              <div>
-                <p className="font-display text-3xl">
+              <div className="min-w-[7rem]">
+                <p className="font-display text-3xl leading-none tabular-nums">
                   <StatDisplay value={98} suffix="%" />
                 </p>
-                <p className="text-xs text-muted">в срок</p>
+                <p className="mt-1.5 text-xs leading-snug text-muted">в срок</p>
               </div>
             </div>
           </div>

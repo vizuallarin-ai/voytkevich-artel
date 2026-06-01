@@ -1,5 +1,13 @@
+/** Герой главной — реальный объект артели (брусовой дом, Хомутово, megaartel.ru) */
+export const heroHome = {
+  src: "https://megaartel.ru/wp-content/uploads/2022/03/dsc06818-scaled.jpg",
+  alt: "Брусовой загородный дом под ключ — строительная артель Александра Войткевича, Иркутск и область",
+} as const;
+
 /** Проверенные ключи Unsplash (формат photo-{key}) */
 export const photos = {
+  /** Деревянный / срубовый дом, зимний пейзаж */
+  houseTimber: "1449844908491-882860a5cc46",
   houseModern: "1600596542815-ffad4c1539a9",
   houseVilla: "1613490493576-7fde63acd811",
   houseBright: "1600607687939-ce8a6c25118c",

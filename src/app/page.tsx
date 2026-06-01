@@ -106,7 +106,7 @@ export default async function HomePage() {
             {turnkeyIncluded.items.map((item) => (
               <li
                 key={item}
-                className="flex gap-2 rounded-sm border border-graphite/10 bg-background px-4 py-3 text-sm capitalize"
+                className="flex gap-2 rounded-sm border border-graphite/10 bg-background px-4 py-3 text-sm leading-snug"
               >
                 <span className="text-wood" aria-hidden>
                   —
