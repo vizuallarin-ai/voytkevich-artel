@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { projectBadges } from "@/lib/project-meta";
+import { buildCalculatorUrl } from "@/lib/calculator";
 import type { Project } from "@/types";
 import { formatPrice } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -46,7 +47,17 @@ export function ProjectHero({ project }: { project: Project }) {
             <Link href="#project-lead">{cta.projectEstimate}</Link>
           </Button>
           <Button asChild size="lg" variant="outline">
-            <Link href="#project-lead">{cta.getConsultation}</Link>
+            <Link
+              href={buildCalculatorUrl({
+                project: project.slug,
+                area: project.specs.area,
+                material: project.specs.material,
+                floors: project.specs.floors <= 2 ? project.specs.floors : 2,
+                source: "project-page",
+              })}
+            >
+              Рассчитать этот проект
+            </Link>
           </Button>
         </div>
       </div>

@@ -1,9 +1,29 @@
 "use client";
 
+import Link from "next/link";
 import { getDisplayPackages } from "@/lib/project-content";
+import { buildCalculatorUrl, type PackageTypeId } from "@/lib/calculator";
 import type { Project } from "@/types";
 import { formatPrice } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+
+const PACKAGE_MAP: Record<string, PackageTypeId> = {
+  shell: "коробка",
+  korobka: "коробка",
+  warm: "тёплый контур",
+  pred: "предчистовая",
+  full: "под ключ",
+  turnkey: "под ключ",
+};
+
+function packageTypeFromId(id: string, name: string): PackageTypeId {
+  if (PACKAGE_MAP[id]) return PACKAGE_MAP[id];
+  if (name.toLowerCase().includes("короб")) return "коробка";
+  if (name.toLowerCase().includes("тёпл") || name.toLowerCase().includes("тепл"))
+    return "тёплый контур";
+  if (name.toLowerCase().includes("предчист")) return "предчистовая";
+  return "под ключ";
+}
 
 export function ProjectPackages({ project }: { project: Project }) {
   const packages = getDisplayPackages(project);
@@ -37,14 +57,22 @@ export function ProjectPackages({ project }: { project: Project }) {
               ))}
             </ul>
             <Button asChild className="mt-6 w-full" variant="outline">
-              <a
-                href="#project-lead"
+              <Link
+                href={buildCalculatorUrl({
+                  project: project.slug,
+                  area: project.specs.area,
+                  material: project.specs.material,
+                  floors: project.specs.floors <= 2 ? project.specs.floors : 2,
+                  packageType: packageTypeFromId(pkg.id, pkg.name),
+                  bedrooms: Math.min(4, project.specs.bedrooms),
+                  source: "project-page",
+                })}
                 onClick={() => {
                   sessionStorage.setItem(`project-package-${project.slug}`, pkg.name);
                 }}
               >
                 Рассчитать в этой комплектации
-              </a>
+              </Link>
             </Button>
           </article>
         ))}

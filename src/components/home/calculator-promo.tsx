@@ -4,8 +4,7 @@ import { Reveal } from "@/components/animations/reveal";
 import { Button } from "@/components/ui/button";
 import { calculatorPromo } from "@/data/home";
 import { cta } from "@/data/copy";
-import { formatPrice } from "@/lib/utils";
-import { quickHeroEstimate } from "@/lib/calculator";
+import { formatPriceRange, quickHeroEstimate } from "@/lib/calculator";
 
 export function CalculatorPromo() {
   const example = quickHeroEstimate(calculatorPromo.example.area);
@@ -53,7 +52,9 @@ export function CalculatorPromo() {
                 </div>
                 <div className="flex justify-between border-b border-graphite/10 pb-3">
                   <dt className="text-sm text-muted">Предварительно</dt>
-                  <dd className="font-display text-2xl">от {formatPrice(example.price)}</dd>
+                  <dd className="font-display text-2xl">
+                    {formatPriceRange(example.priceMin, example.priceMax)}
+                  </dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-sm text-muted">Срок</dt>
