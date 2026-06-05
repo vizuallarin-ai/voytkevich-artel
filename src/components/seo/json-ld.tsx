@@ -79,7 +79,9 @@ export function articleSchema(post: {
   description: string;
   image: string;
   datePublished: string;
-  author: string;
+  dateModified?: string;
+  author?: string;
+  url?: string;
 }) {
   return {
     "@context": "https://schema.org",
@@ -88,7 +90,9 @@ export function articleSchema(post: {
     description: post.description,
     image: post.image,
     datePublished: post.datePublished,
-    author: { "@type": "Person", name: post.author },
+    dateModified: post.dateModified ?? post.datePublished,
+    ...(post.author ? { author: { "@type": "Organization", name: post.author } } : {}),
+    ...(post.url ? { mainEntityOfPage: { "@type": "WebPage", "@id": post.url } } : {}),
   };
 }
 
@@ -101,6 +105,31 @@ export function faqSchema(items: { question: string; answer: string }[]) {
       name: item.question,
       acceptedAnswer: { "@type": "Answer", text: item.answer },
     })),
+  };
+}
+
+export function serviceSchema(service: {
+  name: string;
+  description: string;
+  url: string;
+  serviceType?: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: service.name,
+    description: service.description,
+    serviceType: service.serviceType,
+    provider: {
+      "@type": "HomeAndConstructionBusiness",
+      name: brand.name,
+      url: SITE_URL,
+    },
+    areaServed: {
+      "@type": "AdministrativeArea",
+      name: "Иркутская область",
+    },
+    url: service.url,
   };
 }
 

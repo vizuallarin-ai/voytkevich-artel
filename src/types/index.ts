@@ -70,18 +70,7 @@ export interface Project {
   categorySlugs?: string[];
 }
 
-export interface BlogPost {
-  slug: string;
-  title: string;
-  excerpt: string;
-  content: string;
-  coverImage: string;
-  category: string;
-  publishedAt: string;
-  readTime: number;
-  author: string;
-  seo: { title: string; description: string };
-}
+export type { BlogPost } from "@/types/blog";
 
 export interface FAQItem {
   id: string;

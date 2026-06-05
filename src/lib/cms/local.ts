@@ -1,5 +1,6 @@
 import { projects } from "@/data/projects";
-import { blogPosts } from "@/data/blog";
+import { allBlogPosts } from "@/data/blog";
+import { getPublishedPosts } from "@/lib/blog";
 import type { CMSAdapter } from "./types";
 
 /** Local JSON/data CMS — swap for Sanity/Strapi/Payload adapter */
@@ -11,10 +12,13 @@ export const localCMS: CMSAdapter = {
     return projects.find((p) => p.slug === slug) ?? null;
   },
   async getBlogPosts() {
-    return blogPosts;
+    return getPublishedPosts(allBlogPosts);
+  },
+  async getAllBlogPosts() {
+    return allBlogPosts;
   },
   async getBlogPostBySlug(slug: string) {
-    return blogPosts.find((p) => p.slug === slug) ?? null;
+    return allBlogPosts.find((p) => p.slug === slug) ?? null;
   },
 };
 

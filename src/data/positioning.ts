@@ -375,7 +375,7 @@ export const homeScenarios = [
     title: "Хочу дом в ипотеку",
     description: subOffers.mortgage,
     cta: "Узнать про ипотеку",
-    href: "/blog/ipoteka-na-izhs",
+    href: "/blog/stroitelstvo-doma-v-ipoteku-chto-podgotovit",
   },
   {
     id: "turnkey",

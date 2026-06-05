@@ -1,5 +1,12 @@
 /** Простой markdown → HTML для статей блога (заголовки, списки, таблицы, ссылки, bold) */
 
+function slugifyHeading(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}\s-]/gu, "")
+    .replace(/\s+/g, "-");
+}
+
 function parseInline(text: string): string {
   return text
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
@@ -69,7 +76,9 @@ export function markdownToHtml(content: string): string {
 
     if (line.startsWith("## ")) {
       closeList();
-      out.push(`<h2>${parseInline(line.slice(3))}</h2>`);
+      const title = line.slice(3);
+      const id = slugifyHeading(title);
+      out.push(`<h2 id="${id}">${parseInline(title)}</h2>`);
       i++;
       continue;
     }

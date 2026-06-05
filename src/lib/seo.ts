@@ -50,6 +50,7 @@ export function pageMetadata(opts: {
   image?: string;
   openGraphTitle?: string;
   openGraphDescription?: string;
+  noindex?: boolean;
 }): Metadata {
   const url = opts.path ? `${SITE_URL}${opts.path}` : SITE_URL;
   const ogTitle = opts.openGraphTitle ?? opts.title;
@@ -58,6 +59,7 @@ export function pageMetadata(opts: {
     title: opts.title,
     description: opts.description,
     alternates: { canonical: url },
+    robots: opts.noindex ? { index: false, follow: true } : { index: true, follow: true },
     openGraph: {
       title: ogTitle,
       description: ogDescription,

@@ -78,11 +78,6 @@ export function Header() {
             {brand.phoneDisplay}
           </a>
           <MagneticButton>
-            <Button asChild variant="outline" size="sm">
-              <Link href="/planirovka">Планировщик</Link>
-            </Button>
-          </MagneticButton>
-          <MagneticButton>
             <Button asChild size="sm">
               <Link href="/#lead">{cta.preliminaryEstimate}</Link>
             </Button>
