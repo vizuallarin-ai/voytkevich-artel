@@ -5,19 +5,31 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
-export function ProjectGallery({ images, name }: { images: string[]; name: string }) {
+export function ProjectGallery({
+  images,
+  name,
+  specs,
+}: {
+  images: string[];
+  name: string;
+  specs?: { area: number; material: string };
+}) {
   const [index, setIndex] = useState(0);
   const [fullscreen, setFullscreen] = useState(false);
 
   const prev = () => setIndex((i) => (i === 0 ? images.length - 1 : i - 1));
   const next = () => setIndex((i) => (i === images.length - 1 ? 0 : i + 1));
 
+  const altBase = specs
+    ? `Проект дома ${name}, ${specs.area} м², ${specs.material}`
+    : name;
+
   return (
     <>
       <div className="relative aspect-[16/9] overflow-hidden rounded-sm">
         <Image
           src={images[index]}
-          alt={`${name} — фото ${index + 1}`}
+          alt={`${altBase} — фото ${index + 1}`}
           fill
           className="cursor-zoom-in object-cover"
           onClick={() => setFullscreen(true)}
@@ -52,7 +64,7 @@ export function ProjectGallery({ images, name }: { images: string[]; name: strin
               i === index ? "ring-2 ring-graphite" : "opacity-60"
             }`}
           >
-            <Image src={img} alt={`${name} — миниатюра ${i + 1}`} fill className="object-cover" sizes="96px" />
+            <Image src={img} alt={`${altBase} — миниатюра ${i + 1}`} fill className="object-cover" sizes="96px" />
           </button>
         ))}
       </div>
@@ -74,7 +86,7 @@ export function ProjectGallery({ images, name }: { images: string[]; name: strin
               <X className="h-8 w-8" />
             </button>
             <div className="relative h-[80vh] w-[90vw]">
-              <Image src={images[index]} alt={name} fill className="object-contain" />
+              <Image src={images[index]} alt={altBase} fill className="object-contain" />
             </div>
           </motion.div>
         )}

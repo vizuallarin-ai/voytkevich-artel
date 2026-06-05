@@ -39,7 +39,7 @@ export function findMatchingProjects(
 export function findSimilarProjects(
   current: Project,
   projects: Project[],
-  limit = 4,
+  limit = 6,
 ): Project[] {
   return projects
     .filter((p) => p.id !== current.id)

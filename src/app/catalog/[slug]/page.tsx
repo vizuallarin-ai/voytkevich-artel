@@ -4,11 +4,23 @@ import Link from "next/link";
 import { cms } from "@/lib/cms/local";
 import { Breadcrumbs } from "@/components/seo/breadcrumbs";
 import { ProjectGallery } from "@/components/project/project-gallery";
-import { FloorPlanInteractive } from "@/components/project/floor-plan-interactive";
-import { LeadForm } from "@/components/forms/lead-form";
+import { ProjectHero } from "@/components/project/project-hero";
+import { ProjectSpecs } from "@/components/project/project-specs";
+import { ProjectAudience } from "@/components/project/project-audience";
+import { ProjectFloorPlanSection } from "@/components/project/project-floor-plan-section";
+import { ProjectIncludedWorks } from "@/components/project/project-included-works";
+import { ProjectPackages } from "@/components/project/project-packages";
+import { ProjectPriceFactors } from "@/components/project/project-price-factors";
+import { ProjectAdaptation } from "@/components/project/project-adaptation";
+import { ProjectBuildSteps } from "@/components/project/project-build-steps";
+import { ProjectRelated } from "@/components/project/project-related";
+import { ProjectSeoBlock } from "@/components/project/project-seo-block";
+import { ProjectLeadSection } from "@/components/project/project-lead-section";
+import { ProjectCategoriesNav } from "@/components/project/project-categories-nav";
+import { ProjectInlineCta } from "@/components/project/project-inline-cta";
+import { ProjectStickyCta, ProjectSidebar } from "@/components/project/project-sticky-cta";
 import { ProjectViewTracker } from "@/components/project/project-view-tracker";
-import { JsonLd, projectSchema, breadcrumbSchema } from "@/components/seo/json-ld";
-import { formatPrice } from "@/lib/utils";
+import { JsonLd, projectSchema, breadcrumbSchema, faqSchema } from "@/components/seo/json-ld";
 import { pageMetadata, SITE_URL } from "@/lib/seo";
 import {
   Accordion,
@@ -16,11 +28,10 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { ProjectCard } from "@/components/catalog/project-card";
 import { Button } from "@/components/ui/button";
 import { cta } from "@/data/copy";
-import { pageCopy } from "@/data/positioning";
-import { priceIncludesItems, projectFaqFor } from "@/lib/project-content";
+import { buildProjectSeoMeta, projectFaqFor } from "@/lib/project-content";
+import { getProjectCategories } from "@/lib/project-categories";
 import { findSimilarProjects } from "@/lib/similar-projects";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -34,9 +45,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const project = await cms.getProjectBySlug(slug);
   if (!project) return {};
+  const seo = buildProjectSeoMeta(project);
   return pageMetadata({
-    title: project.seo.title,
-    description: project.seo.description,
+    title: seo.title,
+    description: seo.description,
     path: `/catalog/${slug}`,
     image: project.images[0],
   });
@@ -48,11 +60,12 @@ export default async function ProjectPage({ params }: Props) {
   if (!project) notFound();
 
   const allProjects = await cms.getProjects();
-  const similar = findSimilarProjects(project, allProjects, 3);
+  const similar = findSimilarProjects(project, allProjects, 6);
   const projectFaq = projectFaqFor(project);
+  const categories = getProjectCategories(project);
 
   return (
-    <article className="pt-28 pb-20">
+    <article className="pb-28 pt-28 md:pb-20">
       <JsonLd
         data={[
           projectSchema({
@@ -67,9 +80,11 @@ export default async function ProjectPage({ params }: Props) {
             { name: "Каталог", url: `${SITE_URL}/catalog` },
             { name: project.name, url: `${SITE_URL}/catalog/${slug}` },
           ]),
+          faqSchema(projectFaq.map((f) => ({ question: f.question, answer: f.answer }))),
         ]}
       />
       <ProjectViewTracker slug={slug} />
+      <ProjectStickyCta project={project} />
 
       <div className="container-narrow px-5 md:px-10 lg:px-16">
         <Breadcrumbs
@@ -79,131 +94,70 @@ export default async function ProjectPage({ params }: Props) {
             { label: project.name },
           ]}
         />
-        <header className="grid gap-8 lg:grid-cols-2 lg:items-end">
-          <div>
-            <p className="label-caps">{project.specs.style} · {project.specs.material}</p>
-            <h1 className="heading-section mt-2">{project.name}</h1>
-            <p className="mt-4 text-lg text-muted">{project.tagline}</p>
-          </div>
-          <div className="text-right">
-            <p className="font-display text-3xl md:text-4xl">{formatPrice(project.price)}</p>
-            <p className="mt-2 text-sm text-muted">
-              {project.specs.area} м² · {project.specs.buildTimeMonths} мес. · {project.specs.bedrooms} спален
-            </p>
-            <p className="mt-1 text-xs text-muted">{pageCopy.project.priceNote}</p>
-            <Button asChild className="mt-4" size="lg">
-              <Link href="#project-lead">{cta.projectEstimateThis}</Link>
-            </Button>
-          </div>
-        </header>
 
-        <div className="mt-10">
-          <ProjectGallery images={project.gallery} name={project.name} />
+        <div className="mt-6 grid gap-12 lg:grid-cols-[1fr_280px] lg:items-start">
+          <div className="min-w-0 space-y-16">
+            <ProjectHero project={project} />
+            <ProjectCategoriesNav categories={categories} />
+
+            <ProjectGallery images={project.gallery} name={project.name} specs={project.specs} />
+
+            <ProjectSpecs project={project} />
+            <ProjectInlineCta label="Уточнить стоимость" />
+
+            <section aria-labelledby="project-about-title">
+              <h2 id="project-about-title" className="font-display text-2xl">
+                О проекте
+              </h2>
+              <p className="mt-4 text-muted">{project.description}</p>
+              {project.shortDescription && project.shortDescription !== project.description && (
+                <p className="mt-3 text-sm text-muted">{project.shortDescription}</p>
+              )}
+              <ul className="mt-6 flex flex-wrap gap-2">
+                {project.features.map((f) => (
+                  <li key={f} className="rounded-full bg-sand px-3 py-1 text-xs">
+                    {f}
+                  </li>
+                ))}
+              </ul>
+            </section>
+
+            <ProjectAudience project={project} />
+            <ProjectFloorPlanSection project={project} />
+            <ProjectIncludedWorks />
+            <ProjectPackages project={project} />
+            <ProjectPriceFactors />
+            <ProjectAdaptation />
+            <ProjectBuildSteps />
+
+            <ProjectRelated similar={similar} />
+
+            <section aria-labelledby="project-faq-title">
+              <h2 id="project-faq-title" className="font-display text-2xl">
+                FAQ по проекту
+              </h2>
+              <Accordion type="single" collapsible className="mt-6 max-w-3xl">
+                {projectFaq.map((item) => (
+                  <AccordionItem key={item.id} value={item.id}>
+                    <AccordionTrigger>{item.question}</AccordionTrigger>
+                    <AccordionContent>{item.answer}</AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+              <Button asChild className="mt-8" size="lg">
+                <Link href="#project-lead">{cta.projectEstimate}</Link>
+              </Button>
+            </section>
+
+            <ProjectSeoBlock project={project} />
+
+            <div className="max-w-lg">
+              <ProjectLeadSection project={project} slug={slug} />
+            </div>
+          </div>
+
+          <ProjectSidebar project={project} />
         </div>
-
-        <section className="mt-16 grid gap-12 lg:grid-cols-2">
-          <div>
-            <h2 className="font-display text-2xl">О проекте</h2>
-            <p className="mt-4 text-muted">{project.description}</p>
-            <ul className="mt-6 flex flex-wrap gap-2">
-              {project.features.map((f) => (
-                <li key={f} className="rounded-full bg-sand px-3 py-1 text-xs">
-                  {f}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h2 className="font-display text-2xl">Планировки</h2>
-            <div className="mt-4">
-              <FloorPlanInteractive plans={project.floorPlans} />
-            </div>
-          </div>
-        </section>
-
-        <section className="mt-16">
-          <h2 className="font-display text-2xl">Что входит в стоимость</h2>
-          <p className="mt-3 max-w-2xl text-sm text-muted">
-            Состав работ зависит от комплектации. Ниже — типовой перечень для проекта «под ключ» в
-            Иркутске.
-          </p>
-          <ul className="mt-6 grid gap-2 sm:grid-cols-2">
-            {priceIncludesItems.map((item) => (
-              <li
-                key={item}
-                className="flex gap-2 rounded-sm border border-graphite/10 bg-muted-bg/50 px-4 py-3 text-sm"
-              >
-                <span className="text-wood" aria-hidden>
-                  —
-                </span>
-                {item}
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section className="mt-16">
-          <h2 className="font-display text-2xl">Комплектации</h2>
-          <div className="mt-6 grid gap-6 md:grid-cols-2">
-            {project.packages.map((pkg) => (
-              <div key={pkg.id} className="rounded-sm border border-graphite/10 p-6">
-                <h3 className="text-lg font-medium">{pkg.name}</h3>
-                <p className="mt-2 font-display text-2xl">от {formatPrice(pkg.priceFrom)}</p>
-                <ul className="mt-4 space-y-1 text-sm text-muted">
-                  {pkg.includes.map((i) => (
-                    <li key={i}>— {i}</li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="mt-16">
-          <h2 className="font-display text-2xl">Этапы строительства</h2>
-          <div className="mt-6 space-y-4">
-            {project.buildStages.map((s) => (
-              <div key={s.title} className="flex justify-between border-b border-graphite/10 py-4">
-                <div>
-                  <p className="font-medium">{s.title}</p>
-                  <p className="text-sm text-muted">{s.description}</p>
-                </div>
-                <p className="text-sm text-wood">{s.duration}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {similar.length > 0 && (
-          <section className="mt-16">
-            <h2 className="font-display text-2xl">Похожие проекты</h2>
-            <div className="mt-8 grid gap-8 md:grid-cols-3">
-              {similar.map((p) => (
-                <ProjectCard key={p.id} project={p} />
-              ))}
-            </div>
-          </section>
-        )}
-
-        <section className="mt-16 max-w-3xl">
-          <h2 className="font-display text-2xl">FAQ по проекту</h2>
-          <Accordion type="single" collapsible className="mt-6">
-            {projectFaq.map((item) => (
-              <AccordionItem key={item.id} value={item.id}>
-                <AccordionTrigger>{item.question}</AccordionTrigger>
-                <AccordionContent>{item.answer}</AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </section>
-
-        <section id="project-lead" className="mt-16 max-w-lg">
-          <LeadForm
-            title={cta.projectEstimateThis}
-            subtitle={pageCopy.project.leadSubtitle}
-            source={`project-${slug}`}
-          />
-        </section>
       </div>
     </article>
   );

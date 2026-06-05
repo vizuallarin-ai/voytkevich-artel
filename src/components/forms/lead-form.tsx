@@ -22,6 +22,8 @@ export function LeadForm({
   prefilledArea,
   prefilledComment,
   source,
+  submitLabel,
+  footnote,
 }: {
   id?: string;
   title?: string;
@@ -30,6 +32,8 @@ export function LeadForm({
   prefilledComment?: string;
   /** Analytics source label, e.g. "calc", "planner", "quiz" */
   source?: string;
+  submitLabel?: string;
+  footnote?: string;
 }) {
   const [data, setData] = useState<FormData>({
     ...empty,
@@ -187,8 +191,11 @@ export function LeadForm({
       )}
 
       <Button type="submit" className="mt-6 w-full" size="lg" disabled={loading}>
-        {loading ? "Отправляем…" : step < 2 ? "Далее" : cta.preliminaryEstimate}
+        {loading ? "Отправляем…" : step < 2 ? "Далее" : submitLabel ?? cta.preliminaryEstimate}
       </Button>
+      {footnote && (
+        <p className="mt-3 text-center text-xs text-muted">{footnote}</p>
+      )}
       <p className="mt-3 text-center text-xs text-muted">
         {privacyConsent}{" "}
         <Link href="/privacy" className="underline underline-offset-2 hover:text-foreground">

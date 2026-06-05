@@ -66,6 +66,8 @@ export interface Project {
   /** Назначение: семья, дача, постоянное проживание */
   purpose?: ProjectPurpose[];
   tags?: string[];
+  /** Slug категорий каталога — optional, иначе вычисляется по фильтрам */
+  categorySlugs?: string[];
 }
 
 export interface BlogPost {
