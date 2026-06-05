@@ -1,21 +1,28 @@
 import Link from "next/link";
 import Image from "next/image";
+import type { Metadata } from "next";
 import { Hero } from "@/components/home/hero";
-import { HouseQuiz } from "@/components/forms/quiz";
+import { ScenarioCards } from "@/components/home/scenario-cards";
+import { CalculatorPromo } from "@/components/home/calculator-promo";
 import { LeadForm } from "@/components/forms/lead-form";
 import { ProjectCard } from "@/components/catalog/project-card";
 import { Reveal, Stagger, StaggerItem } from "@/components/animations/reveal";
 import { StatDisplay } from "@/components/animations/stat-display";
 import { companyStats } from "@/data/company";
-import { faqItems } from "@/data/faq";
-import { blogPosts } from "@/data/blog";
-import { buildProcessSteps } from "@/data/process";
 import {
-  audienceCards,
-  cta,
-  trustBenefits,
-  turnkeyIncluded,
-} from "@/data/copy";
+  audienceSegments,
+  casesBlock,
+  catalogHomeCategories,
+  finalLeadBlock,
+  hiddenCostsBlock,
+  homeFaqItems,
+  homeProcessSteps,
+  homeSeoText,
+  keyBenefits,
+  trustHomeBlock,
+  whatWeTakeBlock,
+} from "@/data/home";
+import { cta, founderBlock, pageMeta } from "@/data/copy";
 import { Button } from "@/components/ui/button";
 import {
   Accordion,
@@ -24,66 +31,255 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { cms } from "@/lib/cms/local";
+import { pageMetadata } from "@/lib/seo";
+import { photos, unsplash } from "@/data/images";
+
+export const metadata: Metadata = pageMetadata({
+  title: pageMeta.home.title,
+  description: pageMeta.home.description,
+  path: "/",
+});
 
 export default async function HomePage() {
-  const featured = (await cms.getProjects()).filter((p) => p.featured).slice(0, 3);
+  const allProjects = await cms.getProjects();
+  const featured = allProjects.filter((p) => p.featured).slice(0, 6);
+  const displayProjects = featured.length >= 3 ? featured : allProjects.slice(0, 6);
 
   return (
     <>
       <Hero />
 
-      <section id="catalog-preview" className="section-padding">
+      <ScenarioCards />
+
+      {/* 3. Ключевые преимущества */}
+      <section className="section-padding" aria-labelledby="benefits-title">
         <div className="container-narrow">
           <Reveal>
-            <p className="label-caps">Каталог проектов</p>
-            <h2 className="heading-section mt-2">Дома с прозрачной сметой</h2>
+            <p className="label-caps">Преимущества</p>
+            <h2 id="benefits-title" className="heading-section mt-2">
+              Почему строительство с нами понятнее и спокойнее
+            </h2>
+          </Reveal>
+          <Stagger className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {keyBenefits.map((b) => (
+              <StaggerItem key={b.title}>
+                <div className="h-full rounded-sm border border-graphite/10 bg-background p-6">
+                  <h3 className="font-display text-lg">{b.title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted">{b.description}</p>
+                </div>
+              </StaggerItem>
+            ))}
+          </Stagger>
+        </div>
+      </section>
+
+      <CalculatorPromo />
+
+      {/* 5. Каталог */}
+      <section id="catalog-preview" className="section-padding bg-muted-bg">
+        <div className="container-narrow">
+          <Reveal>
+            <p className="label-caps">Каталог</p>
+            <h2 className="heading-section mt-2">Проекты домов под разные задачи и бюджеты</h2>
             <p className="mt-4 max-w-2xl text-muted">
-              Реальные цены, сроки и технологии — без «от…» и скрытых доплат. Каждый проект можно
-              адаптировать под участок и бюджет.
+              Готовые проекты с ориентировочной ценой, сроком и материалом. Каждый можно адаптировать
+              под участок и комплектацию.
             </p>
           </Reveal>
+
+          <nav
+            className="mt-8 flex flex-wrap gap-2"
+            aria-label="Категории проектов"
+          >
+            {catalogHomeCategories.map((cat) => (
+              <Link
+                key={cat.slug}
+                href={`/catalog/kategoriya/${cat.slug}`}
+                className="rounded-full border border-graphite/15 bg-background px-3 py-1.5 text-xs transition hover:border-graphite"
+              >
+                {cat.label}
+              </Link>
+            ))}
+          </nav>
+
           <Stagger className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {featured.map((p) => (
+            {displayProjects.map((p) => (
               <StaggerItem key={p.id}>
                 <ProjectCard project={p} />
               </StaggerItem>
             ))}
           </Stagger>
-          <div className="mt-10 text-center">
+
+          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <Button asChild size="lg">
+              <Link href="/catalog">Смотреть все проекты</Link>
+            </Button>
             <Button asChild variant="outline" size="lg">
-              <Link href="/catalog">{cta.viewCatalog}</Link>
+              <Link href="/#lead">{cta.discussPlot}</Link>
             </Button>
           </div>
         </div>
       </section>
 
-      <section className="section-padding bg-graphite text-background">
+      {/* 6. Защита от скрытых доплат */}
+      <section className="section-padding" aria-labelledby="hidden-costs-title">
         <div className="container-narrow">
-          <div className="grid gap-12 md:grid-cols-4">
-            {companyStats.map((s) => (
-              <Reveal key={s.label}>
-                <p className="font-display text-4xl md:text-5xl">
-                  <StatDisplay
-                    value={s.value}
-                    suffix={s.suffix}
-                    decimals={s.decimals}
-                  />
-                </p>
-                <p className="mt-2 text-sm text-background/70">{s.label}</p>
+          <Reveal>
+            <p className="label-caps">Прозрачность</p>
+            <h2 id="hidden-costs-title" className="heading-section mt-2">
+              {hiddenCostsBlock.title}
+            </h2>
+            <p className="mt-4 max-w-3xl text-muted">{hiddenCostsBlock.problem}</p>
+            <p className="mt-4 max-w-3xl text-muted">{hiddenCostsBlock.position}</p>
+          </Reveal>
+          <ul className="mt-10 grid gap-3 sm:grid-cols-2">
+            {hiddenCostsBlock.solutions.map((item) => (
+              <li
+                key={item}
+                className="flex gap-3 rounded-sm border border-graphite/10 bg-muted-bg/50 px-5 py-4 text-sm"
+              >
+                <span className="font-display text-wood" aria-hidden>
+                  —
+                </span>
+                {item}
+              </li>
+            ))}
+          </ul>
+          <Button asChild className="mt-10" size="lg">
+            <Link href="/#lead">{cta.preliminaryEstimate}</Link>
+          </Button>
+        </div>
+      </section>
+
+      {/* 7. Процесс */}
+      <section className="section-padding bg-muted-bg" aria-labelledby="process-title">
+        <div className="container-narrow">
+          <Reveal>
+            <p className="label-caps">Процесс</p>
+            <h2 id="process-title" className="heading-section mt-2">
+              Понятный путь от идеи до готового дома
+            </h2>
+          </Reveal>
+          <div className="mt-12 space-y-6">
+            {homeProcessSteps.map((step, i) => (
+              <Reveal key={step.id} delay={i * 0.04}>
+                <div className="grid gap-4 border-b border-graphite/10 pb-6 md:grid-cols-[3rem_1fr]">
+                  <span className="font-display text-3xl text-sand">{String(i + 1).padStart(2, "0")}</span>
+                  <div>
+                    <h3 className="text-lg font-medium">{step.title}</h3>
+                    <p className="mt-2 text-sm text-muted">{step.description}</p>
+                  </div>
+                </div>
               </Reveal>
             ))}
+          </div>
+          <Button asChild className="mt-8" variant="outline">
+            <Link href="/process">Посмотреть процесс подробнее</Link>
+          </Button>
+        </div>
+      </section>
+
+      {/* 8. Кейсы — честная заготовка */}
+      <section className="section-padding" aria-labelledby="cases-title">
+        <div className="container-narrow">
+          <Reveal>
+            <p className="label-caps">Примеры</p>
+            <h2 id="cases-title" className="heading-section mt-2">
+              {casesBlock.title}
+            </h2>
+            <p className="mt-4 max-w-3xl text-sm text-muted">{casesBlock.disclaimer}</p>
+          </Reveal>
+          <div className="mt-10 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {displayProjects.slice(0, 3).map((p) => (
+              <article
+                key={p.id}
+                className="overflow-hidden rounded-sm border border-graphite/10"
+              >
+                <div className="relative aspect-[16/10]">
+                  <Image
+                    src={p.images[0]}
+                    alt={`Проект ${p.name} — пример из каталога`}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
+                </div>
+                <div className="p-5">
+                  <h3 className="font-display text-lg">{p.name}</h3>
+                  <p className="mt-2 text-sm text-muted">
+                    {p.specs.area} м² · {p.specs.material} · {p.specs.buildTimeMonths} мес.
+                  </p>
+                  <p className="mt-2 text-xs text-muted">
+                    Задача: подобрать дом под участок и бюджет семьи
+                  </p>
+                  <Button asChild variant="ghost" className="mt-4 px-0" size="sm">
+                    <Link href={`/catalog/${p.slug}`}>Смотреть проект</Link>
+                  </Button>
+                </div>
+              </article>
+            ))}
+          </div>
+          <Button asChild className="mt-10" variant="outline">
+            <Link href="/#lead">Хочу похожий дом</Link>
+          </Button>
+        </div>
+      </section>
+
+      {/* 9. Доверие */}
+      <section className="section-padding bg-graphite text-background" aria-labelledby="trust-title">
+        <div className="container-narrow">
+          <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
+            <Reveal>
+              <p className="label-caps text-background/50">Доверие</p>
+              <h2 id="trust-title" className="heading-section mt-2">
+                {trustHomeBlock.title}
+              </h2>
+              <p className="mt-4 text-background/80">{trustHomeBlock.description}</p>
+              <div className="mt-8">
+                <p className="font-display text-xl">{founderBlock.title}</p>
+                <p className="mt-3 text-sm text-background/70">{founderBlock.description}</p>
+              </div>
+              <div className="mt-10 grid grid-cols-2 gap-6 sm:grid-cols-4">
+                {companyStats.map((s) => (
+                  <div key={s.label}>
+                    <p className="font-display text-2xl md:text-3xl">
+                      <StatDisplay value={s.value} suffix={s.suffix} decimals={s.decimals} />
+                    </p>
+                    <p className="mt-1 text-xs text-background/60">{s.label}</p>
+                  </div>
+                ))}
+              </div>
+              <Button asChild className="mt-10" variant="outline">
+                <Link href="/about" className="border-background/30 text-background hover:bg-background/10">
+                  Узнать о компании
+                </Link>
+              </Button>
+            </Reveal>
+            <Reveal delay={0.15}>
+              <div className="relative aspect-[4/5] overflow-hidden rounded-sm">
+                <Image
+                  src={unsplash(photos.teamFounder, { w: 800, h: 1000 })}
+                  alt="Руководитель строительной артели — контроль проекта и стройки"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            </Reveal>
           </div>
         </div>
       </section>
 
-      <section className="section-padding">
+      {/* 10. Для кого */}
+      <section className="section-padding" aria-labelledby="audience-title">
         <div className="container-narrow">
           <Reveal>
             <p className="label-caps">Для кого</p>
-            <h2 className="heading-section mt-2">Кому подойдёт работа с артелью</h2>
+            <h2 id="audience-title" className="heading-section mt-2">
+              Для каких задач строим дома
+            </h2>
           </Reveal>
           <Stagger className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {audienceCards.map((card) => (
+            {audienceSegments.map((card) => (
               <StaggerItem key={card.title}>
                 <div className="h-full rounded-sm border border-graphite/10 bg-background p-6">
                   <h3 className="font-display text-xl">{card.title}</h3>
@@ -95,15 +291,18 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="section-padding bg-muted-bg">
+      {/* 11. Что входит */}
+      <section className="section-padding bg-muted-bg" aria-labelledby="scope-title">
         <div className="container-narrow">
           <Reveal>
             <p className="label-caps">Комплектация</p>
-            <h2 className="heading-section mt-2">{turnkeyIncluded.title}</h2>
-            <p className="mt-4 max-w-2xl text-muted">{turnkeyIncluded.footnote}</p>
+            <h2 id="scope-title" className="heading-section mt-2">
+              {whatWeTakeBlock.title}
+            </h2>
+            <p className="mt-4 max-w-2xl text-muted">{whatWeTakeBlock.footnote}</p>
           </Reveal>
           <ul className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {turnkeyIncluded.items.map((item) => (
+            {whatWeTakeBlock.items.map((item) => (
               <li
                 key={item}
                 className="flex gap-2 rounded-sm border border-graphite/10 bg-background px-4 py-3 text-sm leading-snug"
@@ -115,123 +314,82 @@ export default async function HomePage() {
               </li>
             ))}
           </ul>
-        </div>
-      </section>
-
-      <section className="section-padding">
-        <div className="container-narrow">
-          <Reveal>
-            <p className="label-caps">Процесс</p>
-            <h2 className="heading-section mt-2">Прозрачная стройка</h2>
-          </Reveal>
-          <div className="mt-12 space-y-8">
-            {buildProcessSteps.slice(0, 4).map((step, i) => (
-              <Reveal key={step.id} delay={i * 0.05}>
-                <div className="grid gap-6 border-b border-graphite/10 pb-8 md:grid-cols-[120px_1fr]">
-                  <span className="font-display text-4xl text-sand">{String(i + 1).padStart(2, "0")}</span>
-                  <div>
-                    <h3 className="text-xl font-medium">{step.title}</h3>
-                    <p className="mt-1 text-sm text-wood">{step.duration}</p>
-                    <p className="mt-2 text-muted">{step.description}</p>
-                  </div>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-          <Button asChild className="mt-8" variant="outline">
-            <Link href="/process">{cta.allProcess}</Link>
+          <Button asChild className="mt-10" variant="outline">
+            <Link href="/#lead">Обсудить комплектацию</Link>
           </Button>
         </div>
       </section>
 
-      <section className="section-padding bg-muted-bg">
-        <div className="container-narrow grid gap-12 lg:grid-cols-2">
-          <Reveal>
-            <p className="label-caps">Гарантии</p>
-            <h2 className="heading-section mt-2">Почему нам доверяют</h2>
-            <ul className="mt-8 space-y-6">
-              {trustBenefits.map((g) => (
-                <li key={g.title}>
-                  <p className="font-medium">{g.title}</p>
-                  <p className="mt-1 text-sm text-muted">{g.description}</p>
-                </li>
-              ))}
-            </ul>
-          </Reveal>
-          <Reveal delay={0.2}>
-            <div className="relative aspect-[4/5] overflow-hidden rounded-sm">
-              <Image
-                src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=800&h=1000&q=80"
-                alt="Строительство дома — строительная артель Александра Войткевича"
-                fill
-                className="object-cover"
-              />
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      <HouseQuiz />
-
-      <section id="lead" className="section-padding">
-        <div className="container-narrow grid gap-12 lg:grid-cols-2">
-          <Reveal>
-            <p className="label-caps">Консультация</p>
-            <h2 className="heading-section mt-2">Предварительный расчёт за 24 часа</h2>
-            <p className="mt-4 text-muted">
-              Оставьте контакты — подготовим смету с разбивкой по этапам, подберём проект под участок
-              и бюджет и ответим на вопросы по срокам и комплектации.
-            </p>
-          </Reveal>
-          <LeadForm />
-        </div>
-      </section>
-
-      <section className="section-padding bg-muted-bg">
+      {/* 12. SEO-текст */}
+      <section className="section-padding" aria-labelledby="seo-text-title">
         <div className="container-narrow max-w-3xl">
           <Reveal>
-            <h2 className="heading-section">Частые вопросы</h2>
+            <h2 id="seo-text-title" className="heading-section text-2xl md:text-3xl">
+              {homeSeoText.title}
+            </h2>
+            <div className="mt-6 space-y-4 text-sm leading-relaxed text-muted md:text-base">
+              {homeSeoText.paragraphs.map((p) => (
+                <p key={p.slice(0, 40)}>{p}</p>
+              ))}
+            </div>
+            <p className="mt-6 text-sm">
+              <Link href="/calculator" className="text-wood underline underline-offset-4">
+                Калькулятор стоимости
+              </Link>
+              {" · "}
+              <Link href="/catalog" className="text-wood underline underline-offset-4">
+                Каталог проектов
+              </Link>
+              {" · "}
+              <Link href="/blog" className="text-wood underline underline-offset-4">
+                Блог о строительстве
+              </Link>
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* 13. FAQ */}
+      <section className="section-padding bg-muted-bg" aria-labelledby="faq-title">
+        <div className="container-narrow max-w-3xl">
+          <Reveal>
+            <h2 id="faq-title" className="heading-section">
+              Частые вопросы
+            </h2>
           </Reveal>
           <Accordion type="single" collapsible className="mt-8">
-            {faqItems.slice(0, 4).map((item) => (
+            {homeFaqItems.map((item) => (
               <AccordionItem key={item.id} value={item.id}>
                 <AccordionTrigger>{item.question}</AccordionTrigger>
                 <AccordionContent>{item.answer}</AccordionContent>
               </AccordionItem>
             ))}
           </Accordion>
-          <Button asChild variant="ghost" className="mt-4">
-            <Link href="/faq">{cta.allFaq}</Link>
-          </Button>
+          <div className="mt-8 flex flex-wrap gap-4">
+            <Button asChild>
+              <Link href="/#lead">Задать вопрос по моему дому</Link>
+            </Button>
+            <Button asChild variant="ghost">
+              <Link href="/faq">{cta.allFaq}</Link>
+            </Button>
+          </div>
         </div>
       </section>
 
-      <section className="section-padding">
-        <div className="container-narrow">
+      {/* 14. Финальная форма */}
+      <section id="lead" className="section-padding">
+        <div className="container-narrow grid gap-12 lg:grid-cols-2">
           <Reveal>
-            <p className="label-caps">Блог</p>
-            <h2 className="heading-section mt-2">Полезно о строительстве</h2>
+            <p className="label-caps">{finalLeadBlock.label}</p>
+            <h2 className="heading-section mt-2">{finalLeadBlock.title}</h2>
+            <p className="mt-4 text-muted">{finalLeadBlock.subtitle}</p>
+            <p className="mt-6 text-sm text-muted">{finalLeadBlock.footnote}</p>
           </Reveal>
-          <div className="mt-10 grid gap-8 md:grid-cols-3">
-            {blogPosts.slice(0, 3).map((post) => (
-              <Link
-                key={post.slug}
-                href={`/blog/${post.slug}`}
-                className="group block overflow-hidden rounded-sm"
-              >
-                <div className="relative aspect-[16/10] overflow-hidden">
-                  <Image
-                    src={post.coverImage}
-                    alt=""
-                    fill
-                    className="object-cover transition duration-500 group-hover:scale-105"
-                  />
-                </div>
-                <p className="mt-4 text-xs text-muted">{post.category}</p>
-                <h3 className="mt-1 font-display text-xl group-hover:text-wood">{post.title}</h3>
-              </Link>
-            ))}
-          </div>
+          <LeadForm
+            title={cta.preliminaryEstimate}
+            subtitle="Перезвоним в течение рабочего дня с ориентировочной сметой"
+            source="home-lead"
+          />
         </div>
       </section>
     </>

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { calculateHouseCost } from "@/lib/calculator";
-import { findMatchingProject } from "@/lib/find-matching-project";
+import { findTopMatchingProjects } from "@/lib/find-matching-project";
 import {
   createLayoutFromInput,
   layoutToFloorPlans,
@@ -16,7 +16,9 @@ import type { PlannerInput, PlannerRoomArea } from "@/types";
 
 export function usePlannerEditor(initialInput: PlannerInput) {
   const [input, setInput] = useState(initialInput);
-  const [layoutRooms, setLayoutRooms] = useState<LayoutRoom[]>([]);
+  const [layoutRooms, setLayoutRooms] = useState<LayoutRoom[]>(() =>
+    createLayoutFromInput(initialInput),
+  );
   const [floorIdx, setFloorIdx] = useState(0);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isCustomized, setIsCustomized] = useState(false);
@@ -70,10 +72,8 @@ export function usePlannerEditor(initialInput: PlannerInput) {
     [input],
   );
 
-  const { project: matchedProject } = useMemo(
-    () => findMatchingProject(input),
-    [input],
-  );
+  const matchedProjects = useMemo(() => findTopMatchingProjects(input, 3), [input]);
+  const matchedProject = matchedProjects[0] ?? null;
 
   const totalRoomsArea = roomAreas.reduce((s, r) => s + r.area, 0);
   const areaDelta = input.area > 0 ? Math.round((totalRoomsArea / input.area) * 100) : 100;
@@ -108,6 +108,7 @@ export function usePlannerEditor(initialInput: PlannerInput) {
     roomAreas,
     calculator,
     matchedProject,
+    matchedProjects,
     totalRoomsArea,
     areaDelta,
     selectedId,

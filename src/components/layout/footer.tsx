@@ -5,7 +5,7 @@ import { brand } from "@/data/brand";
 const links = {
   catalog: [
     { href: "/catalog", label: "Все проекты" },
-    { href: "/catalog?sort=price-asc", label: "До 10 млн" },
+    { href: "/catalog?priceMax=10000000", label: "До 10 млн" },
     { href: "/catalog?floors=2", label: "Двухэтажные" },
   ],
   company: [
@@ -18,6 +18,13 @@ const links = {
     { href: "/blog", label: "Блог" },
     { href: "/faq", label: "FAQ" },
     { href: "/blog/stoimost-stroitelstva-2026", label: "Цены 2026" },
+    { href: "/privacy", label: "Конфиденциальность" },
+  ],
+  categories: [
+    { href: "/catalog/kategoriya/odnoetazhnye", label: "Одноэтажные" },
+    { href: "/catalog/kategoriya/dvukhetazhnye", label: "Двухэтажные" },
+    { href: "/catalog/kategoriya/iz-brusa", label: "Из бруса" },
+    { href: "/catalog/kategoriya/karkasnye", label: "Каркасные" },
   ],
 };
 
@@ -25,7 +32,7 @@ export function Footer() {
   return (
     <footer className="border-t border-graphite/10 bg-graphite text-background">
       <div className="container-narrow section-padding !py-16">
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-5">
           <div>
             <p className="font-display text-xl leading-snug">{brand.name}</p>
             <p className="mt-4 text-sm text-background/70">
@@ -49,7 +56,13 @@ export function Footer() {
           {Object.entries(links).map(([title, items]) => (
             <div key={title}>
               <p className="label-caps text-background/50">
-                {title === "catalog" ? "Каталог" : title === "company" ? "Компания" : "Полезное"}
+                {title === "catalog"
+                  ? "Каталог"
+                  : title === "company"
+                    ? "Компания"
+                    : title === "categories"
+                      ? "Категории"
+                      : "Полезное"}
               </p>
               <ul className="mt-4 space-y-2">
                 {items.map((l) => (

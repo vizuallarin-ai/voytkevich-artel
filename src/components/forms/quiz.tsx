@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -99,11 +100,11 @@ export function HouseQuiz() {
             Мы отфильтровали каталог по вашим ответам — посмотрите подходящие проекты.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-            <Button size="lg" onClick={goToCatalog}>
-              Смотреть подходящие проекты
+            <Button asChild size="lg">
+              <Link href="/#lead">Получить расчёт по подборке</Link>
             </Button>
-            <Button asChild variant="outline" size="lg">
-              <a href="/#lead">Получить консультацию</a>
+            <Button variant="outline" size="lg" onClick={goToCatalog}>
+              Смотреть проекты в каталоге
             </Button>
           </div>
         </div>
@@ -114,7 +115,7 @@ export function HouseQuiz() {
   return (
     <section id="quiz" className="section-padding bg-muted-bg" aria-labelledby="quiz-title">
       <div className="container-narrow max-w-2xl">
-        <p className="label-caps">AI-подбор дома</p>
+        <p className="label-caps">Подбор дома за 5 шагов</p>
         <h2 id="quiz-title" className="heading-section mt-2">
           Ответьте на 5 вопросов
         </h2>

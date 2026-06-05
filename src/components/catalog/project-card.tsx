@@ -4,8 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { Heart, GitCompare, Bed, Layers, Maximize } from "lucide-react";
 import { cn, formatPrice } from "@/lib/utils";
+import { projectBadges } from "@/lib/project-meta";
 import type { Project } from "@/types";
 import { Button } from "@/components/ui/button";
+import { cta } from "@/data/copy";
+import { pageCopy } from "@/data/positioning";
 import { useFavorites } from "@/hooks/use-favorites";
 
 export function ProjectCard({
@@ -16,17 +19,20 @@ export function ProjectCard({
   project: Project;
   compare?: string[];
   onCompare?: (id: string) => void;
+  leadSource?: string;
+  filterContext?: string;
 }) {
   const { isFavorite, toggle } = useFavorites();
   const fav = isFavorite(project.id);
   const inCompare = compare?.includes(project.id);
+  const badges = projectBadges(project);
 
   return (
     <article className="group relative flex flex-col overflow-hidden rounded-sm bg-background shadow-sm transition hover:shadow-lg">
       <Link href={`/catalog/${project.slug}`} className="relative block aspect-[4/3] overflow-hidden">
         <Image
           src={project.images[0]}
-          alt={project.name}
+          alt={`Проект дома ${project.name} — ${project.specs.area} м²`}
           fill
           className="object-cover transition duration-700 group-hover:scale-105"
           sizes="(max-width:768px) 100vw, 33vw"
@@ -34,7 +40,7 @@ export function ProjectCard({
         />
         <div className="absolute inset-0 bg-gradient-to-t from-graphite/60 to-transparent opacity-0 transition group-hover:opacity-100" />
         <div className="absolute bottom-4 left-4 right-4 translate-y-4 opacity-0 transition group-hover:translate-y-0 group-hover:opacity-100">
-          <span className="text-sm text-background">Смотреть проект →</span>
+          <span className="text-sm text-background">{cta.openProject} →</span>
         </div>
       </Link>
 
@@ -53,7 +59,7 @@ export function ProjectCard({
             onClick={() => onCompare(project.id)}
             className={cn(
               "glass flex h-9 w-9 items-center justify-center rounded-full",
-              inCompare && "ring-2 ring-graphite"
+              inCompare && "ring-2 ring-graphite",
             )}
             aria-label="Сравнить"
           >
@@ -65,13 +71,31 @@ export function ProjectCard({
       <div className="flex flex-1 flex-col p-5">
         <div className="flex items-start justify-between gap-2">
           <div>
-            <h3 className="font-display text-xl">{project.name}</h3>
+            <h3 className="font-display text-xl">
+              <Link href={`/catalog/${project.slug}`} className="hover:underline">
+                {project.name}
+              </Link>
+            </h3>
             <p className="mt-1 text-sm text-muted">{project.tagline}</p>
           </div>
-          <p className="shrink-0 font-medium">{formatPrice(project.price)}</p>
+          <div className="shrink-0 text-right">
+            <p className="text-xs text-muted">от</p>
+            <p className="font-medium">{formatPrice(project.price)}</p>
+          </div>
         </div>
 
-        <ul className="mt-4 flex flex-wrap gap-3 text-xs text-muted">
+        <ul className="mt-3 flex flex-wrap gap-1.5">
+          {badges.map((b) => (
+            <li
+              key={b}
+              className="rounded-full bg-sand/80 px-2 py-0.5 text-[10px] uppercase tracking-wide text-graphite/80"
+            >
+              {b}
+            </li>
+          ))}
+        </ul>
+
+        <ul className="mt-3 flex flex-wrap gap-3 text-xs text-muted">
           <li className="flex items-center gap-1">
             <Maximize className="h-3.5 w-3.5" /> {project.specs.area} м²
           </li>
@@ -87,18 +111,19 @@ export function ProjectCard({
           {project.specs.buildTimeMonths} мес. · {project.specs.material}
         </p>
 
+        {project.shortDescription && (
+          <p className="mt-3 line-clamp-2 text-xs text-muted">{project.shortDescription}</p>
+        )}
+
+        <p className="mt-2 text-[10px] leading-relaxed text-muted">{pageCopy.project.priceNote}</p>
+
         <div className="mt-5 flex flex-col gap-2">
-          <Button asChild variant="outline" className="w-full">
-            <Link href={`/catalog/${project.slug}#project-lead`}>
-              Получить смету по этому проекту
-            </Link>
+          <Button asChild className="w-full">
+            <Link href={`/catalog/${project.slug}#project-lead`}>{cta.projectEstimate}</Link>
           </Button>
-          <Link
-            href={`/catalog/${project.slug}`}
-            className="text-center text-xs text-muted underline-offset-4 hover:text-foreground hover:underline"
-          >
-            Параметры и планировки
-          </Link>
+          <Button asChild variant="outline" className="w-full">
+            <Link href={`/catalog/${project.slug}`}>{cta.openProject}</Link>
+          </Button>
         </div>
       </div>
     </article>

@@ -4,12 +4,13 @@ import { FunnelHint } from "@/components/planner/funnel-hint";
 import { PlannerPhoneCta } from "@/components/planner/planner-phone-cta";
 import { PlannerWizard } from "@/components/planner/planner-wizard";
 import { Reveal } from "@/components/animations/reveal";
+import { pageMeta } from "@/data/copy";
+import { pageCopy } from "@/data/positioning";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Подбор планировки дома по параметрам",
-  description:
-    "Соберите ориентировочную планировку дома: площадь, спальни, этажи, гараж. Смета и похожий проект из каталога за минуту.",
+  title: pageMeta.planner.title,
+  description: pageMeta.planner.description,
   path: "/planirovka",
 });
 
@@ -24,12 +25,8 @@ export default function PlanirovkaPage() {
         <PlannerPhoneCta />
         <Reveal>
           <p className="label-caps">Дополнительно</p>
-          <h1 className="heading-section mt-2">Схема планировки за минуту</h1>
-          <p className="mt-4 max-w-3xl text-muted">
-            Опциональный шаг после калькулятора: задайте параметры, подвиньте комнаты и посмотрите
-            похожий проект из каталога. Это эскиз для разговора с менеджером, не проект для
-            стройки — финальную планировку сделает проектировщик артели.
-          </p>
+          <h1 className="heading-section mt-2">{pageCopy.planner.h1}</h1>
+          <p className="mt-4 max-w-3xl text-muted">{pageCopy.planner.intro}</p>
         </Reveal>
         <div className="mt-12">
           <PlannerWizard />

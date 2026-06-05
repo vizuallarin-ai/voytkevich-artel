@@ -39,7 +39,7 @@ export function HeroCalculator() {
         </div>
       </div>
       <Button asChild className="mt-6 w-full" size="lg">
-        <Link href="/#lead">{cta.preliminaryEstimate}</Link>
+        <Link href="/calculator">{cta.calculateCost}</Link>
       </Button>
     </div>
   );

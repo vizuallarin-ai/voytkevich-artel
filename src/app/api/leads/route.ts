@@ -11,13 +11,41 @@ const LeadSchema = z.object({
 
 type Lead = z.infer<typeof LeadSchema>;
 
-async function sendToTelegram(lead: Lead): Promise<void> {
+async function sendToTelegram(lead: Lead): Promise<boolean> {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
+  if (!token || !chatId) return false;
 
-  if (!token || !chatId) return;
+  const lines = formatLeadMessage(lead);
 
-  const lines = [
+  const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      chat_id: chatId,
+      text: lines,
+      parse_mode: "Markdown",
+    }),
+  });
+
+  return res.ok;
+}
+
+async function sendToWebhook(lead: Lead): Promise<boolean> {
+  const url = process.env.LEADS_WEBHOOK_URL;
+  if (!url) return false;
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ...lead, receivedAt: new Date().toISOString() }),
+  });
+
+  return res.ok;
+}
+
+function formatLeadMessage(lead: Lead): string {
+  return [
     "🏠 *Новая заявка с сайта*",
     "",
     `👤 Имя: ${lead.name}`,
@@ -30,16 +58,6 @@ async function sendToTelegram(lead: Lead): Promise<void> {
   ]
     .filter(Boolean)
     .join("\n");
-
-  await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      chat_id: chatId,
-      text: lines,
-      parse_mode: "Markdown",
-    }),
-  });
 }
 
 export async function POST(request: Request) {
@@ -59,7 +77,31 @@ export async function POST(request: Request) {
     );
   }
 
-  await sendToTelegram(parsed.data);
+  const lead = parsed.data;
+  const delivered =
+    (await sendToTelegram(lead)) || (await sendToWebhook(lead));
+
+  if (!delivered && process.env.NODE_ENV === "development") {
+    console.info("[leads] Dev mode — logged locally:", formatLeadMessage(lead));
+    return NextResponse.json({ ok: true, dev: true });
+  }
+
+  if (!delivered) {
+    console.error("[leads] No delivery channel configured or delivery failed", {
+      source: lead.source,
+      hasTelegram: !!(process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID),
+      hasWebhook: !!process.env.LEADS_WEBHOOK_URL,
+    });
+    return NextResponse.json(
+      {
+        ok: false,
+        error: "delivery_failed",
+        message:
+          "Заявка не доставлена. Позвоните нам напрямую — мы на связи в рабочее время.",
+      },
+      { status: 503 },
+    );
+  }
 
   return NextResponse.json({ ok: true });
 }

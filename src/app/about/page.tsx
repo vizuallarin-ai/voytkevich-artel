@@ -13,15 +13,14 @@ import {
   companyStats,
   licenses,
 } from "@/data/company";
-import { aboutIntro, cta, founderBlock } from "@/data/copy";
+import { aboutIntro, cta, founderBlock, pageMeta } from "@/data/copy";
+import { pageCopy } from "@/data/positioning";
 import { pageMetadata } from "@/lib/seo";
-import { brand } from "@/data/brand";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = pageMetadata({
-  title: `О компании — ${brand.nameShort}`,
-  description:
-    "127 домов в Иркутской области, фиксированная смета, гарантия до 5 лет. Команда архитекторов и строителей под руководством Александра Войткевича.",
+  title: pageMeta.about.title,
+  description: pageMeta.about.description,
   path: "/about",
 });
 
@@ -35,6 +34,10 @@ export default function AboutPage() {
           <h1 className="heading-section mt-2">{aboutIntro.headline}</h1>
           <p className="mt-6 max-w-3xl text-lg text-muted">{aboutIntro.lead}</p>
           <p className="mt-4 max-w-3xl text-muted">{aboutIntro.body}</p>
+        </Reveal>
+        <Reveal delay={0.05} className="mt-12 max-w-3xl rounded-sm border border-graphite/10 bg-muted-bg/60 p-6 md:p-8">
+          <h2 className="font-display text-xl md:text-2xl">{pageCopy.about.approachTitle}</h2>
+          <p className="mt-4 text-muted">{pageCopy.about.approachText}</p>
         </Reveal>
       </div>
 

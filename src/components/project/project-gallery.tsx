@@ -52,7 +52,7 @@ export function ProjectGallery({ images, name }: { images: string[]; name: strin
               i === index ? "ring-2 ring-graphite" : "opacity-60"
             }`}
           >
-            <Image src={img} alt="" fill className="object-cover" sizes="96px" />
+            <Image src={img} alt={`${name} — миниатюра ${i + 1}`} fill className="object-cover" sizes="96px" />
           </button>
         ))}
       </div>

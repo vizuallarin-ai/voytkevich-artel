@@ -10,9 +10,10 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { usePlannerEditor } from "@/hooks/use-planner-editor";
+import { plannerPresets, applyPreset } from "@/data/planner-presets";
 import { DEFAULT_PLANNER_INPUT, plannerSummaryForLead } from "@/lib/planner";
+import { pageCopy } from "@/data/positioning";
 import { cn, formatNumber, formatPrice } from "@/lib/utils";
-import { trackEvent } from "@/lib/analytics";
 import type { Material, PlannerInput, PlannerLayoutVariant } from "@/types";
 
 const materials: Material[] = ["каркас", "газобетон", "кирпич", "брус", "клееный брус"];
@@ -34,6 +35,7 @@ export function PlannerWizard() {
     roomAreas,
     calculator,
     matchedProject,
+    matchedProjects,
     totalRoomsArea,
     areaDelta,
     selectedId,
@@ -112,24 +114,31 @@ export function PlannerWizard() {
             </div>
           </div>
 
-          {matchedProject && (
-            <div className="flex flex-col gap-4 rounded-sm border border-wood/30 bg-wood/5 p-5 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex gap-3">
-                <Home className="h-5 w-5 shrink-0 text-wood" aria-hidden />
-                <div>
-                  <p className="text-xs text-muted">Похожий готовый проект</p>
-                  <p className="font-display text-xl">{matchedProject.name}</p>
-                  <p className="text-sm text-muted">
-                    {matchedProject.specs.area} м² · {formatPrice(matchedProject.price)}
-                  </p>
+          {matchedProjects.length > 0 && (
+            <div className="space-y-3">
+              <p className="text-xs font-medium text-muted">Похожие проекты из каталога</p>
+              {matchedProjects.map((p) => (
+                <div
+                  key={p.id}
+                  className="flex flex-col gap-3 rounded-sm border border-wood/30 bg-wood/5 p-4 sm:flex-row sm:items-center sm:justify-between"
+                >
+                  <div className="flex gap-3">
+                    <Home className="h-5 w-5 shrink-0 text-wood" aria-hidden />
+                    <div>
+                      <p className="font-display text-lg">{p.name}</p>
+                      <p className="text-sm text-muted">
+                        {p.specs.area} м² · {formatPrice(p.price)}
+                      </p>
+                    </div>
+                  </div>
+                  <Button asChild variant="outline" size="sm">
+                    <Link href={`/catalog/${p.slug}`}>
+                      Смотреть
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  </Button>
                 </div>
-              </div>
-              <Button asChild variant="outline">
-                <Link href={`/catalog/${matchedProject.slug}`}>
-                  Смотреть проект
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
+              ))}
             </div>
           )}
         </div>
@@ -148,8 +157,8 @@ export function PlannerWizard() {
           </div>
           <LeadForm
             id="planner-lead-form"
-            title="Заказать проектирование"
-            subtitle="Ваши площади комнат и раскладка попадут в заявку"
+            title={pageCopy.planner.leadTitle}
+            subtitle={pageCopy.planner.leadSubtitle}
             source="planner"
             prefilledArea={String(input.area)}
             prefilledComment={leadComment}
@@ -169,6 +178,23 @@ function ParamsPanel({
 }) {
   return (
     <>
+      <div>
+        <p className="text-sm font-medium">Сценарий</p>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {plannerPresets.map((preset) => (
+            <button
+              key={preset.id}
+              type="button"
+              title={preset.description}
+              onClick={() => setInput(applyPreset(preset))}
+              className="rounded-sm border border-graphite/15 px-3 py-2 text-xs transition hover:border-graphite hover:bg-sand/50"
+            >
+              {preset.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div>
         <Label>Площадь дома: {input.area} м²</Label>
         <Slider

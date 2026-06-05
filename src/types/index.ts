@@ -1,6 +1,8 @@
 export type Material = "каркас" | "газобетон" | "кирпич" | "брус" | "клееный брус";
 export type Style = "скандинавский" | "минимализм" | "шале" | "барнхаус" | "хай-тек" | "классика";
 
+export type ProjectPurpose = "семья" | "дача" | "постоянное" | "загородная";
+
 export interface ProjectSpecs {
   area: number;
   floors: 1 | 2 | 3;
@@ -12,6 +14,8 @@ export interface ProjectSpecs {
   hasTerrace: boolean;
   hasGarage: boolean;
   hasSauna: boolean;
+  /** Кабинет / рабочая зона — optional, выводится из площади и планировки */
+  hasCabinet?: boolean;
   technology: string;
 }
 
@@ -57,6 +61,11 @@ export interface Project {
   seo: { title: string; description: string; keywords: string[] };
   featured: boolean;
   createdAt: string;
+  /** Короткое описание для карточки каталога */
+  shortDescription?: string;
+  /** Назначение: семья, дача, постоянное проживание */
+  purpose?: ProjectPurpose[];
+  tags?: string[];
 }
 
 export interface BlogPost {
@@ -130,7 +139,17 @@ export interface CatalogFilters {
   terrace?: boolean;
   garage?: boolean;
   sauna?: boolean;
-  sort?: "price-asc" | "price-desc" | "area-asc" | "area-desc" | "newest";
+  cabinet?: boolean;
+  purpose?: ProjectPurpose[];
+  sort?:
+    | "price-asc"
+    | "price-desc"
+    | "area-asc"
+    | "area-desc"
+    | "duration-asc"
+    | "duration-desc"
+    | "newest"
+    | "featured";
 }
 
 export interface QuizAnswer {

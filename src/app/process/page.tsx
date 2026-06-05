@@ -2,12 +2,15 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { Breadcrumbs } from "@/components/seo/breadcrumbs";
 import { Reveal } from "@/components/animations/reveal";
+import { LeadForm } from "@/components/forms/lead-form";
 import { buildProcessSteps } from "@/data/process";
+import { cta, pageMeta } from "@/data/copy";
+import { pageCopy } from "@/data/positioning";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Процесс строительства дома под ключ",
-  description: "7 этапов: от проектирования до сдачи. Сроки, фото, прозрачный контроль.",
+  title: pageMeta.process.title,
+  description: pageMeta.process.description,
   path: "/process",
 });
 
@@ -18,10 +21,8 @@ export default function ProcessPage() {
         <Breadcrumbs items={[{ label: "Главная", href: "/" }, { label: "Процесс" }]} />
         <Reveal>
           <p className="label-caps">Процесс</p>
-          <h1 className="heading-section mt-2">Как мы строим ваш дом</h1>
-          <p className="mt-6 max-w-2xl text-muted">
-            Каждый этап фиксируется в договоре, сопровождается актами и фотоотчётами.
-          </p>
+          <h1 className="heading-section mt-2">{pageCopy.process.h1}</h1>
+          <p className="mt-6 max-w-2xl text-muted">{pageCopy.process.intro}</p>
         </Reveal>
       </div>
 
@@ -46,6 +47,17 @@ export default function ProcessPage() {
           ))}
         </div>
       </div>
+
+      <section className="section-padding bg-muted-bg">
+        <div className="container-narrow max-w-lg px-5 md:px-10 lg:px-16">
+          <LeadForm
+            id="process-lead"
+            title={cta.buildConsultation}
+            subtitle="Обсудим этапы строительства и подготовим предварительный расчёт по вводным"
+            source="process"
+          />
+        </div>
+      </section>
     </div>
   );
 }

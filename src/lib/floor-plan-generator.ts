@@ -55,7 +55,7 @@ function layoutFloor(
   const rects: LayoutRect[] = [];
 
   let x0 = PAD;
-  let y0 = PAD;
+  const y0 = PAD;
   let innerW = 100 - PAD * 2;
   let innerH = 100 - PAD * 2;
 

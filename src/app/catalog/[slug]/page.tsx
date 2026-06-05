@@ -16,9 +16,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { ProjectCard } from "@/components/catalog/project-card";
 import { Button } from "@/components/ui/button";
-import { faqItems } from "@/data/faq";
 import { cta } from "@/data/copy";
+import { pageCopy } from "@/data/positioning";
+import { priceIncludesItems, projectFaqFor } from "@/lib/project-content";
+import { findSimilarProjects } from "@/lib/similar-projects";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -43,6 +46,10 @@ export default async function ProjectPage({ params }: Props) {
   const { slug } = await params;
   const project = await cms.getProjectBySlug(slug);
   if (!project) notFound();
+
+  const allProjects = await cms.getProjects();
+  const similar = findSimilarProjects(project, allProjects, 3);
+  const projectFaq = projectFaqFor(project);
 
   return (
     <article className="pt-28 pb-20">
@@ -83,6 +90,7 @@ export default async function ProjectPage({ params }: Props) {
             <p className="mt-2 text-sm text-muted">
               {project.specs.area} м² · {project.specs.buildTimeMonths} мес. · {project.specs.bedrooms} спален
             </p>
+            <p className="mt-1 text-xs text-muted">{pageCopy.project.priceNote}</p>
             <Button asChild className="mt-4" size="lg">
               <Link href="#project-lead">{cta.projectEstimateThis}</Link>
             </Button>
@@ -111,6 +119,27 @@ export default async function ProjectPage({ params }: Props) {
               <FloorPlanInteractive plans={project.floorPlans} />
             </div>
           </div>
+        </section>
+
+        <section className="mt-16">
+          <h2 className="font-display text-2xl">Что входит в стоимость</h2>
+          <p className="mt-3 max-w-2xl text-sm text-muted">
+            Состав работ зависит от комплектации. Ниже — типовой перечень для проекта «под ключ» в
+            Иркутске.
+          </p>
+          <ul className="mt-6 grid gap-2 sm:grid-cols-2">
+            {priceIncludesItems.map((item) => (
+              <li
+                key={item}
+                className="flex gap-2 rounded-sm border border-graphite/10 bg-muted-bg/50 px-4 py-3 text-sm"
+              >
+                <span className="text-wood" aria-hidden>
+                  —
+                </span>
+                {item}
+              </li>
+            ))}
+          </ul>
         </section>
 
         <section className="mt-16">
@@ -145,10 +174,21 @@ export default async function ProjectPage({ params }: Props) {
           </div>
         </section>
 
+        {similar.length > 0 && (
+          <section className="mt-16">
+            <h2 className="font-display text-2xl">Похожие проекты</h2>
+            <div className="mt-8 grid gap-8 md:grid-cols-3">
+              {similar.map((p) => (
+                <ProjectCard key={p.id} project={p} />
+              ))}
+            </div>
+          </section>
+        )}
+
         <section className="mt-16 max-w-3xl">
           <h2 className="font-display text-2xl">FAQ по проекту</h2>
           <Accordion type="single" collapsible className="mt-6">
-            {faqItems.slice(0, 3).map((item) => (
+            {projectFaq.map((item) => (
               <AccordionItem key={item.id} value={item.id}>
                 <AccordionTrigger>{item.question}</AccordionTrigger>
                 <AccordionContent>{item.answer}</AccordionContent>
@@ -160,7 +200,7 @@ export default async function ProjectPage({ params }: Props) {
         <section id="project-lead" className="mt-16 max-w-lg">
           <LeadForm
             title={cta.projectEstimateThis}
-            subtitle={`Смета по проекту «${project.name}» с разбивкой по этапам — в течение рабочего дня`}
+            subtitle={pageCopy.project.leadSubtitle}
             source={`project-${slug}`}
           />
         </section>

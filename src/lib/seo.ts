@@ -3,9 +3,17 @@ import { brand } from "@/data/brand";
 
 // Prefer explicit env var; fall back to production domain from brand config.
 // The brand.website value already ends with "/", so strip the trailing slash.
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  brand.website.replace(/\/$/, "");
+function resolveSiteUrl(): string {
+  const raw = (process.env.NEXT_PUBLIC_SITE_URL ?? brand.website).trim().replace(/\/$/, "");
+  try {
+    new URL(raw);
+    return raw;
+  } catch {
+    return "https://voytkevich-artel.vercel.app";
+  }
+}
+
+const SITE_URL = resolveSiteUrl();
 const SITE_NAME = brand.name;
 const SITE_NAME_SHORT = brand.nameShort;
 

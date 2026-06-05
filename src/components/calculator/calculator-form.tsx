@@ -24,7 +24,7 @@ export function CalculatorForm() {
     utilities: true,
     plotPrep: false,
   });
-  const [showLead, setShowLead] = useState(false);
+  const [showLead, setShowLead] = useState(true);
 
   const result = useMemo(() => calculateHouseCost(input), [input]);
 

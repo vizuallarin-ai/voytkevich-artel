@@ -1,5 +1,6 @@
 import type { Material, Project, Style } from "@/types";
-import { projectDescriptionDefault } from "@/data/copy";
+import { buildProjectDescription } from "@/lib/project-content";
+import { enrichProject } from "@/lib/project-meta";
 import scraped from "@/data/megaartel-scraped.json";
 
 type Scraped = {
@@ -79,12 +80,12 @@ function toProject(item: Scraped, index: number): Project {
   const hasTerrace =
     item.name.toLowerCase().includes("террас") || item.slug.includes("barnhaus");
 
-  return {
+  const project: Project = {
     id: String(index + 1),
     slug: item.slug,
     name: shortName(item.name),
     tagline: `${area} м² · ${material} · ${floors} ${floors === 1 ? "этаж" : "этажа"}`,
-    description: projectDescriptionDefault,
+    description: "",
     price,
     pricePerSqm: Math.round(price / area),
     specs: {
@@ -133,6 +134,8 @@ function toProject(item: Scraped, index: number): Project {
     featured: index < 6,
     createdAt: "2025-01-01",
   };
+
+  return enrichProject({ ...project, description: buildProjectDescription(project) });
 }
 
 const items = (scraped as Scraped[]).filter((p) => p.slug !== "feed" && p.images?.length > 0);

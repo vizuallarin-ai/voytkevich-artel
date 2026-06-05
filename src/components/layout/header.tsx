@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, Phone, X } from "lucide-react";
+import { brand } from "@/data/brand";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { MagneticButton } from "@/components/animations/magnetic-button";
-import { brand } from "@/data/brand";
 import { cta } from "@/data/copy";
 
 const nav = [
@@ -17,6 +17,7 @@ const nav = [
   { href: "/process", label: "Процесс" },
   { href: "/about", label: "О компании" },
   { href: "/blog", label: "Блог" },
+  { href: "/faq", label: "FAQ" },
 ];
 
 export function Header() {
@@ -69,6 +70,13 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
+          <a
+            href={`tel:${brand.phone}`}
+            className="hidden items-center gap-1.5 text-sm text-muted transition hover:text-foreground xl:flex"
+          >
+            <Phone className="h-4 w-4" aria-hidden />
+            {brand.phoneDisplay}
+          </a>
           <MagneticButton>
             <Button asChild variant="outline" size="sm">
               <Link href="/planirovka">Планировщик</Link>

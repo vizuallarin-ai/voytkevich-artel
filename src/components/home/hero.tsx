@@ -3,12 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MagneticButton } from "@/components/animations/magnetic-button";
 import { HeroCalculator } from "@/components/home/hero-calculator";
-import { StatDisplay } from "@/components/animations/stat-display";
-import { cta, heroCopy, microTrust } from "@/data/copy";
+import { brand } from "@/data/brand";
+import { cta, heroCopy } from "@/data/copy";
+import { heroTrustFacts } from "@/data/home";
 import { heroHome } from "@/data/images";
 
 export function Hero() {
@@ -40,14 +41,12 @@ export function Hero() {
               {heroCopy.label}
             </motion.p>
             <motion.h1
-              className="heading-display mt-4 text-balance"
+              className="heading-display mt-4 max-w-3xl text-balance"
               initial={reduced ? false : { opacity: 0, y: 30, filter: "blur(8px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               transition={{ duration: 0.9, delay: 0.1 }}
             >
-              {heroCopy.headlineLine1}
-              <br />
-              <span className="text-wood">{heroCopy.headlineAccent}</span>
+              {heroCopy.headline}
             </motion.h1>
             <motion.p
               className="mt-6 max-w-xl text-lg text-muted"
@@ -66,7 +65,7 @@ export function Hero() {
             >
               <MagneticButton>
                 <Button asChild size="lg">
-                  <Link href="/#lead">{cta.preliminaryEstimate}</Link>
+                  <Link href="/calculator">{cta.calculateCost}</Link>
                 </Button>
               </MagneticButton>
               <MagneticButton>
@@ -76,29 +75,35 @@ export function Hero() {
               </MagneticButton>
             </motion.div>
 
-            <motion.p
-              className="mt-6 text-sm text-muted"
+            <motion.ul
+              className="mt-8 flex flex-wrap gap-x-6 gap-y-3"
               initial={reduced ? false : { opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.55 }}
+              aria-label="Ключевые факты"
             >
-              {microTrust}
-            </motion.p>
+              {heroTrustFacts.map((f) => (
+                <li key={f.label} className="min-w-[6.5rem]">
+                  <p className="font-display text-xl leading-none tabular-nums md:text-2xl">{f.value}</p>
+                  <p className="mt-1 text-xs leading-snug text-muted">{f.label}</p>
+                </li>
+              ))}
+            </motion.ul>
 
-            <div className="mt-8 flex flex-wrap gap-x-10 gap-y-4">
-              <div className="min-w-[7rem]">
-                <p className="font-display text-3xl leading-none tabular-nums">
-                  <StatDisplay value={127} />
-                </p>
-                <p className="mt-1.5 text-xs leading-snug text-muted">домов сдано</p>
-              </div>
-              <div className="min-w-[7rem]">
-                <p className="font-display text-3xl leading-none tabular-nums">
-                  <StatDisplay value={98} suffix="%" />
-                </p>
-                <p className="mt-1.5 text-xs leading-snug text-muted">в срок</p>
-              </div>
-            </div>
+            <motion.div
+              className="mt-6"
+              initial={reduced ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
+            >
+              <a
+                href={`tel:${brand.phone}`}
+                className="inline-flex items-center gap-2 text-sm text-muted transition hover:text-foreground"
+              >
+                <Phone className="h-4 w-4" aria-hidden />
+                {brand.phoneDisplay}
+              </a>
+            </motion.div>
           </div>
 
           <motion.div
@@ -111,9 +116,9 @@ export function Hero() {
         </div>
 
         <a
-          href="#catalog-preview"
+          href="#scenarios"
           className="mt-12 flex items-center gap-2 text-sm text-muted transition hover:text-foreground"
-          aria-label="Прокрутить к каталогу"
+          aria-label="Прокрутить к выбору сценария"
         >
           <ArrowDown className="h-4 w-4 animate-bounce" />
           Листайте вниз

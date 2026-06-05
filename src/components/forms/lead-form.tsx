@@ -1,12 +1,15 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useFormAutosave } from "@/hooks/use-form-autosave";
 import { trackEvent } from "@/lib/analytics";
-import { cta, privacyConsent } from "@/data/copy";
+import { brand } from "@/data/brand";
+import { cta, privacyConsent, privacyLinkText } from "@/data/copy";
+import { pageCopy } from "@/data/positioning";
 
 type FormData = { name: string; phone: string; area: string; comment: string };
 
@@ -15,7 +18,7 @@ const empty: FormData = { name: "", phone: "", area: "", comment: "" };
 export function LeadForm({
   id = "lead",
   title = cta.preliminaryEstimate,
-  subtitle = "Перезвоним в течение рабочего дня с ориентировочной сметой и вопросами по участку",
+  subtitle = pageCopy.forms.defaultSubtitle,
   prefilledArea,
   prefilledComment,
   source,
@@ -67,13 +70,25 @@ export function LeadForm({
         body: JSON.stringify({ ...data, source: source ?? id }),
       });
 
-      if (!res.ok) throw new Error("server");
+      const payload = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        message?: string;
+      };
+
+      if (!res.ok) {
+        throw new Error(payload.message ?? "server");
+      }
 
       setSent(true);
       localStorage.removeItem(`lead-${id}`);
       trackEvent("lead_submit", { source: source ?? id });
-    } catch {
-      setError("Не удалось отправить заявку. Позвоните нам напрямую или попробуйте снова.");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "";
+      setError(
+        msg && msg !== "server"
+          ? msg
+          : `Не удалось отправить заявку. Позвоните ${brand.phoneDisplay} или попробуйте снова.`,
+      );
     } finally {
       setLoading(false);
     }
@@ -82,8 +97,8 @@ export function LeadForm({
   if (sent) {
     return (
       <div className="glass rounded-sm p-8 text-center" id={id}>
-        <p className="heading-section text-2xl">Заявка отправлена</p>
-        <p className="mt-2 text-muted">Менеджер свяжется с вами в ближайшее время.</p>
+        <p className="heading-section text-2xl">{pageCopy.forms.successTitle}</p>
+        <p className="mt-2 text-muted">{pageCopy.forms.successMessage}</p>
       </div>
     );
   }
@@ -174,7 +189,12 @@ export function LeadForm({
       <Button type="submit" className="mt-6 w-full" size="lg" disabled={loading}>
         {loading ? "Отправляем…" : step < 2 ? "Далее" : cta.preliminaryEstimate}
       </Button>
-      <p className="mt-3 text-center text-xs text-muted">{privacyConsent}</p>
+      <p className="mt-3 text-center text-xs text-muted">
+        {privacyConsent}{" "}
+        <Link href="/privacy" className="underline underline-offset-2 hover:text-foreground">
+          {privacyLinkText}
+        </Link>
+      </p>
     </form>
   );
 }

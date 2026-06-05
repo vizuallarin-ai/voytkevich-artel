@@ -1,4 +1,5 @@
 import { brand } from "@/data/brand";
+import { aggregateRating } from "@/data/testimonials";
 import { SITE_URL } from "@/lib/seo";
 
 export function JsonLd({ data }: { data: Record<string, unknown> | Record<string, unknown>[] }) {
@@ -27,6 +28,26 @@ export function organizationSchema() {
     },
     areaServed: "Иркутская область",
     priceRange: "$$$$",
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: aggregateRating.value,
+      reviewCount: aggregateRating.count,
+      bestRating: aggregateRating.best,
+      worstRating: aggregateRating.worst,
+    },
+  };
+}
+
+export function itemListSchema(items: { name: string; url: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: items.map((item, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: item.name,
+      url: item.url,
+    })),
   };
 }
 
