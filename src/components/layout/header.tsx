@@ -17,6 +17,7 @@ const nav = [
   { href: "/process", label: "Процесс" },
   { href: "/about", label: "О компании" },
   { href: "/blog", label: "Блог" },
+  { href: "/cases", label: "Кейсы" },
   { href: "/faq", label: "FAQ" },
 ];
 

@@ -20,6 +20,7 @@ import { BlogInlineCta } from "./blog-inline-cta";
 import { BlogFAQ } from "./blog-faq";
 import { BlogRelatedPosts, BlogRelatedServices } from "./blog-related";
 import { BlogRelatedProjects } from "./blog-related-projects";
+import { BlogRelatedCases } from "@/components/cases/blog-related-cases";
 import { BlogFinalLeadForm, BlogLeadMagnetBlock, BlogUpdateNotice } from "./blog-lead-blocks";
 import { BlogTableOfContents } from "./blog-table-of-contents";
 
@@ -140,6 +141,7 @@ export function BlogPostTemplate({ post, allPosts, projects }: Props) {
         {magnet ? <BlogLeadMagnetBlock post={post} magnet={magnet} /> : null}
 
         <BlogRelatedProjects projects={relatedProjects} />
+        <BlogRelatedCases post={post} />
         <BlogRelatedServices links={serviceLinks} />
 
         {post.faqs?.length ? <BlogFAQ items={post.faqs} /> : null}

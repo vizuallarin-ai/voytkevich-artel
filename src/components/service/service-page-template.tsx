@@ -6,6 +6,7 @@ import { defaultIncludesNote } from "@/data/service-pages";
 import { ServiceFAQ } from "./service-faq";
 import { ServiceLeadSection } from "./service-lead-section";
 import { ServiceRelatedProjects } from "./service-related-projects";
+import { ServiceRelatedCases } from "@/components/cases/service-related-cases";
 import {
   ServiceAudience,
   ServiceCalculatorCTA,
@@ -63,6 +64,10 @@ export function ServicePageTemplate({
 
       <Reveal delay={0.05}>
         <ServiceRelatedProjects page={page} projects={projects} />
+      </Reveal>
+
+      <Reveal delay={0.05}>
+        <ServiceRelatedCases serviceSlug={page.slug} />
       </Reveal>
 
       <Reveal delay={0.05}>

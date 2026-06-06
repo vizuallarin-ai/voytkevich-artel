@@ -5,6 +5,9 @@ import { blogCategories } from "@/data/blog-categories";
 import { cms } from "@/lib/cms/local";
 import { getPublishedPosts } from "@/lib/blog";
 import { filterProjects } from "@/lib/filters";
+import { allCases, publishedCases } from "@/data/cases";
+import { caseCategories } from "@/data/case-categories";
+import { getCasesForCategory, isCaseIndexable } from "@/lib/cases";
 import { SITE_URL } from "@/lib/seo";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -19,6 +22,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/process",
     "/calculator",
     "/blog",
+    "/cases",
     "/faq",
     "/privacy",
   ].map((path) => ({
@@ -67,5 +71,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.75,
   }));
 
-  return [...staticRoutes, ...serviceRoutes, ...categoryRoutes, ...projectRoutes, ...blogCategoryRoutes, ...blogRoutes];
+  const caseRoutes = publishedCases.filter(isCaseIndexable).map((c) => ({
+    url: `${SITE_URL}/cases/${c.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.72,
+  }));
+
+  const caseCategoryRoutes = caseCategories
+    .filter((c) => getCasesForCategory(allCases, c).length > 0)
+    .map((c) => ({
+      url: `${SITE_URL}/cases/category/${c.slug}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+    }));
+
+  return [
+    ...staticRoutes,
+    ...serviceRoutes,
+    ...categoryRoutes,
+    ...projectRoutes,
+    ...blogCategoryRoutes,
+    ...blogRoutes,
+    ...caseRoutes,
+    ...caseCategoryRoutes,
+  ];
 }

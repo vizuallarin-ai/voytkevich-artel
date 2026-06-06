@@ -11,6 +11,7 @@ const links = {
   company: [
     { href: "/about", label: "О компании" },
     { href: "/process", label: "Процесс" },
+    { href: "/cases", label: "Кейсы" },
     { href: "/calculator", label: "Калькулятор" },
     { href: "/planirovka", label: "Схема планировки" },
   ],

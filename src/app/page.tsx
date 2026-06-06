@@ -219,9 +219,17 @@ export default async function HomePage() {
               </article>
             ))}
           </div>
-          <Button asChild className="mt-10" variant="outline">
-            <Link href="/#lead">Хочу похожий дом</Link>
-          </Button>
+          <div className="mt-10 flex flex-wrap gap-4">
+            <Button asChild variant="outline">
+              <Link href="/cases">Раздел кейсов</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/catalog">Смотреть проекты</Link>
+            </Button>
+            <Button asChild>
+              <Link href="/#lead">Хочу похожий дом</Link>
+            </Button>
+          </div>
         </div>
       </section>
 
