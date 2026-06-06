@@ -15,6 +15,7 @@ import { ProjectAdaptation } from "@/components/project/project-adaptation";
 import { ProjectBuildSteps } from "@/components/project/project-build-steps";
 import { ProjectRelated } from "@/components/project/project-related";
 import { ProjectRelatedCases } from "@/components/cases/project-related-cases";
+import { ProjectRelatedBuiltObjects } from "@/components/objects-map/related-built-objects";
 import { ProjectSeoBlock } from "@/components/project/project-seo-block";
 import { ProjectLeadSection } from "@/components/project/project-lead-section";
 import { ProjectCategoriesNav } from "@/components/project/project-categories-nav";
@@ -133,6 +134,7 @@ export default async function ProjectPage({ params }: Props) {
 
             <ProjectRelated similar={similar} />
             <ProjectRelatedCases projectSlug={slug} />
+            <ProjectRelatedBuiltObjects projectSlug={slug} />
 
             <section aria-labelledby="project-faq-title">
               <h2 id="project-faq-title" className="font-display text-2xl">

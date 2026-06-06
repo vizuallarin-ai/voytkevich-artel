@@ -4,6 +4,7 @@ import { Breadcrumbs } from "@/components/seo/breadcrumbs";
 import { JsonLd, faqSchema } from "@/components/seo/json-ld";
 import { pageMetadata } from "@/lib/seo";
 import { allCases, publishedCases } from "@/data/cases";
+import { publishedBuiltObjects } from "@/data/built-objects";
 import { getFeaturedCases, getPublishedCases } from "@/lib/cases";
 import {
   CasesHomeHero,
@@ -18,6 +19,7 @@ import { LeadForm } from "@/components/forms/lead-form";
 import { Button } from "@/components/ui/button";
 
 const hasPublished = publishedCases.length > 0;
+const hasMapObjects = publishedBuiltObjects.length > 0;
 
 export const metadata: Metadata = pageMetadata({
   title: hasPublished
@@ -57,6 +59,18 @@ export default function CasesPage() {
         <CasesListClient cases={published} />
 
         <CasesHowToRead />
+
+        {hasMapObjects ? (
+          <div className="mt-12 rounded-sm border border-graphite/10 p-6 text-center">
+            <p className="font-display text-lg">География построенных объектов</p>
+            <p className="mx-auto mt-2 max-w-md text-sm text-muted">
+              Посмотрите районы и объекты на карте — без точных адресов частных домов.
+            </p>
+            <Button asChild variant="outline" className="mt-4">
+              <Link href="/objects-map">Смотреть карту объектов</Link>
+            </Button>
+          </div>
+        ) : null}
 
         <div className="mt-16 rounded-sm border border-wood/30 bg-wood/5 p-6 text-center md:p-8">
           <p className="font-display text-xl">Хотите похожий дом?</p>

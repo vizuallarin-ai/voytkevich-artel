@@ -8,6 +8,9 @@ import { filterProjects } from "@/lib/filters";
 import { allCases, publishedCases } from "@/data/cases";
 import { caseCategories } from "@/data/case-categories";
 import { getCasesForCategory, isCaseIndexable } from "@/lib/cases";
+import { allBuiltObjects } from "@/data/built-objects";
+import { builtObjectAreas } from "@/data/built-object-areas";
+import { getBuiltObjectsForArea } from "@/lib/built-objects";
 import { SITE_URL } from "@/lib/seo";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -23,6 +26,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/calculator",
     "/blog",
     "/cases",
+    "/objects-map",
     "/faq",
     "/privacy",
   ].map((path) => ({
@@ -87,6 +91,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     }));
 
+  const objectsMapAreaRoutes = builtObjectAreas
+    .filter((area) => {
+      if (!area.noindexIfEmpty) return true;
+      return getBuiltObjectsForArea(allBuiltObjects, area).length > 0;
+    })
+    .filter((area) => getBuiltObjectsForArea(allBuiltObjects, area).length > 0)
+    .map((area) => ({
+      url: `${SITE_URL}/objects-map/${area.slug}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.68,
+    }));
+
   return [
     ...staticRoutes,
     ...serviceRoutes,
@@ -96,5 +113,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...blogRoutes,
     ...caseRoutes,
     ...caseCategoryRoutes,
+    ...objectsMapAreaRoutes,
   ];
 }

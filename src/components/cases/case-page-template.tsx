@@ -16,6 +16,8 @@ import {
   isCasePublic,
   caseStatusLabel,
 } from "@/lib/cases";
+import { getBuiltObjectByCaseSlug } from "@/lib/built-objects";
+import { allBuiltObjects } from "@/data/built-objects";
 import { filterProjects } from "@/lib/filters";
 import { CaseFAQ, defaultCaseFaqs } from "./case-faq";
 import { CaseRelatedLinks, CaseRelatedProjects, RelatedCasesSection } from "./case-related";
@@ -54,6 +56,7 @@ export function CasePageTemplate({ item, allCases, projects }: Props) {
   const relatedCases = getRelatedCases(allCases, item);
   const blogPosts = getRelatedBlogPostsForCase(item);
   const blogLinks = blogPosts.map((p) => ({ href: `/blog/${p.slug}`, label: p.title }));
+  const mapObject = getBuiltObjectByCaseSlug(allBuiltObjects, item.slug);
 
   const schemas: Record<string, unknown>[] = [
     articleSchema({
@@ -116,13 +119,18 @@ export function CasePageTemplate({ item, allCases, projects }: Props) {
           ))}
         </div>
 
-        <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
           <Button asChild>
             <Link href="#case-lead">{item.leadCTA?.label ?? "Хочу похожий дом"}</Link>
           </Button>
           <Button asChild variant="outline">
             <Link href={`/calculator?source=case&case=${item.slug}`}>Рассчитать стоимость</Link>
           </Button>
+          {mapObject ? (
+            <Button asChild variant="outline">
+              <Link href="/objects-map">Посмотреть на карте</Link>
+            </Button>
+          ) : null}
         </div>
         <p className="mt-3 text-xs text-muted">
           Каждый участок и проект индивидуальны. Стоимость и сроки похожего дома уточняются после

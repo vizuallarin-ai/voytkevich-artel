@@ -17,6 +17,8 @@ const links = {
   ],
   seo: [
     { href: "/blog", label: "Блог" },
+    { href: "/cases", label: "Кейсы" },
+    { href: "/objects-map", label: "Карта объектов" },
     { href: "/faq", label: "FAQ" },
     { href: "/blog/stoimost-stroitelstva-2026", label: "Цены 2026" },
     { href: "/privacy", label: "Конфиденциальность" },

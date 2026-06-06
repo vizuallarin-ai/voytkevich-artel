@@ -7,6 +7,7 @@ import { ServiceFAQ } from "./service-faq";
 import { ServiceLeadSection } from "./service-lead-section";
 import { ServiceRelatedProjects } from "./service-related-projects";
 import { ServiceRelatedCases } from "@/components/cases/service-related-cases";
+import { ServiceRelatedBuiltObjects } from "@/components/objects-map/related-built-objects";
 import {
   ServiceAudience,
   ServiceCalculatorCTA,
@@ -68,6 +69,10 @@ export function ServicePageTemplate({
 
       <Reveal delay={0.05}>
         <ServiceRelatedCases serviceSlug={page.slug} />
+      </Reveal>
+
+      <Reveal delay={0.05}>
+        <ServiceRelatedBuiltObjects serviceSlug={page.slug} />
       </Reveal>
 
       <Reveal delay={0.05}>
