@@ -12,6 +12,7 @@ import {
 } from "@/lib/built-objects";
 import { BuiltObjectsMapClient } from "@/components/objects-map/built-objects-map-client";
 import { ObjectsMapEmptyState } from "@/components/objects-map/objects-map-empty-state";
+import { ObjectsMapViewTracker } from "@/components/objects-map/objects-map-view-tracker";
 import { LeadForm } from "@/components/forms/lead-form";
 import { buildBuiltObjectLeadComment } from "@/lib/built-objects";
 import { Button } from "@/components/ui/button";
@@ -46,6 +47,7 @@ export default async function ObjectsMapAreaPage({ params }: Props) {
 
   return (
     <div className="pt-28 pb-20">
+      <ObjectsMapViewTracker path={`/objects-map/${areaSlug}`} />
       <JsonLd
         data={breadcrumbSchema([
           { name: "Главная", url: SITE_URL },

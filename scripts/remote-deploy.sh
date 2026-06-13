@@ -56,11 +56,16 @@ for i in $(seq 1 30); do
 done
 
 echo "==> nginx"
-cp deploy/nginx.stroistroy.ru.conf /etc/nginx/sites-available/stroistroy.ru
-ln -sf /etc/nginx/sites-available/stroistroy.ru /etc/nginx/sites-enabled/
-rm -f /etc/nginx/sites-enabled/default
-nginx -t
-systemctl reload nginx
+if certbot certificates 2>/dev/null | grep -q "$DOMAIN"; then
+  echo "SSL cert exists — keeping nginx config"
+  nginx -t && systemctl reload nginx
+else
+  cp deploy/nginx.stroistroy.ru.conf /etc/nginx/sites-available/stroistroy.ru
+  ln -sf /etc/nginx/sites-available/stroistroy.ru /etc/nginx/sites-enabled/
+  rm -f /etc/nginx/sites-enabled/default
+  nginx -t
+  systemctl reload nginx
+fi
 
 echo "==> SSL"
 if ! certbot certificates 2>/dev/null | grep -q "$DOMAIN"; then

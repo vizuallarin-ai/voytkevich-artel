@@ -27,11 +27,17 @@ done
 curl -sf http://127.0.0.1:3000/api/health | head -c 500 || echo "WARN: health check failed"
 
 echo "==> nginx"
-cp deploy/nginx.stroistroy.ru.conf /etc/nginx/sites-available/stroistroy.ru
-ln -sf /etc/nginx/sites-available/stroistroy.ru /etc/nginx/sites-enabled/
-rm -f /etc/nginx/sites-enabled/default
-nginx -t
-systemctl reload nginx
+if certbot certificates 2>/dev/null | grep -q "$DOMAIN"; then
+  echo "SSL cert exists — keeping nginx config (certbot-managed)"
+  nginx -t
+  systemctl reload nginx
+else
+  cp deploy/nginx.stroistroy.ru.conf /etc/nginx/sites-available/stroistroy.ru
+  ln -sf /etc/nginx/sites-available/stroistroy.ru /etc/nginx/sites-enabled/
+  rm -f /etc/nginx/sites-enabled/default
+  nginx -t
+  systemctl reload nginx
+fi
 
 echo "==> SSL (certbot)"
 if certbot certificates 2>/dev/null | grep -q "$DOMAIN"; then
@@ -43,8 +49,12 @@ else
 fi
 
 echo "==> backup cron"
+chmod +x scripts/backup-stroistroy-data.sh scripts/verify-production.sh scripts/setup-github-deploy-key.sh 2>/dev/null || true
 CRON_LINE="0 3 * * * APP_DIR=$APP_DIR $APP_DIR/scripts/backup-stroistroy-data.sh >> /var/log/stroistroy-backup.log 2>&1"
 (crontab -l 2>/dev/null | grep -v backup-stroistroy-data; echo "$CRON_LINE") | crontab -
+
+echo "==> smoke test"
+bash scripts/verify-production.sh "https://$DOMAIN" || echo "WARN: some checks failed"
 
 echo ""
 echo "DONE"

@@ -1,9 +1,9 @@
 # Этап 18 — Production launch на VPS (stroistroy.ru)
 
-**Статус:** следующий этап после 17  
+**Статус:** ✅ закрыт (код + prod)  
 **Домен:** https://stroistroy.ru  
 **Инфра:** VPS + Docker + nginx + Let's Encrypt  
-**Примечание:** прежний «Этап 18 CRO/A/B» перенесён в backlog growth — сейчас приоритет запуск production.
+**Примечание:** growth/CRO — отдельный backlog (см. ниже).
 
 ---
 
@@ -19,11 +19,11 @@
 |------|--------|--------|
 | **1. VPS + Docker** | Docker, compose, volume `.data`, nginx, SSL | ✅ в репо + скрипты |
 | **2. Домен** | stroistroy.ru → A-record на VPS, www → apex | ✅ Beget |
-| **3. Env production** | `.env`, token, SMTP/Telegram | ⏳ SMTP/Metrika — ключи владельца |
-| **4. Smoke test** | `/api/health`, форма → CRM | ✅ health; форма после деплоя |
-| **5. Metrika / GA** | `NEXT_PUBLIC_YM_ID` | ⏳ нужен ID счётчика |
+| **3. Env production** | `.env`, token, SMTP/Telegram | ⏳ ключи владельца (не блокирует сайт) |
+| **4. Smoke test** | `/api/health`, `verify-production.sh` | ✅ |
+| **5. Metrika / GA** | `NEXT_PUBLIC_YM_ID` | ⏳ ID счётчика |
 | **6. Контент** | Published кейс, verified объект | контент владельца |
-| **7. Мониторинг** | Uptime, бэкап `.data` | ✅ `scripts/backup-stroistroy-data.sh` + cron |
+| **7. Мониторинг** | Health, бэкап `.data` | ✅ |
 
 ---
 
@@ -56,11 +56,12 @@
 
 - A/B тесты CTA и форм
 - Feature flags
-- CSV export analytics
-- CRM sidebar admin UI (без шапки сайта)
-- `/api/health` для мониторинга
-- `scripts/vps-update.sh`, `backup-stroistroy-data.sh`, `rotate-crm-token.sh`
-- Страницы с трафиком и низкой конверсией
+- CSV export analytics ✅
+- CRM sidebar admin UI ✅
+- `/api/health` (storage, auth, notifications, metrika flags) ✅
+- `scripts/vps-update.sh` (не ломает SSL при обновлении) ✅
+- `scripts/verify-production.sh`, `setup-github-deploy-key.sh` ✅
+- Typed page views: catalog, blog, service, case, project ✅
 
 ---
 
