@@ -1,9 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
 import { SmoothScrollProvider } from "@/components/providers/smooth-scroll";
-import { StickyCta } from "@/components/widgets/sticky-cta";
-import { MessengerWidget } from "@/components/widgets/messenger";
+import { SiteChrome } from "@/components/layout/site-chrome";
 import { JsonLd, organizationSchema } from "@/components/seo/json-ld";
 import { YaMetrika } from "@/components/analytics/ya-metrika";
 import { AttributionInit } from "@/components/analytics/attribution-init";
@@ -30,11 +27,7 @@ export default function RootLayout({
         <PageViewTracker />
         <JsonLd data={organizationSchema()} />
         <SmoothScrollProvider>
-          <Header />
-          <main id="main-content">{children}</main>
-          <Footer />
-          <StickyCta />
-          <MessengerWidget />
+          <SiteChrome>{children}</SiteChrome>
         </SmoothScrollProvider>
       </body>
     </html>

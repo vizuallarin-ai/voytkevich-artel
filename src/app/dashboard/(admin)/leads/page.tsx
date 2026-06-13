@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { LeadsListClient } from "@/components/dashboard/leads/leads-list-client";
 import { filterByStatusGroup } from "@/lib/leads/lead-filters";
 import { fetchLeads } from "@/lib/leads/lead-service";
@@ -37,10 +36,8 @@ export default async function LeadsPage({ searchParams }: Props) {
   }
 
   return (
-    <DashboardShell>
-      <Suspense fallback={<p className="text-muted">Загрузка…</p>}>
-        <LeadsListClient initial={result} />
-      </Suspense>
-    </DashboardShell>
+    <Suspense fallback={<p className="text-muted">Загрузка…</p>}>
+      <LeadsListClient initial={result} />
+    </Suspense>
   );
 }

@@ -8,6 +8,7 @@ function isProtectedApi(pathname: string, method: string): boolean {
   if (pathname === "/api/leads" && method === "GET") return true;
   if (pathname.startsWith("/api/leads/") && pathname !== "/api/leads") return true;
   if (pathname === "/api/dashboard/export") return true;
+  if (pathname === "/api/dashboard/analytics-export") return true;
   if (pathname === "/api/analytics/report" && method === "GET") return true;
   return false;
 }

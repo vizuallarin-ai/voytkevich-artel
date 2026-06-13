@@ -45,6 +45,12 @@ function AnalyticsDashboardInner({ initial }: { initial: AnalyticsReport }) {
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
+          <a
+            href={`/api/dashboard/analytics-export?range=${range}`}
+            className="rounded-sm border border-graphite/15 px-3 py-1.5 text-sm transition hover:bg-sand"
+          >
+            Экспорт CSV
+          </a>
           {(["7d", "30d", "90d", "all"] as DateRangeKey[]).map((r) => (
             <button
               key={r}

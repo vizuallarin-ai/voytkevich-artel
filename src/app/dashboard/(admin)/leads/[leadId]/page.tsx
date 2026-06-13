@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { LeadDetailClient } from "@/components/dashboard/leads/lead-detail-client";
 import { fetchLead } from "@/lib/leads/lead-service";
 
@@ -16,9 +15,5 @@ export default async function LeadDetailPage({ params }: Props) {
   const lead = await fetchLead(leadId);
   if (!lead) notFound();
 
-  return (
-    <DashboardShell>
-      <LeadDetailClient initial={lead} />
-    </DashboardShell>
-  );
+  return <LeadDetailClient initial={lead} />;
 }
