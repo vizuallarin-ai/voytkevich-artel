@@ -5,6 +5,7 @@ import { Hero } from "@/components/home/hero";
 import { ScenarioCards } from "@/components/home/scenario-cards";
 import { CalculatorPromo } from "@/components/home/calculator-promo";
 import { LeadForm } from "@/components/forms/lead-form";
+import { LeadMagnetsBlock } from "@/components/lead-magnets/lead-magnets-block";
 import { ProjectCard } from "@/components/catalog/project-card";
 import { Reveal, Stagger, StaggerItem } from "@/components/animations/reveal";
 import { StatDisplay } from "@/components/animations/stat-display";
@@ -357,6 +358,22 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* 12b. Лид-магниты — промежуточные шаги */}
+      <section className="section-padding" aria-labelledby="lead-magnets-home">
+        <div className="container-narrow">
+          <LeadMagnetsBlock
+            pageType="home"
+            magnetIds={[
+              "mistakes-checklist",
+              "cost-review",
+              "budget-project-selection",
+              "land-checklist",
+            ]}
+            maxItems={4}
+          />
+        </div>
+      </section>
+
       {/* 13. FAQ */}
       <section className="section-padding bg-muted-bg" aria-labelledby="faq-title">
         <div className="container-narrow max-w-3xl">
@@ -396,7 +413,15 @@ export default async function HomePage() {
           <LeadForm
             title={cta.preliminaryEstimate}
             subtitle="Перезвоним в течение рабочего дня с ориентировочной сметой"
-            source="home-lead"
+            leadConfig={{
+              sourceType: "home",
+              formId: "home-lead",
+              formName: "Главная форма заявки",
+              requestType: "callback",
+              requestTitle: cta.preliminaryEstimate,
+              selectedCTA: cta.preliminaryEstimate,
+              conversionGoal: "callback_request",
+            }}
           />
         </div>
       </section>

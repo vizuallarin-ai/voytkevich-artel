@@ -9,7 +9,7 @@ function resolveSiteUrl(): string {
     new URL(raw);
     return raw;
   } catch {
-    return "https://voytkevich-artel.vercel.app";
+    return "https://stroistroy.ru";
   }
 }
 

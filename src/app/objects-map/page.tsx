@@ -20,6 +20,7 @@ import { BuiltObjectsStatsBlock } from "@/components/objects-map/built-objects-s
 import { ObjectsMapFAQ } from "@/components/objects-map/objects-map-faq";
 import { ObjectsMapViewTracker } from "@/components/objects-map/objects-map-view-tracker";
 import { LeadForm } from "@/components/forms/lead-form";
+import { LeadMagnetsBlock } from "@/components/lead-magnets/lead-magnets-block";
 import { Button } from "@/components/ui/button";
 import { buildBuiltObjectLeadComment } from "@/lib/built-objects";
 
@@ -81,6 +82,13 @@ export default function ObjectsMapPage() {
 
         <ObjectsMapSeoText hasPublished={hasPublished} />
         <ObjectsMapFAQ items={objectsMapFaqs} />
+
+        <LeadMagnetsBlock
+          pageType="objects-map"
+          magnetIds={["land-checklist", "budget-project-selection", "cost-review"]}
+          maxItems={3}
+          mode="section"
+        />
 
         <div id="objects-map-lead" className="mt-16 border-t border-graphite/10 pt-16">
           <LeadForm

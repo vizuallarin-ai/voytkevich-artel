@@ -6,6 +6,8 @@ import { StickyCta } from "@/components/widgets/sticky-cta";
 import { MessengerWidget } from "@/components/widgets/messenger";
 import { JsonLd, organizationSchema } from "@/components/seo/json-ld";
 import { YaMetrika } from "@/components/analytics/ya-metrika";
+import { AttributionInit } from "@/components/analytics/attribution-init";
+import { PageViewTracker } from "@/components/analytics/page-view-tracker";
 import { defaultMetadata } from "@/lib/seo";
 import "./globals.css";
 
@@ -24,6 +26,8 @@ export default function RootLayout({
     <html lang="ru">
       <body className="min-h-screen font-sans antialiased">
         <YaMetrika />
+        <AttributionInit />
+        <PageViewTracker />
         <JsonLd data={organizationSchema()} />
         <SmoothScrollProvider>
           <Header />

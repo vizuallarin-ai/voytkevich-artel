@@ -1,19 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { HoneypotField } from "@/components/forms/honeypot-field";
 import { useFormAutosave } from "@/hooks/use-form-autosave";
-import { trackEvent } from "@/lib/analytics";
-import { brand } from "@/data/brand";
+import { useLeadForm } from "@/hooks/use-lead-form";
+import type { LeadFormConfig } from "@/lib/leads/lead-source";
+import { inferLeadConfigFromLegacy } from "@/lib/leads/lead-source";
 import { cta, privacyConsent, privacyLinkText } from "@/data/copy";
 import { pageCopy } from "@/data/positioning";
-
-type FormData = { name: string; phone: string; area: string; comment: string };
-
-const empty: FormData = { name: "", phone: "", area: "", comment: "" };
 
 export function LeadForm({
   id = "lead",
@@ -24,85 +22,76 @@ export function LeadForm({
   source,
   submitLabel,
   footnote,
+  leadConfig,
+  successMessage,
 }: {
   id?: string;
   title?: string;
   subtitle?: string;
   prefilledArea?: string;
   prefilledComment?: string;
-  /** Analytics source label, e.g. "calc", "planner", "quiz" */
+  /** @deprecated Use leadConfig — kept for backward compatibility */
   source?: string;
   submitLabel?: string;
   footnote?: string;
+  leadConfig?: LeadFormConfig;
+  successMessage?: string;
 }) {
-  const [data, setData] = useState<FormData>({
-    ...empty,
-    area: prefilledArea ?? "",
-    comment: prefilledComment ?? "",
+  const config = useMemo(
+    () =>
+      leadConfig ??
+      inferLeadConfigFromLegacy({ id, source, title, submitLabel }),
+    [leadConfig, id, source, title, submitLabel],
+  );
+
+  const form = useLeadForm({
+    config,
+    defaultValues: {
+      area: prefilledArea ?? "",
+      comment: prefilledComment ?? "",
+    },
+    successMessage,
   });
-  const [sent, setSent] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+
   const [step, setStep] = useState(0);
 
   useEffect(() => {
-    setData((prev) => ({
-      ...prev,
-      ...(prefilledArea !== undefined ? { area: prefilledArea } : {}),
-      ...(prefilledComment !== undefined ? { comment: prefilledComment } : {}),
-    }));
+    form.setValue("area", prefilledArea ?? form.values.area);
+    if (prefilledComment !== undefined) {
+      form.setValue("comment", prefilledComment);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- sync prefilled props only
   }, [prefilledArea, prefilledComment]);
 
-  useFormAutosave(`lead-${id}`, data, setData);
+  useFormAutosave(`lead-${id}`, form.values, (saved) => {
+    Object.entries(saved).forEach(([key, value]) => {
+      if (typeof value === "string") {
+        form.setValue(key as keyof typeof form.values, value);
+      }
+    });
+  });
 
   const progress = step === 0 ? 33 : step === 1 ? 66 : 100;
 
-  const submit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (step < 2) {
       setStep(step + 1);
       return;
     }
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      const res = await fetch("/api/leads", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...data, source: source ?? id }),
-      });
-
-      const payload = (await res.json().catch(() => ({}))) as {
-        ok?: boolean;
-        message?: string;
-      };
-
-      if (!res.ok) {
-        throw new Error(payload.message ?? "server");
-      }
-
-      setSent(true);
+    await form.submit(prefilledComment ?? form.values.comment);
+    if (form.isSuccess) {
       localStorage.removeItem(`lead-${id}`);
-      trackEvent("lead_submit", { source: source ?? id });
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : "";
-      setError(
-        msg && msg !== "server"
-          ? msg
-          : `Не удалось отправить заявку. Позвоните ${brand.phoneDisplay} или попробуйте снова.`,
-      );
-    } finally {
-      setLoading(false);
     }
   };
 
-  if (sent) {
+  if (form.isSuccess) {
     return (
       <div className="glass rounded-sm p-8 text-center" id={id}>
         <p className="heading-section text-2xl">{pageCopy.forms.successTitle}</p>
-        <p className="mt-2 text-muted">{pageCopy.forms.successMessage}</p>
+        <p className="mt-2 text-muted">
+          {form.successMessage ?? pageCopy.forms.successMessage}
+        </p>
       </div>
     );
   }
@@ -110,10 +99,12 @@ export function LeadForm({
   return (
     <form
       id={id}
-      onSubmit={submit}
+      onSubmit={handleSubmit}
       className="glass rounded-sm p-6 md:p-8"
       aria-labelledby={`${id}-title`}
     >
+      <HoneypotField id={`${id}-website`} value={form.honeypot} onChange={form.setHoneypot} />
+
       <div className="mb-6 h-1 overflow-hidden rounded-full bg-sand">
         <div
           className="h-full bg-graphite transition-all duration-500"
@@ -137,11 +128,14 @@ export function LeadForm({
               <Input
                 id={`${id}-name`}
                 required
-                value={data.name}
-                onChange={(e) => setData({ ...data, name: e.target.value })}
+                value={form.values.name}
+                onChange={(e) => form.setValue("name", e.target.value)}
                 placeholder="Как к вам обращаться"
                 className="mt-1"
               />
+              {form.errors.name ? (
+                <p className="mt-1 text-xs text-destructive">{form.errors.name}</p>
+              ) : null}
             </div>
             <div>
               <Label htmlFor={`${id}-phone`}>Телефон</Label>
@@ -149,11 +143,14 @@ export function LeadForm({
                 id={`${id}-phone`}
                 type="tel"
                 required
-                value={data.phone}
-                onChange={(e) => setData({ ...data, phone: e.target.value })}
+                value={form.values.phone}
+                onChange={(e) => form.setValue("phone", e.target.value)}
                 placeholder="+7 (___) ___-__-__"
                 className="mt-1"
               />
+              {form.errors.phone ? (
+                <p className="mt-1 text-xs text-destructive">{form.errors.phone}</p>
+              ) : null}
             </div>
           </>
         )}
@@ -163,8 +160,8 @@ export function LeadForm({
             <Input
               id={`${id}-area`}
               type="number"
-              value={data.area}
-              onChange={(e) => setData({ ...data, area: e.target.value })}
+              value={form.values.area ?? ""}
+              onChange={(e) => form.setValue("area", e.target.value)}
               placeholder="120–240"
               className="mt-1"
             />
@@ -175,8 +172,8 @@ export function LeadForm({
             <Label htmlFor={`${id}-comment`}>Комментарий</Label>
             <textarea
               id={`${id}-comment`}
-              value={data.comment}
-              onChange={(e) => setData({ ...data, comment: e.target.value })}
+              value={form.values.comment ?? ""}
+              onChange={(e) => form.setValue("comment", e.target.value)}
               placeholder="Участок, сроки, пожелания"
               className="mt-1 flex min-h-[100px] w-full rounded-sm border border-graphite/15 bg-background px-4 py-3 text-sm"
             />
@@ -184,18 +181,19 @@ export function LeadForm({
         )}
       </div>
 
-      {error && (
-        <p role="alert" className="mt-4 rounded-sm border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive">
-          {error}
+      {form.errorMessage && (
+        <p
+          role="alert"
+          className="mt-4 rounded-sm border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive"
+        >
+          {form.errorMessage}
         </p>
       )}
 
-      <Button type="submit" className="mt-6 w-full" size="lg" disabled={loading}>
-        {loading ? "Отправляем…" : step < 2 ? "Далее" : submitLabel ?? cta.preliminaryEstimate}
+      <Button type="submit" className="mt-6 w-full" size="lg" disabled={form.isSubmitting}>
+        {form.isSubmitting ? "Отправляем…" : step < 2 ? "Далее" : submitLabel ?? cta.preliminaryEstimate}
       </Button>
-      {footnote && (
-        <p className="mt-3 text-center text-xs text-muted">{footnote}</p>
-      )}
+      {footnote && <p className="mt-3 text-center text-xs text-muted">{footnote}</p>}
       <p className="mt-3 text-center text-xs text-muted">
         {privacyConsent}{" "}
         <Link href="/privacy" className="underline underline-offset-2 hover:text-foreground">

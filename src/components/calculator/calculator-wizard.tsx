@@ -20,6 +20,7 @@ import {
   DEFAULT_CALCULATOR_INPUT,
   calculateEstimate,
   parseCalculatorSearchParams,
+  resolveCalculatorBudgetHint,
   type AdditionalOptionId,
   type CalculatorEstimateInput,
   type FoundationType,
@@ -133,6 +134,10 @@ function buildInitialInput(searchParams: URLSearchParams): CalculatorEstimateInp
 
 export function CalculatorWizard() {
   const searchParams = useSearchParams();
+  const budgetHint = useMemo(
+    () => resolveCalculatorBudgetHint(searchParams),
+    [searchParams],
+  );
   const [input, setInput] = useState(() => buildInitialInput(searchParams));
   const [step, setStep] = useState(1);
   const [resultViewed, setResultViewed] = useState(false);
@@ -218,6 +223,15 @@ export function CalculatorWizard() {
           </p>
         </div>
       )}
+
+      {budgetHint.label && !input.projectTitle ? (
+        <div className="mb-8 rounded-sm border border-wood/20 bg-wood/5 p-4">
+          <p className="text-sm font-medium">Расчёт под бюджет: {budgetHint.label}</p>
+          <p className="mt-1 text-sm text-muted">
+            Площадь подставлена ориентировочно — скорректируйте параметры для точнее диапазона.
+          </p>
+        </div>
+      ) : null}
 
       <div className="mb-8">
         <div className="flex flex-wrap gap-2">

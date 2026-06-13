@@ -501,6 +501,64 @@ export function buildCalculatorLeadComment(
   return lines.join("\n");
 }
 
+export type CalculatorBudgetPreset = "do-5-mln" | "5-8-mln" | "8-12-mln" | "12+";
+
+const BUDGET_PRESET_AREAS: Record<CalculatorBudgetPreset, { area: number; label: string }> = {
+  "do-5-mln": { area: 100, label: "до 5 млн ₽" },
+  "5-8-mln": { area: 130, label: "5–8 млн ₽" },
+  "8-12-mln": { area: 160, label: "8–12 млн ₽" },
+  "12+": { area: 200, label: "от 12 млн ₽" },
+};
+
+export function parseBudgetPreset(raw: string | null | undefined): CalculatorBudgetPreset | undefined {
+  if (!raw) return undefined;
+  const normalized = raw.trim().toLowerCase().replace(/_/g, "-");
+  const map: Record<string, CalculatorBudgetPreset> = {
+    "do-5-mln": "do-5-mln",
+    "до-5-mln": "do-5-mln",
+    "5-8-mln": "5-8-mln",
+    "8-12-mln": "8-12-mln",
+    "12+": "12+",
+    "12-plus": "12+",
+  };
+  return map[normalized];
+}
+
+export function suggestAreaFromPriceMax(priceMax: number, material: Material = "газобетон"): number {
+  const rate = BASE_RATE[material]["под ключ"] ?? 78000;
+  const area = Math.round(priceMax / rate);
+  return clampArea(area);
+}
+
+export function resolveCalculatorBudgetHint(params: URLSearchParams): {
+  preset?: CalculatorBudgetPreset;
+  label?: string;
+  priceMax?: number;
+  service?: string;
+} {
+  const preset = parseBudgetPreset(params.get("budget"));
+  const priceMaxRaw = params.get("priceMax");
+  const priceMax = priceMaxRaw ? Number(priceMaxRaw) : undefined;
+
+  if (preset) {
+    return {
+      preset,
+      label: BUDGET_PRESET_AREAS[preset].label,
+      service: params.get("service") ?? undefined,
+    };
+  }
+
+  if (priceMax && Number.isFinite(priceMax)) {
+    return {
+      priceMax,
+      label: `бюджет до ${formatPrice(priceMax)}`,
+      service: params.get("service") ?? undefined,
+    };
+  }
+
+  return { service: params.get("service") ?? undefined };
+}
+
 export function parseCalculatorSearchParams(
   params: URLSearchParams,
 ): Partial<CalculatorEstimateInput> {
@@ -509,6 +567,8 @@ export function parseCalculatorSearchParams(
   const floorsRaw = params.get("floors");
   const bedroomsRaw = params.get("bedrooms");
   const bathroomsRaw = params.get("bathrooms");
+  const budgetPreset = parseBudgetPreset(params.get("budget"));
+  const priceMaxRaw = params.get("priceMax");
 
   const partial: Partial<CalculatorEstimateInput> = {
     projectSlug: project,
@@ -521,6 +581,13 @@ export function parseCalculatorSearchParams(
   if (areaRaw) {
     const area = Number(areaRaw);
     if (Number.isFinite(area)) partial.area = clampArea(area);
+  } else if (budgetPreset) {
+    partial.area = BUDGET_PRESET_AREAS[budgetPreset].area;
+  } else if (priceMaxRaw) {
+    const priceMax = Number(priceMaxRaw);
+    if (Number.isFinite(priceMax)) {
+      partial.area = suggestAreaFromPriceMax(priceMax, partial.material ?? DEFAULT_CALCULATOR_INPUT.material);
+    }
   }
 
   if (floorsRaw) {

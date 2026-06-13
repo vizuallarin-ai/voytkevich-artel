@@ -14,6 +14,7 @@ import {
 import { CasesListClient } from "@/components/cases/cases-list-client";
 import { CaseCard } from "@/components/cases/case-card";
 import { CaseFAQ } from "@/components/cases/case-faq";
+import { LeadMagnetsBlock } from "@/components/lead-magnets/lead-magnets-block";
 import { casesIndexFaqs } from "@/data/case-faqs";
 import { LeadForm } from "@/components/forms/lead-form";
 import { Button } from "@/components/ui/button";
@@ -84,6 +85,13 @@ export default function CasesPage() {
 
         <CasesSeoText hasPublished={hasPublished} />
         <CaseFAQ items={casesIndexFaqs} />
+
+        <LeadMagnetsBlock
+          pageType="case-page"
+          magnetIds={["budget-project-selection", "cost-review"]}
+          maxItems={2}
+          mode="cards"
+        />
 
         <div id="cases-lead" className="mt-16 border-t border-graphite/10 pt-16">
           <LeadForm

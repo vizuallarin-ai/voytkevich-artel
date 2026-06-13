@@ -31,6 +31,6 @@ export function trackEvent(
 }
 
 /** Track CTA button clicks */
-export function trackCta(label: string) {
-  trackEvent("cta_click", { label });
+export function trackCta(label: string, extra?: Record<string, unknown>) {
+  trackEvent("cta_click", { label, ctaLabel: label, ...extra });
 }

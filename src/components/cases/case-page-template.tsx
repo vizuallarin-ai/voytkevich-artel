@@ -7,9 +7,9 @@ import { JsonLd, articleSchema, breadcrumbSchema, faqSchema } from "@/components
 import { SITE_URL } from "@/lib/seo";
 import { Button } from "@/components/ui/button";
 import { LeadForm } from "@/components/forms/lead-form";
+import { LeadMagnetsBlock } from "@/components/lead-magnets/lead-magnets-block";
 import {
   buildCaseLeadComment,
-  buildCaseLeadSource,
   formatCaseLocation,
   getRelatedCases,
   getRelatedBlogPostsForCase,
@@ -329,6 +329,18 @@ export function CasePageTemplate({ item, allCases, projects }: Props) {
         <CaseRelatedLinks serviceSlugs={item.relatedServiceSlugs} blogLinks={blogLinks} />
         <CaseFAQ items={faqs} />
 
+        <LeadMagnetsBlock
+          pageType="case-page"
+          magnetIds={["budget-project-selection", "cost-review"]}
+          maxItems={1}
+          mode="cards"
+          context={{
+            caseSlug: item.slug,
+            caseTitle: item.h1,
+            projectSlug: item.project?.projectSlug,
+          }}
+        />
+
         <div id="case-lead" className="mt-16 border-t border-graphite/10 pt-16">
           <LeadForm
             id="case-lead-form"
@@ -337,10 +349,29 @@ export function CasePageTemplate({ item, allCases, projects }: Props) {
               item.leadCTA?.description ??
               "Оставьте контакты — обсудим участок, площадь, материал, бюджет и подскажем, можно ли взять этот кейс или похожий проект за основу."
             }
-            source={buildCaseLeadSource(item)}
             prefilledComment={buildCaseLeadComment(item, "similar-house")}
             submitLabel="Обсудить похожий дом"
             footnote="Сначала уточним вводные. Стоимость и сроки похожего дома считаются отдельно."
+            leadConfig={{
+              sourceType: "case-page",
+              pageSlug: item.slug,
+              formId: "case-lead-form",
+              formName: item.h1,
+              requestType: "case-like",
+              requestTitle: "Хотите похожий дом?",
+              selectedCTA: "Обсудить похожий дом",
+              conversionGoal: "case_like_request",
+              context: {
+                case: {
+                  slug: item.slug,
+                  title: item.h1,
+                  area: item.house.area,
+                  material: item.house.material,
+                  floors: item.house.floors,
+                  locationLabel: location ?? undefined,
+                },
+              },
+            }}
           />
         </div>
       </div>

@@ -5,8 +5,8 @@ export const brand = {
   logoLine2: "Александра Войткевича",
   founder: "Александр Войткевич",
   tagline: "Строительство домов под ключ в Иркутске и области",
-  /** Публичный сайт (Vercel / продакшен) */
-  website: "https://voytkevich-artel.vercel.app/",
+  /** Публичный сайт (production: stroistroy.ru) */
+  website: "https://stroistroy.ru/",
   foundedYear: 2014,
   phone: "+73952640134",
   phoneDisplay: "+7 (3952) 64-01-34",
@@ -23,5 +23,5 @@ export const brand = {
   telegram: "https://t.me/megaartel",
   yandexMaps:
     "https://yandex.ru/maps/org/stroitelnaya_artel_aleksandra_voytkevicha/1205239314/",
-  storagePrefix: "voytkevich-artel",
+  storagePrefix: "stroistroy",
 } as const;

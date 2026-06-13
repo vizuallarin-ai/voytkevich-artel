@@ -18,6 +18,7 @@ import { ProjectRelatedCases } from "@/components/cases/project-related-cases";
 import { ProjectRelatedBuiltObjects } from "@/components/objects-map/related-built-objects";
 import { ProjectSeoBlock } from "@/components/project/project-seo-block";
 import { ProjectLeadSection } from "@/components/project/project-lead-section";
+import { LeadMagnetsBlock } from "@/components/lead-magnets/lead-magnets-block";
 import { ProjectCategoriesNav } from "@/components/project/project-categories-nav";
 import { ProjectInlineCta } from "@/components/project/project-inline-cta";
 import { ProjectStickyCta, ProjectSidebar } from "@/components/project/project-sticky-cta";
@@ -154,6 +155,19 @@ export default async function ProjectPage({ params }: Props) {
             </section>
 
             <ProjectSeoBlock project={project} />
+
+            <LeadMagnetsBlock
+              pageType="project-page"
+              pageSlug={slug}
+              magnetIds={["cost-review", "layout-review"]}
+              maxItems={2}
+              mode="cards"
+              prefilledArea={String(project.specs.area)}
+              context={{
+                projectSlug: slug,
+                projectTitle: project.name,
+              }}
+            />
 
             <div className="max-w-lg">
               <ProjectLeadSection project={project} slug={slug} />

@@ -4,6 +4,7 @@ import { CatalogClient } from "@/components/catalog/catalog-client";
 import { CatalogHero } from "@/components/catalog/catalog-hero";
 import { CatalogQuickCategories } from "@/components/catalog/catalog-quick-categories";
 import { CatalogPickerBlock } from "@/components/catalog/catalog-picker-block";
+import { LeadMagnetsBlock } from "@/components/lead-magnets/lead-magnets-block";
 import { CatalogSeoSection } from "@/components/catalog/catalog-seo-section";
 import { CatalogFaq } from "@/components/catalog/catalog-faq";
 import { ProjectCard } from "@/components/catalog/project-card";
@@ -61,6 +62,12 @@ export default async function CatalogPage() {
       </div>
 
       <div className="container-narrow px-5 md:px-10 lg:px-16">
+        <LeadMagnetsBlock
+          pageType="catalog"
+          magnetIds={["budget-project-selection"]}
+          maxItems={1}
+          mode="cards"
+        />
         <CatalogPickerBlock />
         <CatalogSeoSection />
         <CatalogFaq />

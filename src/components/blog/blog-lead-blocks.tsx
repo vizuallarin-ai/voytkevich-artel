@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { BlogPost } from "@/types/blog";
 import type { BlogLeadMagnet } from "@/data/blog-lead-magnets";
 import { LeadForm } from "@/components/forms/lead-form";
-import { buildBlogLeadComment, buildBlogLeadSource } from "@/lib/blog";
+import { buildBlogLeadComment } from "@/lib/blog";
 
 export function BlogLeadMagnetBlock({
   post,
@@ -46,9 +46,30 @@ export function BlogFinalLeadForm({
         id="blog-lead"
         title={title ?? "Получить предварительный расчёт"}
         subtitle={subtitle ?? "Уточним вводные и подскажем следующий шаг — расчёт, проект или консультация"}
-        source={buildBlogLeadSource(post)}
         prefilledComment={comment}
         submitLabel="Отправить"
+        leadConfig={{
+          sourceType: "blog-post",
+          pageSlug: post.slug,
+          formId: "blog-lead",
+          formName: post.h1,
+          requestType: "consultation",
+          requestTitle: title ?? "Получить предварительный расчёт",
+          selectedCTA: "Отправить",
+          conversionGoal: "blog_submit",
+          context: {
+            blog: {
+              slug: post.slug,
+              title: post.h1,
+              categorySlug: post.categorySlug,
+              clusterId: post.clusterId,
+              leadMagnetId,
+            },
+            leadMagnet: leadMagnetId
+              ? { id: leadMagnetId, title: leadMagnetId }
+              : undefined,
+          },
+        }}
       />
     </div>
   );

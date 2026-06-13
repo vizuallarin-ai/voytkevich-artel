@@ -23,7 +23,8 @@ export function buildServiceCalculatorUrl(page: ServicePage): string {
     sp.set("material", MATERIAL_TO_CALC[params.material] ?? "brus");
   }
   if (params?.floors) sp.set("floors", String(params.floors));
-  // TODO: calculator does not read budget presets yet — service slug is passed for analytics
+  if (params?.budget) sp.set("budget", params.budget);
+  if (params?.priceMax) sp.set("priceMax", String(params.priceMax));
 
   return `/calculator?${sp.toString()}`;
 }

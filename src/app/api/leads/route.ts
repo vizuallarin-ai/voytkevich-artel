@@ -1,101 +1,93 @@
 import { NextResponse } from "next/server";
-import { z } from "zod";
+import type { LeadFormInput, LeadListParams } from "@/types/lead";
+import { buildLeadFromInput, normalizeLegacyPayload } from "@/lib/leads/lead-payload";
+import { isSuspiciousSubmit, parseLeadRequestBody } from "@/lib/leads/lead-validation";
+import { persistLead } from "@/lib/leads/lead-storage";
+import { handleNewLeadAutomation } from "@/lib/leads/lead-automation";
+import { logger } from "@/lib/logger";
+import { recordLeadCreatedEvent } from "@/lib/analytics/server-events";
+import { fetchLeads } from "@/lib/leads/lead-service";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
-const LeadSchema = z.object({
-  name: z.string().min(1),
-  phone: z.string().min(7),
-  area: z.string().optional(),
-  comment: z.string().optional(),
-  source: z.string().optional(),
-});
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const params: LeadListParams = {
+    search: searchParams.get("search") ?? undefined,
+    page: Number(searchParams.get("page") ?? 1),
+    limit: Number(searchParams.get("limit") ?? 20),
+    sort: (searchParams.get("sort") as LeadListParams["sort"]) ?? "newest",
+  };
 
-type Lead = z.infer<typeof LeadSchema>;
+  const status = searchParams.get("status");
+  if (status) params.status = status as LeadListParams["status"];
 
-async function sendToTelegram(lead: Lead): Promise<boolean> {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
-  if (!token || !chatId) return false;
+  const readiness = searchParams.get("readiness");
+  if (readiness) params.readiness = readiness as LeadListParams["readiness"];
 
-  const lines = formatLeadMessage(lead);
+  const sourceType = searchParams.get("sourceType");
+  if (sourceType) params.sourceType = sourceType as LeadListParams["sourceType"];
 
-  const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      chat_id: chatId,
-      text: lines,
-      parse_mode: "Markdown",
-    }),
-  });
-
-  return res.ok;
-}
-
-async function sendToWebhook(lead: Lead): Promise<boolean> {
-  const url = process.env.LEADS_WEBHOOK_URL;
-  if (!url) return false;
-
-  const res = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ ...lead, receivedAt: new Date().toISOString() }),
-  });
-
-  return res.ok;
-}
-
-function formatLeadMessage(lead: Lead): string {
-  return [
-    "🏠 *Новая заявка с сайта*",
-    "",
-    `👤 Имя: ${lead.name}`,
-    `📞 Телефон: ${lead.phone}`,
-    lead.area ? `📐 Площадь: ${lead.area} м²` : null,
-    lead.comment ? `💬 Комментарий:\n${lead.comment}` : null,
-    lead.source ? `📌 Источник: ${lead.source}` : null,
-    "",
-    `🕐 ${new Date().toLocaleString("ru-RU", { timeZone: "Asia/Irkutsk" })} (ИСТ)`,
-  ]
-    .filter(Boolean)
-    .join("\n");
+  const result = await fetchLeads(params);
+  return NextResponse.json(result);
 }
 
 export async function POST(request: Request) {
+  const rate = checkRateLimit(`leads:${getClientIp(request)}`, {
+    limit: Number(process.env.LEADS_RATE_LIMIT ?? 8),
+    windowMs: 60_000,
+  });
+  if (!rate.ok) {
+    return NextResponse.json(
+      { ok: false, error: "rate_limited", message: "Слишком много запросов. Попробуйте через минуту." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil((rate.resetAt - Date.now()) / 1000)) } },
+    );
+  }
+
   let body: unknown;
 
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+    return NextResponse.json(
+      { ok: false, error: "invalid_json", message: "Некорректный запрос" },
+      { status: 400 },
+    );
   }
 
-  const parsed = LeadSchema.safeParse(body);
-  if (!parsed.success) {
+  const parsed = parseLeadRequestBody(body);
+
+  if (parsed.kind === "error") {
     return NextResponse.json(
-      { error: "Validation failed", issues: parsed.error.issues },
+      { ok: false, error: "validation_failed", message: "Укажите имя и телефон" },
       { status: 422 },
     );
   }
 
-  const lead = parsed.data;
-  const delivered =
-    (await sendToTelegram(lead)) || (await sendToWebhook(lead));
+  let input: LeadFormInput =
+    parsed.kind === "structured" ? parsed.input : normalizeLegacyPayload(parsed.legacy);
 
-  if (!delivered && process.env.NODE_ENV === "development") {
-    console.info("[leads] Dev mode — logged locally:", formatLeadMessage(lead));
-    return NextResponse.json({ ok: true, dev: true });
+  if (isSuspiciousSubmit(input)) {
+    input = { ...input, honeypot: input.honeypot ?? "filled" };
   }
 
-  if (!delivered) {
-    console.error("[leads] No delivery channel configured or delivery failed", {
-      source: lead.source,
-      hasTelegram: !!(process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID),
-      hasWebhook: !!process.env.LEADS_WEBHOOK_URL,
-    });
+  const serverMeta = {
+    userAgent: request.headers.get("user-agent") ?? undefined,
+    referrer: request.headers.get("referer") ?? undefined,
+  };
+
+  const lead = buildLeadFromInput(input, serverMeta);
+
+  if (lead.status === "spam") {
+    return NextResponse.json({ ok: true, leadId: `spam_${Date.now()}` });
+  }
+
+  const result = await persistLead(lead);
+
+  if (!result.ok || !result.lead) {
     return NextResponse.json(
       {
         ok: false,
-        error: "delivery_failed",
+        error: result.error ?? "delivery_failed",
         message:
           "Заявка не доставлена. Позвоните нам напрямую — мы на связи в рабочее время.",
       },
@@ -103,5 +95,38 @@ export async function POST(request: Request) {
     );
   }
 
-  return NextResponse.json({ ok: true });
+  try {
+    await handleNewLeadAutomation(result.lead);
+    await recordLeadCreatedEvent(result.lead);
+  } catch (err) {
+    logger.warn("lead.automation.error", {
+      leadId: result.lead.id,
+      error: err instanceof Error ? err.message : "automation_failed",
+    });
+  }
+
+  return NextResponse.json({
+    ok: true,
+    leadId: result.leadId,
+    message: successMessageForLead(input),
+  });
+}
+
+function successMessageForLead(input: LeadFormInput): string {
+  switch (input.request.type) {
+    case "calculator-result":
+      return "Расчёт отправлен. Мы получили параметры дома и сможем обсудить смету предметнее.";
+    case "planner-review":
+      return "Планировка отправлена. Мы получили сценарий, комнаты и площадь.";
+    case "project-estimate":
+      return "Заявка по проекту отправлена. Мы получили название проекта и ваши вводные.";
+    case "lead-magnet":
+      return "Запрос отправлен. Мы получили тему и контакты — специалист свяжется с вами.";
+    case "case-like":
+      return "Заявка отправлена. Обсудим похожий дом и ваши вводные.";
+    case "object-map":
+      return "Заявка отправлена. Уточним участок, район и параметры дома.";
+    default:
+      return "Заявка отправлена. Мы свяжемся с вами, чтобы уточнить вводные.";
+  }
 }

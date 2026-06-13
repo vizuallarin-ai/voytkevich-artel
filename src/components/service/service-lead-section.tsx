@@ -2,7 +2,7 @@
 
 import { LeadForm } from "@/components/forms/lead-form";
 import type { ServicePage } from "@/types/service-page";
-import { buildServiceLeadComment, buildServiceLeadSource } from "@/lib/service-pages";
+import { buildServiceLeadComment } from "@/lib/service-pages";
 import { pageCopy } from "@/data/positioning";
 
 const LEAD_FOOTNOTE =
@@ -10,7 +10,6 @@ const LEAD_FOOTNOTE =
 
 export function ServiceLeadSection({ page }: { page: ServicePage }) {
   const id = `lead-${page.slug}`;
-  const source = buildServiceLeadSource(page);
   const comment = buildServiceLeadComment(page);
 
   return (
@@ -23,9 +22,25 @@ export function ServiceLeadSection({ page }: { page: ServicePage }) {
         title={page.cta.leadTitle}
         subtitle={pageCopy.forms.defaultSubtitle}
         prefilledComment={comment}
-        source={source}
         submitLabel={page.cta.leadSubmit ?? page.cta.leadTitle}
         footnote={LEAD_FOOTNOTE}
+        leadConfig={{
+          sourceType: "service-page",
+          pageSlug: page.slug,
+          formId: id,
+          formName: page.title,
+          requestType: "service-page",
+          requestTitle: page.cta.leadTitle,
+          selectedCTA: page.cta.leadSubmit ?? page.cta.leadTitle,
+          conversionGoal: "service_page_submit",
+          context: {
+            service: {
+              slug: page.slug,
+              title: page.title,
+              serviceType: page.serviceType,
+            },
+          },
+        }}
       />
     </section>
   );

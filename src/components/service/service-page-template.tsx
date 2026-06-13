@@ -8,6 +8,7 @@ import { ServiceLeadSection } from "./service-lead-section";
 import { ServiceRelatedProjects } from "./service-related-projects";
 import { ServiceRelatedCases } from "@/components/cases/service-related-cases";
 import { ServiceRelatedBuiltObjects } from "@/components/objects-map/related-built-objects";
+import { LeadMagnetsBlock } from "@/components/lead-magnets/lead-magnets-block";
 import {
   ServiceAudience,
   ServiceCalculatorCTA,
@@ -89,6 +90,15 @@ export function ServicePageTemplate({
 
       <Reveal delay={0.05}>
         <ServiceRisks page={page} />
+      </Reveal>
+
+      <Reveal delay={0.05}>
+        <LeadMagnetsBlock
+          pageType="service-page"
+          pageSlug={page.slug}
+          maxItems={2}
+          mode="cards"
+        />
       </Reveal>
 
       <Reveal delay={0.05}>

@@ -22,6 +22,7 @@ import { BlogRelatedPosts, BlogRelatedServices } from "./blog-related";
 import { BlogRelatedProjects } from "./blog-related-projects";
 import { BlogRelatedCases } from "@/components/cases/blog-related-cases";
 import { BlogFinalLeadForm, BlogLeadMagnetBlock, BlogUpdateNotice } from "./blog-lead-blocks";
+import { LeadMagnetsBlock } from "@/components/lead-magnets/lead-magnets-block";
 import { BlogTableOfContents } from "./blog-table-of-contents";
 
 type Props = {
@@ -114,6 +115,15 @@ export function BlogPostTemplate({ post, allPosts, projects }: Props) {
           </div>
         ) : null}
 
+        <LeadMagnetsBlock
+          pageType="blog-post"
+          pageSlug={post.slug}
+          clusterId={post.clusterId}
+          mode="inline"
+          maxItems={1}
+          context={{ blogPostSlug: post.slug }}
+        />
+
         <div className="mt-6">
           <BlogInlineCta
             cta={{ primary: heroCta, secondary: cta.secondary }}
@@ -139,6 +149,15 @@ export function BlogPostTemplate({ post, allPosts, projects }: Props) {
         />
 
         {magnet ? <BlogLeadMagnetBlock post={post} magnet={magnet} /> : null}
+
+        <LeadMagnetsBlock
+          pageType="blog-post"
+          pageSlug={post.slug}
+          clusterId={post.clusterId}
+          mode="cards"
+          maxItems={1}
+          context={{ blogPostSlug: post.slug }}
+        />
 
         <BlogRelatedProjects projects={relatedProjects} />
         <BlogRelatedCases post={post} />

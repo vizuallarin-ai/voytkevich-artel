@@ -9,6 +9,7 @@ import { formatPrice } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
 import type { CalculatorInput, Material } from "@/types";
 import { LeadForm } from "@/components/forms/lead-form";
+import { LeadMagnetsBlock } from "@/components/lead-magnets/lead-magnets-block";
 import { PlannerPromo } from "@/components/planner/planner-promo";
 import { calculatorDisclaimer, cta } from "@/data/copy";
 
@@ -157,6 +158,28 @@ export function CalculatorForm() {
             {cta.preliminaryPdf}
           </Button>
           <p className="mt-3 text-center text-xs text-muted">{calculatorDisclaimer}</p>
+          <LeadMagnetsBlock
+            pageType="calculator"
+            magnetIds={["cost-review", "estimate-example"]}
+            maxItems={2}
+            mode="cards"
+            prefilledArea={String(input.area)}
+            context={{
+              calculatorResult: {
+                area: input.area,
+                floors: input.floors,
+                material: input.material,
+                foundation: input.foundation,
+                finish: input.finish,
+                utilities: input.utilities,
+                plotPrep: input.plotPrep,
+                total: result.total,
+                perSqm: result.perSqm,
+                buildMonths: result.buildMonths,
+                breakdown: result.breakdown,
+              },
+            }}
+          />
           <div className="mt-6 border-t border-graphite/10 pt-6">
             <PlannerPromo variant="compact" />
           </div>
@@ -167,13 +190,41 @@ export function CalculatorForm() {
               id="calc-lead"
               title={cta.stagedEstimate}
               subtitle="Отправим смету с разбивкой по этапам на почту или в мессенджер"
-              source="calculator"
               prefilledArea={String(input.area)}
               prefilledComment={[
                 `Параметры расчёта: ${input.area} м², ${input.floors} эт., материал — ${input.material}, фундамент — ${input.foundation}, отделка — ${input.finish}.`,
                 `Итог: ${formatPrice(result.total)} (~${formatPrice(result.perSqm)}/м², ${result.buildMonths} мес.)`,
                 result.breakdown.map((b) => `  ${b.label}: ${formatPrice(b.amount)}`).join("\n"),
               ].join("\n")}
+              submitLabel={cta.preliminaryPdf}
+              leadConfig={{
+                sourceType: "calculator",
+                formId: "calc-lead",
+                formName: "Калькулятор стоимости",
+                requestType: "calculator-result",
+                requestTitle: cta.stagedEstimate,
+                selectedCTA: cta.preliminaryPdf,
+                conversionGoal: "calculator_submit",
+                context: {
+                  calculator: {
+                    area: input.area,
+                    floors: input.floors,
+                    material: input.material,
+                    foundation: input.foundation,
+                    finish: input.finish,
+                    utilities: input.utilities,
+                    plotPrep: input.plotPrep,
+                    total: result.total,
+                    perSqm: result.perSqm,
+                    durationMinMonths: result.buildMonths,
+                    breakdown: result.breakdown.map((b) => ({
+                      label: b.label,
+                      amount: b.amount,
+                    })),
+                  },
+                },
+              }}
+              successMessage="Расчёт отправлен. Мы получили параметры дома и сможем обсудить смету предметнее."
             />
           </div>
         )}
