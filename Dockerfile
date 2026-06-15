@@ -9,7 +9,13 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+ARG NEXT_PUBLIC_SITE_URL=https://stroistroy.ru
+ARG NEXT_PUBLIC_YM_ID=
+ARG NEXT_PUBLIC_GA_ID=
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
+ENV NEXT_PUBLIC_YM_ID=$NEXT_PUBLIC_YM_ID
+ENV NEXT_PUBLIC_GA_ID=$NEXT_PUBLIC_GA_ID
 RUN npm run build
 
 FROM node:20-alpine AS runner

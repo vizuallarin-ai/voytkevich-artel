@@ -25,6 +25,8 @@ check "home" "$BASE/" "200"
 check "calculator" "$BASE/calculator" "200"
 check "crm-login" "$BASE/dashboard/login" "200"
 check "health" "$BASE/api/health" "200"
+check "robots" "$BASE/robots.txt" "200"
+check "sitemap" "$BASE/sitemap.xml" "200"
 check "http-redirect" "http://${BASE#https://}/" "301"
 
 if curl -sf "$BASE/api/health" | grep -q '"ok":true'; then
@@ -38,6 +40,13 @@ if curl -sf "$BASE/api/health" | grep -q '"dashboard":true'; then
   echo "OK  dashboard auth configured"
 else
   echo "WARN dashboard auth not configured"
+fi
+
+if curl -sf "$BASE/sitemap.xml" | grep -q "<loc>${BASE}</loc>"; then
+  echo "OK  sitemap contains homepage"
+else
+  echo "FAIL sitemap missing homepage URL"
+  FAIL=1
 fi
 
 EXPORT_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$BASE/api/dashboard/export")

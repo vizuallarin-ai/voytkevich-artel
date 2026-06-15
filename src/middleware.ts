@@ -13,7 +13,7 @@ function isProtectedApi(pathname: string, method: string): boolean {
   return false;
 }
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const method = request.method;
 
@@ -32,7 +32,7 @@ export function middleware(request: NextRequest) {
     request.cookies.get(DASHBOARD_COOKIE)?.value ??
     request.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
 
-  if (!verifyDashboardToken(token)) {
+  if (!(await verifyDashboardToken(token))) {
     if (isDashboard) {
       const login = new URL("/dashboard/login", request.url);
       login.searchParams.set("next", pathname);

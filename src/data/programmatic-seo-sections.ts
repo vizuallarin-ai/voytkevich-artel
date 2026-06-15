@@ -1,0 +1,126 @@
+import type { ProgrammaticSeoSectionDefinition } from "@/types/programmatic-seo";
+
+export const programmaticSeoSections: ProgrammaticSeoSectionDefinition[] = [
+  {
+    id: "projects",
+    title: "Проекты домов, бань и загородных объектов",
+    description:
+      "Типоразмеры, материалы, категории и локальные посадочные под коммерческий спрос на проекты.",
+    primaryIntent: "commercial",
+    allowedPageTypes: [
+      "project-category",
+      "project-size-page",
+      "project-material-page",
+      "project-feature-page",
+      "project-location-page",
+      "project-page",
+    ],
+    defaultCTA: "Подобрать проект и получить расчёт",
+    defaultLeadMagnet: "estimate-example",
+    defaultIndexingPolicy: "review-before-index",
+    qualityRequirements: {
+      minWords: 800,
+      requiresFAQ: true,
+      requiresHumanReview: true,
+    },
+    distributionAllowed: true,
+  },
+  {
+    id: "technical",
+    title: "Техническая база знаний",
+    description: "How-to и гиды по строительству, материалам, утеплению, инженерии — с дисклеймером.",
+    primaryIntent: "informational",
+    allowedPageTypes: ["technical-how-to", "technical-guide", "comparison-page", "faq-page"],
+    defaultCTA: "Получить консультацию по вашему проекту",
+    defaultLeadMagnet: "checklist-foundation",
+    defaultIndexingPolicy: "noindex-until-approved",
+    qualityRequirements: {
+      minWords: 1200,
+      requiresFAQ: true,
+      requiresHumanReview: true,
+      requiresDisclaimer: true,
+    },
+    distributionAllowed: true,
+  },
+  {
+    id: "blog",
+    title: "Редакционный блог и истории",
+    description: "Авторские колонки, дневники стройки, сценарии выбора — без выдачи вымысла за реальные кейсы.",
+    primaryIntent: "editorial",
+    allowedPageTypes: ["editorial-story", "opinion-article"],
+    defaultCTA: "Обсудить ваш проект",
+    defaultIndexingPolicy: "review-before-index",
+    qualityRequirements: {
+      minWords: 900,
+      requiresFAQ: false,
+      requiresHumanReview: true,
+    },
+    distributionAllowed: true,
+  },
+  {
+    id: "news",
+    title: "Новости и дайджесты",
+    description: "Рынок, изменения, популярные вопросы недели — короткий формат с ссылкой на экспертные материалы.",
+    primaryIntent: "informational",
+    allowedPageTypes: ["news-digest", "opinion-article"],
+    defaultCTA: "Подписаться на обновления / задать вопрос",
+    defaultIndexingPolicy: "noindex-until-approved",
+    qualityRequirements: {
+      minWords: 600,
+      requiresFAQ: false,
+      requiresHumanReview: true,
+    },
+    distributionAllowed: true,
+  },
+  {
+    id: "regulations",
+    title: "Нормативные изменения",
+    description: "Разборы документов и требований — только с указанием даты и источника, без юридических гарантий.",
+    primaryIntent: "informational",
+    allowedPageTypes: ["regulation-update", "technical-guide"],
+    defaultCTA: "Уточнить требования к вашему участку",
+    defaultIndexingPolicy: "never-auto-index",
+    qualityRequirements: {
+      minWords: 1000,
+      requiresFAQ: true,
+      requiresHumanReview: true,
+      requiresDisclaimer: true,
+    },
+    distributionAllowed: false,
+  },
+  {
+    id: "comparisons",
+    title: "Сравнения материалов и технологий",
+    description: "Каркас vs брус vs газобетон — помощь в выборе без универсальных «лучших» ответов.",
+    primaryIntent: "comparison",
+    allowedPageTypes: ["comparison-page", "technical-guide"],
+    defaultCTA: "Помочь выбрать материал под ваш участок",
+    defaultLeadMagnet: "material-comparison",
+    defaultIndexingPolicy: "review-before-index",
+    qualityRequirements: {
+      minWords: 1500,
+      requiresFAQ: true,
+      requiresHumanReview: true,
+    },
+    distributionAllowed: true,
+  },
+  {
+    id: "faq",
+    title: "FAQ и ответы на частые вопросы",
+    description: "Структурированные ответы с перелинковкой на инструменты и коммерческие страницы.",
+    primaryIntent: "informational",
+    allowedPageTypes: ["faq-page", "technical-how-to"],
+    defaultCTA: "Задать свой вопрос / получить расчёт",
+    defaultIndexingPolicy: "review-before-index",
+    qualityRequirements: {
+      minWords: 500,
+      requiresFAQ: true,
+      requiresHumanReview: true,
+    },
+    distributionAllowed: true,
+  },
+];
+
+export function getProgrammaticSection(id: string) {
+  return programmaticSeoSections.find((s) => s.id === id);
+}

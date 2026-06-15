@@ -36,6 +36,13 @@ const SECTIONS: NavSection[] = [
     title: "Аналитика",
     items: [{ href: "/dashboard/analytics", label: "Воронка и KPI" }],
   },
+  {
+    title: "SEO-платформа",
+    items: [
+      { href: "/dashboard/seo", label: "Обзор системы" },
+      { href: "/dashboard/seo/roadmap", label: "Очередь публикаций" },
+    ],
+  },
 ];
 
 function itemHref(item: NavItem): string {
@@ -49,6 +56,12 @@ function isActive(pathname: string, group: string | null, item: NavItem): boolea
   }
   if (item.href === "/dashboard/analytics") {
     return pathname.startsWith("/dashboard/analytics");
+  }
+  if (item.href === "/dashboard/seo") {
+    return pathname === "/dashboard/seo";
+  }
+  if (item.href === "/dashboard/seo/roadmap") {
+    return pathname.startsWith("/dashboard/seo/roadmap");
   }
   if (item.href === "/dashboard/leads") {
     if (pathname.startsWith("/dashboard/leads/")) {
