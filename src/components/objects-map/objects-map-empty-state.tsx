@@ -18,21 +18,21 @@ export function ObjectsMapEmptyState({ filtered = false }: { filtered?: boolean 
 
   return (
     <div className="mt-12 rounded-sm border border-graphite/15 bg-wood/5 p-8 text-center md:p-12">
-      <h2 className="font-display text-2xl md:text-3xl">Карта объектов готовится к наполнению</h2>
+      <h2 className="font-display text-2xl md:text-3xl">Карта объектов наполняется</h2>
       <p className="mx-auto mt-4 max-w-xl text-muted leading-relaxed">
-        Здесь будут опубликованы реальные построенные дома и объекты с разрешения заказчиков:
-        район, материал, площадь, этапы, кейсы и фото. Пока можно посмотреть каталог проектов,
-        рассчитать стоимость или оставить заявку на подбор похожего дома.
+        Здесь будут опубликованы реальные построенные дома с разрешения заказчиков: район, материал,
+        площадь, этапы и фото. Пока можно получить пример сметы, подобрать проект под участок или
+        рассчитать стоимость — без фиктивных адресов и объектов.
       </p>
       <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
         <Button asChild>
-          <Link href="/catalog">Смотреть проекты</Link>
+          <Link href="#objects-map-lead">Получить пример сметы</Link>
+        </Button>
+        <Button asChild variant="outline">
+          <Link href="/catalog#catalog-picker">Подобрать проект под участок</Link>
         </Button>
         <Button asChild variant="outline">
           <Link href="/calculator?source=objects-map">Рассчитать стоимость</Link>
-        </Button>
-        <Button asChild variant="outline">
-          <Link href="#objects-map-lead">Обсудить мой участок</Link>
         </Button>
       </div>
     </div>

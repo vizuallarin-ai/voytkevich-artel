@@ -1,4 +1,4 @@
-import { trackEvent } from "@/lib/analytics";
+import { trackCalculatorEvent as trackCalculatorEventFull } from "@/lib/analytics/events";
 
 export type CalculatorEventName =
   | "calculator_started"
@@ -7,7 +7,8 @@ export type CalculatorEventName =
   | "calculator_lead_form_opened"
   | "calculator_lead_submitted"
   | "calculator_project_clicked"
-  | "calculator_reset";
+  | "calculator_reset"
+  | "calculator_opened";
 
 export type CalculatorEventPayload = {
   area?: number;
@@ -19,12 +20,14 @@ export type CalculatorEventPayload = {
   source?: string;
   projectSlug?: string;
   step?: number;
+  pageType?: string;
 };
 
-/** Safe analytics wrapper for calculator events. No-op when analytics unavailable. */
+/** Calculator funnel — Metrika + internal analytics store. */
 export function trackCalculatorEvent(
   eventName: CalculatorEventName,
   payload?: CalculatorEventPayload,
 ) {
-  trackEvent(eventName, payload);
+  const action = eventName.replace(/^calculator_/, "");
+  trackCalculatorEventFull(action, { ...payload, pageType: "calculator" });
 }

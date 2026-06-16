@@ -51,12 +51,17 @@
 
   html {
     scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply overflow-x-hidden bg-background text-foreground antialiased;
     font-family: var(--font-sans);
     font-feature-settings: "kern" 1, "liga" 1;
+    min-height: 100vh;
+    min-height: 100dvh;
+    -webkit-tap-highlight-color: transparent;
   }
 
   .font-display {
@@ -79,9 +84,14 @@
 
   .glass {
     background: var(--glass);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border);
+  }
+
+  @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+    .glass {
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
   }
 
   .section-padding {
@@ -93,7 +103,7 @@
   }
 
   .heading-display {
-    @apply font-display text-4xl font-light tracking-tight md:text-5xl lg:text-6xl xl:text-7xl;
+    @apply font-display text-3xl font-light tracking-tight sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl;
   }
 
   .heading-section {

@@ -4,7 +4,7 @@ import type {
   LeadPriority,
   StoredLead,
 } from "@/types/lead";
-import { formatTelegramLeadMessage } from "@/lib/leads/lead-notification-formatters";
+import { formatTelegramLeadMessagePlain } from "@/lib/leads/lead-notification-formatters";
 import { getNotificationConfig, shouldSendNotification } from "./notification-config";
 import { sendTelegramNotification } from "./adapters/telegram";
 import { sendLeadEmailNotification } from "./adapters/email";
@@ -33,15 +33,21 @@ export async function sendLeadNotifications(
   };
 
   if (config.telegramEnabled) {
-    const message = formatTelegramLeadMessage(lead, automationPayload);
-    const res = await sendTelegramNotification(message);
+    const message = formatTelegramLeadMessagePlain(lead, automationPayload);
+    let res = await sendTelegramNotification(message, { parseMode: "plain" });
+    if (!res.success) {
+      await new Promise((r) => setTimeout(r, 400));
+      res = await sendTelegramNotification(message, { parseMode: "plain" });
+    }
     results.push({
       channel: "telegram",
       success: res.success,
       sentAt: res.success ? now : undefined,
       error: res.error,
     });
-    if (!res.success) logger.warn("lead.notification.telegram_failed", { leadId: lead.id, error: res.error });
+    if (!res.success) {
+      logger.error("lead.notification.telegram_failed", { leadId: lead.id, error: res.error });
+    }
   }
 
   if (config.emailEnabled) {

@@ -1,9 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { LeadForm } from "@/components/forms/lead-form";
 import { buildProjectLeadComment } from "@/lib/project-content";
 import type { Project } from "@/types";
+
+function readPackageName(slug: string): string | undefined {
+  if (typeof window === "undefined") return undefined;
+  return sessionStorage.getItem(`project-package-${slug}`) ?? undefined;
+}
 
 export function ProjectLeadSection({
   project,
@@ -12,12 +17,7 @@ export function ProjectLeadSection({
   project: Project;
   slug: string;
 }) {
-  const [packageName, setPackageName] = useState<string | undefined>();
-
-  useEffect(() => {
-    const stored = sessionStorage.getItem(`project-package-${slug}`);
-    if (stored) setPackageName(stored);
-  }, [slug]);
+  const [packageName] = useState<string | undefined>(() => readPackageName(slug));
 
   const comment = buildProjectLeadComment(project, {
     packageName,

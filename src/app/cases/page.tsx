@@ -79,7 +79,7 @@ export default function CasesPage() {
             Обсудим участок, площадь, материал и подберём проект или адаптацию под вашу задачу.
           </p>
           <Button asChild className="mt-4">
-            <Link href="#cases-lead">Оставить заявку</Link>
+            <Link href="#cases-lead">Хочу похожий дом</Link>
           </Button>
         </div>
 
@@ -96,11 +96,18 @@ export default function CasesPage() {
         <div id="cases-lead" className="mt-16 border-t border-graphite/10 pt-16">
           <LeadForm
             id="cases-home-lead"
-            title="Хотите похожий дом?"
-            subtitle="Оставьте контакты — обсудим задачу и подскажем следующий шаг: проект, расчёт или консультация."
-            source="cases:home"
-            prefilledComment="Источник: /cases"
+            title="Хочу похожий дом"
+            subtitle="Оставьте контакты — обсудим задачу и подскажем следующий шаг: проект, расчёт или пример сметы."
             submitLabel="Обсудить похожий дом"
+            leadConfig={{
+              sourceType: "case-page",
+              formId: "cases-home-lead",
+              formName: "Кейсы — хочу похожий дом",
+              requestType: "case-like",
+              requestTitle: "Хочу похожий дом",
+              selectedCTA: "Обсудить похожий дом",
+              conversionGoal: "case_like_request",
+            }}
           />
         </div>
       </div>

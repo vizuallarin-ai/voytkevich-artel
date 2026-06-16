@@ -18,7 +18,9 @@ function envBool(key: string, defaultValue: boolean): boolean {
 
 export function getNotificationConfig(): NotificationConfig {
   return {
-    telegramEnabled: Boolean(process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID),
+    telegramEnabled: Boolean(
+      process.env.TELEGRAM_BOT_TOKEN?.trim() && process.env.TELEGRAM_CHAT_ID?.trim(),
+    ),
     emailEnabled: Boolean(
       process.env.LEADS_NOTIFICATION_EMAIL &&
         (process.env.RESEND_API_KEY || process.env.EMAIL_API_KEY || process.env.SMTP_HOST),

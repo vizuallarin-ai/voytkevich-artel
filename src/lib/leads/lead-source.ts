@@ -147,7 +147,33 @@ function inferFromLegacySourceString(source: string): {
     return { sourceType: "blog-post", requestType: "consultation", requestTitle: "Заявка из блога", conversionGoal: "blog_submit" };
   }
   if (source === "catalog" || source.startsWith("catalog")) {
-    return { sourceType: "catalog", requestType: "project-selection", requestTitle: "Подбор проекта", conversionGoal: "catalog_project_selection" };
+    const categorySlug = source.startsWith("catalog-")
+      ? source.replace(/^catalog-/, "")
+      : undefined;
+    return {
+      sourceType: categorySlug ? "catalog-category" : "catalog",
+      pageSlug: categorySlug,
+      requestType: "project-selection",
+      requestTitle: "Подбор проекта",
+      conversionGoal: "catalog_project_selection",
+      context: categorySlug ? { catalog: { categorySlug } } : undefined,
+    };
+  }
+  if (source === "faq") {
+    return {
+      sourceType: "faq",
+      requestType: "consultation",
+      requestTitle: "Вопрос из FAQ",
+      conversionGoal: "callback_request",
+    };
+  }
+  if (source === "process") {
+    return {
+      sourceType: "process",
+      requestType: "consultation",
+      requestTitle: "Консультация по процессу строительства",
+      conversionGoal: "callback_request",
+    };
   }
   if (source === "home" || source === "lead") {
     return { sourceType: "home", requestType: "callback", requestTitle: "Заявка с главной", conversionGoal: "callback_request" };

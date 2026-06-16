@@ -12,6 +12,7 @@ import type { LeadFormConfig } from "@/lib/leads/lead-source";
 import { inferLeadConfigFromLegacy } from "@/lib/leads/lead-source";
 import { cta, privacyConsent, privacyLinkText } from "@/data/copy";
 import { pageCopy } from "@/data/positioning";
+import { trackLeadEvent } from "@/lib/analytics/events";
 
 export function LeadForm({
   id = "lead",
@@ -54,6 +55,16 @@ export function LeadForm({
   });
 
   const [step, setStep] = useState(0);
+  const [formStarted, setFormStarted] = useState(false);
+
+  useEffect(() => {
+    trackLeadEvent("viewed", {
+      formId: config.formId ?? id,
+      pageType: config.sourceType,
+      ctaLabel: config.selectedCTA,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- once on mount
+  }, []);
 
   useEffect(() => {
     form.setValue("area", prefilledArea ?? form.values.area);
@@ -73,9 +84,24 @@ export function LeadForm({
 
   const progress = step === 0 ? 33 : step === 1 ? 66 : 100;
 
+  const stepButtonLabel =
+    step === 0
+      ? "Указать площадь и участок"
+      : step === 1
+        ? submitLabel ?? cta.preliminaryEstimate
+        : submitLabel ?? cta.preliminaryEstimate;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (step < 2) {
+      if (!formStarted) {
+        setFormStarted(true);
+        trackLeadEvent("started", {
+          formId: config.formId ?? id,
+          pageType: config.sourceType,
+          ctaLabel: config.selectedCTA,
+        });
+      }
       setStep(step + 1);
       return;
     }
@@ -100,7 +126,7 @@ export function LeadForm({
     <form
       id={id}
       onSubmit={handleSubmit}
-      className="glass rounded-sm p-6 md:p-8"
+      className="relative glass rounded-sm p-6 md:p-8"
       aria-labelledby={`${id}-title`}
     >
       <HoneypotField id={`${id}-website`} value={form.honeypot} onChange={form.setHoneypot} />
@@ -191,7 +217,7 @@ export function LeadForm({
       )}
 
       <Button type="submit" className="mt-6 w-full" size="lg" disabled={form.isSubmitting}>
-        {form.isSubmitting ? "Отправляем…" : step < 2 ? "Далее" : submitLabel ?? cta.preliminaryEstimate}
+        {form.isSubmitting ? "Отправляем…" : step < 2 ? stepButtonLabel : submitLabel ?? cta.preliminaryEstimate}
       </Button>
       {footnote && <p className="mt-3 text-center text-xs text-muted">{footnote}</p>}
       <p className="mt-3 text-center text-xs text-muted">

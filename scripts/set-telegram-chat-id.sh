@@ -18,7 +18,11 @@ else
   echo "TELEGRAM_CHAT_ID=${CHAT_ID}" >> .env
 fi
 
-docker compose up -d
+docker compose up -d --force-recreate
 
 echo "OK TELEGRAM_CHAT_ID=${CHAT_ID}"
-grep '^TELEGRAM_CHAT_ID=' .env
+grep '^TELEGRAM_' .env || true
+
+if [ -f scripts/test-telegram.sh ]; then
+  bash scripts/test-telegram.sh || true
+fi

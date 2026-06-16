@@ -157,7 +157,7 @@ export default async function CatalogCategoryPage({ params }: Props) {
       )}
 
       <div className="container-narrow mt-16 px-5 md:px-10 lg:px-16">
-        <CatalogPickerBlock />
+        <CatalogPickerBlock categorySlug={slug} categoryTitle={category.h1} />
       </div>
     </div>
   );

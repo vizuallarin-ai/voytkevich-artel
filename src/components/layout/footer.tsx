@@ -50,6 +50,21 @@ export function Footer() {
                 <Mail className="h-4 w-4 shrink-0" aria-hidden />
                 <a href={`mailto:${brand.email}`}>{brand.email}</a>
               </li>
+              <li>
+                <a
+                  href={`https://wa.me/${brand.phoneMobile.replace(/\D/g, "")}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-background"
+                >
+                  WhatsApp: {brand.phoneMobileDisplay}
+                </a>
+              </li>
+              <li>
+                <a href={brand.telegram} target="_blank" rel="noopener noreferrer" className="hover:text-background">
+                  Telegram
+                </a>
+              </li>
               <li className="flex items-center gap-2">
                 <MapPin className="h-4 w-4 shrink-0" aria-hidden />
                 <span>{brand.address}</span>

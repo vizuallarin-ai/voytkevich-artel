@@ -1,6 +1,6 @@
 import { AnimatedCounter } from "@/components/animations/counter";
 
-/** Статика в HTML для SEO + анимация поверх без нулей при загрузке */
+/** Анимированная статистика — одно визуальное значение, без дублей в DOM. */
 export function StatDisplay({
   value,
   suffix = "",
@@ -14,16 +14,11 @@ export function StatDisplay({
 }) {
   const formatted =
     decimals > 0 ? value.toFixed(decimals) : String(Math.round(value));
+  const label = `${formatted}${suffix}`;
 
   return (
-    <span className={className}>
-      <span className="sr-only">
-        {formatted}
-        {suffix}
-      </span>
-      <span aria-hidden="true">
-        <AnimatedCounter value={value} suffix={suffix} decimals={decimals} />
-      </span>
+    <span className={className} aria-label={label}>
+      <AnimatedCounter value={value} suffix={suffix} decimals={decimals} />
     </span>
   );
 }

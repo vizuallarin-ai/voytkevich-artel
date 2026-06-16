@@ -18,21 +18,24 @@ export async function sendLeadToWebhook(lead: Lead, url: string): Promise<boolea
 }
 
 export async function sendLeadToTelegram(lead: Lead, text: string): Promise<boolean> {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
-  if (!token || !chatId) return false;
+  const token = process.env.TELEGRAM_BOT_TOKEN?.trim();
+  const rawChatId = process.env.TELEGRAM_CHAT_ID?.trim();
+  if (!token || !rawChatId) return false;
+
+  const { normalizeTelegramChatId } = await import("@/lib/notifications/adapters/telegram");
 
   try {
     const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        chat_id: chatId,
-        text,
-        parse_mode: "Markdown",
+        chat_id: normalizeTelegramChatId(rawChatId),
+        text: text.slice(0, 4096),
+        disable_web_page_preview: true,
       }),
     });
-    return res.ok;
+    const data = (await res.json().catch(() => ({}))) as { ok?: boolean };
+    return res.ok && Boolean(data.ok);
   } catch {
     return false;
   }

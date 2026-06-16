@@ -52,9 +52,18 @@ export default function ProcessPage() {
         <div className="container-narrow max-w-lg px-5 md:px-10 lg:px-16">
           <LeadForm
             id="process-lead"
-            title={cta.buildConsultation}
-            subtitle="Обсудим этапы строительства и подготовим предварительный расчёт по вводным"
-            source="process"
+            title="Получить пример графика строительства"
+            subtitle="Обсудим этапы, сроки и что фиксируется на каждом шаге — от вводных до сдачи дома"
+            submitLabel={cta.buildConsultation}
+            leadConfig={{
+              sourceType: "process",
+              formId: "process-lead",
+              formName: "Процесс строительства — консультация",
+              requestType: "consultation",
+              requestTitle: "Консультация по процессу строительства",
+              selectedCTA: cta.buildConsultation,
+              conversionGoal: "callback_request",
+            }}
           />
         </div>
       </section>

@@ -61,12 +61,15 @@ export function PlannerWizard() {
 
   useEffect(() => {
     const saved = loadPlannerDraft();
-    if (saved) {
-      setDraft(saved);
-      editor.setInput(saved.input);
-    }
-    setHydrated(true);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    const frameId = requestAnimationFrame(() => {
+      if (saved) {
+        setDraft(saved);
+        editor.setInput(saved.input);
+      }
+      setHydrated(true);
+    });
+    return () => cancelAnimationFrame(frameId);
+  }, [editor]);
 
   useEffect(() => {
     if (!startedRef.current && hydrated) {

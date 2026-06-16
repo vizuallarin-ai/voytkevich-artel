@@ -1,7 +1,13 @@
 import { LeadForm } from "@/components/forms/lead-form";
 import { catalogPickerBlock } from "@/data/catalog-copy";
+import { cta } from "@/data/copy";
 
-export function CatalogPickerBlock() {
+type Props = {
+  categorySlug?: string;
+  categoryTitle?: string;
+};
+
+export function CatalogPickerBlock({ categorySlug, categoryTitle }: Props = {}) {
   return (
     <section
       id="catalog-picker"
@@ -16,9 +22,22 @@ export function CatalogPickerBlock() {
       <div className="mt-8 max-w-lg">
         <LeadForm
           id="catalog-picker-form"
-          title={catalogPickerBlock.cta}
+          title={categoryTitle ? `Подбор: ${categoryTitle}` : catalogPickerBlock.cta}
           subtitle="Уточним площадь, бюджет, участок и подберём 2–3 варианта из каталога"
-          source="catalog-picker"
+          submitLabel={cta.discussPlot}
+          leadConfig={{
+            sourceType: categorySlug ? "catalog-category" : "catalog",
+            pageSlug: categorySlug,
+            formId: "catalog-picker-form",
+            formName: categoryTitle
+              ? `Подбор проекта — ${categoryTitle}`
+              : "Подбор проекта из каталога",
+            requestType: "project-selection",
+            requestTitle: categoryTitle ?? "Подбор проекта под участок",
+            selectedCTA: cta.discussPlot,
+            conversionGoal: "catalog_project_selection",
+            context: categorySlug ? { catalog: { categorySlug } } : undefined,
+          }}
         />
       </div>
       <p className="mt-4 max-w-xl text-xs text-muted">{catalogPickerBlock.footnote}</p>

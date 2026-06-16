@@ -17,6 +17,7 @@ import { BlogFAQ } from "@/components/blog/blog-faq";
 import { BlogInlineCta } from "@/components/blog/blog-inline-cta";
 import { Button } from "@/components/ui/button";
 import { LeadForm } from "@/components/forms/lead-form";
+import { cta } from "@/data/copy";
 
 export const metadata: Metadata = pageMetadata({
   title: "Блог о строительстве домов в Иркутске",
@@ -147,10 +148,19 @@ export default async function BlogPage() {
         <div className="mt-16 border-t border-graphite/10 pt-16">
           <LeadForm
             id="blog-home-lead"
-            title="Нужна консультация по вашей задаче?"
-            subtitle="Ответим на вопросы и подскажем следующий шаг — расчёт, проект или каталог"
-            source="blog:home"
-            prefilledComment="Источник: главная страница блога /blog"
+            title="Обсудить мой проект"
+            subtitle="Ответим на вопросы и подскажем следующий шаг — расчёт, проект, чек-лист или каталог"
+            submitLabel={cta.getConsultation}
+            leadConfig={{
+              sourceType: "blog-post",
+              formId: "blog-home-lead",
+              formName: "Блог — консультация",
+              requestType: "consultation",
+              requestTitle: "Заявка с главной блога",
+              selectedCTA: cta.getConsultation,
+              conversionGoal: "blog_submit",
+              context: { blog: { slug: "index", title: "Главная блога" } },
+            }}
           />
         </div>
       </div>

@@ -1,23 +1,24 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 import { brand } from "@/data/brand";
 
 const KEY = `${brand.storagePrefix}-recent`;
 const MAX = 6;
 
-export function useRecentlyViewed() {
-  const [recent, setRecent] = useState<string[]>([]);
+function readRecent(): string[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = localStorage.getItem(KEY);
+    return raw ? (JSON.parse(raw) as string[]) : [];
+  } catch {
+    return [];
+  }
+}
 
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(KEY);
-      if (raw) setRecent(JSON.parse(raw));
-    } catch {
-      /* ignore */
-    }
-  }, []);
+export function useRecentlyViewed() {
+  const [recent, setRecent] = useState<string[]>(readRecent);
 
   const add = useCallback((slug: string) => {
     setRecent((prev) => {

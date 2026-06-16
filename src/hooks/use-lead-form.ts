@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { LeadFormContact, LeadFormInput, LeadSubmitResult } from "@/types/lead";
 import type { LeadFormConfig } from "@/lib/leads/lead-source";
 import { buildLeadFormInput } from "@/lib/leads/lead-source";
@@ -17,7 +17,11 @@ export type UseLeadFormOptions = {
 
 export function useLeadForm(options: UseLeadFormOptions) {
   const { config, defaultValues, onSuccess, onError, successMessage } = options;
-  const openedAt = useRef(Date.now());
+  const openedAt = useRef(0);
+
+  useEffect(() => {
+    openedAt.current = Date.now();
+  }, []);
 
   const [values, setValues] = useState<LeadFormContact>({
     name: defaultValues?.name ?? "",

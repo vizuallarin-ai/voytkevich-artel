@@ -17,7 +17,9 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Header />
-      <main id="main-content">{children}</main>
+      <main id="main-content" className="pb-24 md:pb-0">
+        {children}
+      </main>
       <Footer />
       <StickyCta />
       <MessengerWidget />

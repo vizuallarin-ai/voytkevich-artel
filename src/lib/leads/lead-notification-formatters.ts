@@ -93,6 +93,51 @@ export function formatTelegramLeadMessage(
   return lines.join("\n");
 }
 
+/** Plain text for Telegram groups — avoids Markdown parse errors. */
+export function formatTelegramLeadMessagePlain(
+  lead: StoredLead,
+  automation: Pick<LeadAutomationResult, "priority" | "recommendedAction" | "sla">,
+): string {
+  const summary = formatLeadNotificationSummary(lead);
+  const priorityLabel = getPriorityLabel(automation.priority);
+  const utm = lead.analytics.utm;
+  const utmLine = utm?.source
+    ? `${utm.source}${utm.medium ? ` / ${utm.medium}` : ""}${utm.campaign ? ` / ${utm.campaign}` : ""}`
+    : null;
+
+  const lines = [
+    `Новая заявка · ${priorityLabel}`,
+    "",
+    "Контакт:",
+    `Имя: ${lead.contact.name}`,
+    `Телефон: ${lead.contact.phone}`,
+  ];
+
+  if (lead.contact.messenger) lines.push(`Мессенджер: ${lead.contact.messenger}`);
+  lines.push("", "Суть:", summary);
+  lines.push("", "Источник:", formatSourceType(lead.source.sourceType));
+  if (lead.request.selectedCTA) lines.push(`CTA: ${lead.request.selectedCTA}`);
+  if (lead.meta.currentUrl) lines.push(`Страница: ${lead.meta.currentUrl}`);
+  if (utmLine) lines.push(`UTM: ${utmLine}`);
+
+  if (automation.sla) {
+    lines.push("", `Приоритет: ${priorityLabel}`);
+    lines.push(`SLA: ${formatSLAStatus({ ...lead, automation: { sla: automation.sla } })}`);
+  }
+
+  if (automation.recommendedAction?.title) {
+    lines.push("", "Следующий шаг:", automation.recommendedAction.title);
+    if (automation.recommendedAction.description) {
+      lines.push(automation.recommendedAction.description);
+    }
+  }
+
+  const dashboardUrl = getDashboardLeadUrl(lead.id);
+  if (dashboardUrl) lines.push("", `Карточка: ${dashboardUrl}`);
+
+  return lines.join("\n");
+}
+
 export function formatEmailSubject(lead: Lead, priority: string): string {
   const type = getLeadProcessingType(lead);
   const typeLabels: Record<string, string> = {

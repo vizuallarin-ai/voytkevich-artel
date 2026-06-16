@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Menu, Phone, X } from "lucide-react";
 import { brand } from "@/data/brand";
 import { cn } from "@/lib/utils";
@@ -24,7 +24,16 @@ const nav = [
 export function Header() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [menuPath, setMenuPath] = useState<string | null>(null);
+
+  const open = menuPath !== null && menuPath === pathname;
+
+  const setOpen = useCallback(
+    (next: boolean) => {
+      setMenuPath(next ? pathname : null);
+    },
+    [pathname],
+  );
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -32,25 +41,32 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => setOpen(false), [pathname]);
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [open]);
 
   return (
     <header
       className={cn(
         "fixed top-0 z-50 w-full transition-all duration-500",
-        scrolled ? "glass py-3 shadow-sm" : "bg-transparent py-5"
+        scrolled || open ? "glass py-3 shadow-sm" : "bg-transparent py-4",
       )}
     >
-      <div className="container-narrow flex items-center justify-between px-5 md:px-10 lg:px-16">
+      <div className="container-narrow flex items-center justify-between gap-3 px-5 md:px-10 lg:px-16">
         <Link
           href="/"
-          className="max-w-[11rem] leading-tight sm:max-w-none sm:text-left"
+          className="min-w-0 flex-1 leading-tight sm:flex-none"
           aria-label={`${brand.name} — на главную`}
         >
-          <span className="block text-[0.65rem] font-medium uppercase tracking-[0.12em] text-muted sm:text-xs">
+          <span className="block text-[0.7rem] font-medium uppercase tracking-[0.1em] text-muted sm:text-xs">
             {brand.logoLine1}
           </span>
-          <span className="font-display text-base tracking-tight text-foreground sm:text-xl md:text-2xl">
+          <span className="font-display text-lg tracking-tight text-foreground sm:text-xl md:text-2xl">
             {brand.logoLine2}
           </span>
         </Link>
@@ -62,7 +78,7 @@ export function Header() {
               href={item.href}
               className={cn(
                 "text-sm transition-colors hover:text-wood",
-                pathname.startsWith(item.href) ? "text-foreground" : "text-muted"
+                pathname.startsWith(item.href) ? "text-foreground" : "text-muted",
               )}
             >
               {item.label}
@@ -87,7 +103,7 @@ export function Header() {
 
         <button
           type="button"
-          className="lg:hidden"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-sm lg:hidden"
           onClick={() => setOpen(!open)}
           aria-expanded={open}
           aria-label={open ? "Закрыть меню" : "Открыть меню"}
@@ -97,18 +113,41 @@ export function Header() {
       </div>
 
       {open && (
-        <div className="glass border-t border-graphite/10 px-5 py-6 lg:hidden">
-          <nav className="flex flex-col gap-4" aria-label="Мобильная навигация">
-            {nav.map((item) => (
-              <Link key={item.href} href={item.href} className="text-lg">
-                {item.label}
-              </Link>
-            ))}
-            <Button asChild className="mt-4 w-full">
-              <Link href="/#lead">{cta.preliminaryEstimate}</Link>
-            </Button>
-          </nav>
-        </div>
+        <>
+          <button
+            type="button"
+            className="fixed inset-0 top-[4.5rem] z-40 bg-graphite/20 lg:hidden"
+            aria-label="Закрыть меню"
+            onClick={() => setOpen(false)}
+          />
+          <div className="relative z-50 glass max-h-[calc(100dvh-4.5rem)] overflow-y-auto border-t border-graphite/10 px-5 py-6 lg:hidden">
+            <nav className="flex flex-col gap-1" aria-label="Мобильная навигация">
+              {nav.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="rounded-sm px-2 py-3 text-lg transition hover:bg-muted-bg/80"
+                  onClick={() => setOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              ))}
+              <a
+                href={`tel:${brand.phone}`}
+                className="mt-2 flex items-center gap-2 rounded-sm px-2 py-3 text-base text-muted"
+                onClick={() => setOpen(false)}
+              >
+                <Phone className="h-5 w-5" aria-hidden />
+                {brand.phoneDisplay}
+              </a>
+              <Button asChild className="mt-4 w-full" size="lg">
+                <Link href="/#lead" onClick={() => setOpen(false)}>
+                  {cta.preliminaryEstimate}
+                </Link>
+              </Button>
+            </nav>
+          </div>
+        </>
       )}
     </header>
   );

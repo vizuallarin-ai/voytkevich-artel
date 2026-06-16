@@ -10,6 +10,7 @@ import {
 import { JsonLd, faqSchema } from "@/components/seo/json-ld";
 import { pageMetadata } from "@/lib/seo";
 import { LeadForm } from "@/components/forms/lead-form";
+import { cta } from "@/data/copy";
 
 export const metadata: Metadata = pageMetadata({
   title: "FAQ — частые вопросы о строительстве домов",
@@ -34,7 +35,22 @@ export default function FaqPage() {
             ))}
           </Accordion>
         </div>
-        <LeadForm title="Не нашли ответ?" subtitle="Задайте вопрос архитектору" />
+        <LeadForm
+          id="faq-lead"
+          title="Задать вопрос архитектору"
+          subtitle="Не нашли ответ — опишите задачу, участок или этап строительства"
+          source="faq"
+          submitLabel={cta.getConsultation}
+          leadConfig={{
+            sourceType: "faq",
+            formId: "faq-lead",
+            formName: "FAQ — вопрос архитектору",
+            requestType: "consultation",
+            requestTitle: "Вопрос из FAQ",
+            selectedCTA: cta.getConsultation,
+            conversionGoal: "callback_request",
+          }}
+        />
       </div>
     </div>
   );

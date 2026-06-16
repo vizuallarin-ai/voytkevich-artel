@@ -22,8 +22,9 @@ export function CompareBar({
   return (
     <div
       className={cn(
-        "fixed bottom-0 left-0 right-0 z-40",
+        "fixed inset-x-0 bottom-[4.75rem] z-50 md:bottom-0",
         "glass border-t border-graphite/15 shadow-2xl",
+        "pb-[max(0.5rem,env(safe-area-inset-bottom))]",
         "translate-y-0 transition-transform duration-300",
       )}
       role="region"
@@ -47,7 +48,7 @@ export function CompareBar({
               <button
                 type="button"
                 onClick={() => onRemove(p.id)}
-                className="ml-1 flex h-5 w-5 items-center justify-center rounded-full text-muted transition hover:bg-sand hover:text-foreground"
+                className="ml-1 flex h-9 w-9 items-center justify-center rounded-full text-muted transition hover:bg-sand hover:text-foreground"
                 aria-label={`Убрать ${p.name} из сравнения`}
               >
                 <X className="h-3 w-3" />

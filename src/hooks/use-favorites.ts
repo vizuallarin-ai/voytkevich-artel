@@ -1,22 +1,23 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 import { brand } from "@/data/brand";
 
 const KEY = `${brand.storagePrefix}-favorites`;
 
-export function useFavorites() {
-  const [favorites, setFavorites] = useState<string[]>([]);
+function readFavorites(): string[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = localStorage.getItem(KEY);
+    return raw ? (JSON.parse(raw) as string[]) : [];
+  } catch {
+    return [];
+  }
+}
 
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(KEY);
-      if (raw) setFavorites(JSON.parse(raw));
-    } catch {
-      /* ignore */
-    }
-  }, []);
+export function useFavorites() {
+  const [favorites, setFavorites] = useState<string[]>(readFavorites);
 
   const persist = useCallback((next: string[]) => {
     setFavorites(next);
@@ -28,10 +29,10 @@ export function useFavorites() {
       persist(
         favorites.includes(id)
           ? favorites.filter((f) => f !== id)
-          : [...favorites, id]
+          : [...favorites, id],
       );
     },
-    [favorites, persist]
+    [favorites, persist],
   );
 
   const isFavorite = useCallback((id: string) => favorites.includes(id), [favorites]);

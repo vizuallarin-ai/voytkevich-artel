@@ -41,6 +41,8 @@ const SECTIONS: NavSection[] = [
     items: [
       { href: "/dashboard/seo", label: "Обзор системы" },
       { href: "/dashboard/seo/roadmap", label: "Очередь публикаций" },
+      { href: "/dashboard/seo/taxonomy", label: "Таксономия" },
+      { href: "/dashboard/seo/taxonomy/matrix", label: "Матрица комбинаций" },
     ],
   },
 ];
@@ -62,6 +64,12 @@ function isActive(pathname: string, group: string | null, item: NavItem): boolea
   }
   if (item.href === "/dashboard/seo/roadmap") {
     return pathname.startsWith("/dashboard/seo/roadmap");
+  }
+  if (item.href === "/dashboard/seo/taxonomy/matrix") {
+    return pathname.startsWith("/dashboard/seo/taxonomy/matrix");
+  }
+  if (item.href === "/dashboard/seo/taxonomy") {
+    return pathname === "/dashboard/seo/taxonomy";
   }
   if (item.href === "/dashboard/leads") {
     if (pathname.startsWith("/dashboard/leads/")) {

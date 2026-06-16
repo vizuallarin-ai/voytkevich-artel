@@ -26,6 +26,17 @@ done
 
 curl -sf http://127.0.0.1:3000/api/health | head -c 500 || echo "WARN: health check failed"
 
+if curl -sf http://127.0.0.1:3000/api/health | grep -q '"telegram":true'; then
+  echo "==> telegram test (optional)"
+  if [ -f scripts/test-telegram.sh ]; then
+    bash scripts/test-telegram.sh || echo "WARN: telegram test failed — проверьте TELEGRAM_* в .env"
+  else
+    echo "WARN: scripts/test-telegram.sh not found — git pull или создайте скрипт"
+    curl -sS -X POST http://127.0.0.1:3000/api/dashboard/test-telegram 2>/dev/null | head -c 300 || true
+    echo ""
+  fi
+fi
+
 echo "==> nginx"
 if certbot certificates 2>/dev/null | grep -q "$DOMAIN"; then
   echo "SSL cert exists — keeping nginx config (certbot-managed)"
@@ -49,7 +60,7 @@ else
 fi
 
 echo "==> backup cron"
-chmod +x scripts/backup-stroistroy-data.sh scripts/verify-production.sh scripts/setup-github-deploy-key.sh 2>/dev/null || true
+chmod +x scripts/backup-stroistroy-data.sh scripts/verify-production.sh scripts/setup-github-deploy-key.sh scripts/test-telegram.sh scripts/set-telegram-chat-id.sh 2>/dev/null || true
 CRON_LINE="0 3 * * * APP_DIR=$APP_DIR $APP_DIR/scripts/backup-stroistroy-data.sh >> /var/log/stroistroy-backup.log 2>&1"
 (crontab -l 2>/dev/null | grep -v backup-stroistroy-data; echo "$CRON_LINE") | crontab -
 

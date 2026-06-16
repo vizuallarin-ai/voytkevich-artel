@@ -56,7 +56,7 @@ export function trackConversionGoal(goalId: ConversionGoalId, payload?: Record<s
 }
 
 export function trackLeadEvent(
-  action: "started" | "submitted" | "success" | "error",
+  action: "viewed" | "started" | "submitted" | "success" | "error",
   payload?: Record<string, unknown>,
 ) {
   trackEvent(`lead_form_${action}`, payload);

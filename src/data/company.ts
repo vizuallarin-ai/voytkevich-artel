@@ -2,8 +2,8 @@ import type { BuiltHome, Partner, TeamMember } from "@/types";
 import { photos, unsplash } from "@/data/images";
 
 export const companyStats = [
-  { value: 127, suffix: "", label: "домов построено", decimals: 0 },
-  { value: 98, suffix: "%", label: "объектов сданы в срок", decimals: 0 },
+  { value: 127, suffix: "+", label: "домов построено", decimals: 0 },
+  { value: 98, suffix: "%", label: "объектов в срок", decimals: 0 },
   { value: 4.9, suffix: "", label: "рейтинг клиентов", decimals: 1 },
   { value: 5, suffix: " лет", label: "гарантия на конструктив", decimals: 0 },
 ];

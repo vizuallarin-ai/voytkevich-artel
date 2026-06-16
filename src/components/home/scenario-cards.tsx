@@ -10,7 +10,7 @@ export function ScenarioCards() {
         <Reveal>
           <p className="label-caps">С чего начнём</p>
           <h2 id="scenarios-title" className="heading-section mt-2">
-            Выберите, что для вас сейчас актуально
+            С чего начнём
           </h2>
         </Reveal>
         <Stagger className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

@@ -565,7 +565,7 @@ export function CalculatorWizard() {
             )}
             {step < 5 && (
               <Button type="button" onClick={goNext}>
-                {step === 4 ? "Показать результат" : "Далее"}
+                {step === 4 ? "Показать результат" : step === 1 ? "Выбрать комплектацию" : step === 2 ? "Уточнить участок" : step === 3 ? "Дополнительные опции" : "Начать расчёт"}
               </Button>
             )}
             {step === 5 && (
