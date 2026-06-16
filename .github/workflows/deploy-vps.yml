@@ -1,0 +1,25 @@
+name: Deploy VPS
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths-ignore:
+      - "docs/**"
+      - "*.md"
+
+jobs:
+  deploy:
+    if: ${{ secrets.VPS_SSH_KEY != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            set -euo pipefail
+            cd /opt/stroistroy
+            bash scripts/vps-update.sh

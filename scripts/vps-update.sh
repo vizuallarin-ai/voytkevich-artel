@@ -12,8 +12,8 @@ cd "$APP_DIR"
 echo "==> git pull"
 git pull origin master
 
-echo "==> docker compose up"
-docker compose up -d --build
+echo "==> docker compose up (rebuild + reload .env)"
+docker compose up -d --build --force-recreate
 
 echo "==> wait for app"
 for i in $(seq 1 30); do

@@ -163,10 +163,28 @@ certbot --nginx -d stroistroy.ru -d www.stroistroy.ru
 
 ---
 
-## 9. Обновления
+## 9. Обновления (после `git push`)
+
+**Beget → VPS → Терминал в браузере** (или SSH с паролем):
 
 ```bash
-cd /opt/stroistroy && git pull && docker compose up -d --build
+cd /opt/stroistroy && bash scripts/vps-update.sh
+```
+
+Скрипт: `git pull` → `docker compose up -d --build --force-recreate` → health → тест Telegram → nginx/SSL → smoke.
+
+Только Telegram-тест:
+
+```bash
+cd /opt/stroistroy && bash scripts/test-telegram.sh
+```
+
+Добавить SSH-ключ с ПК (один раз, чтобы деплоить без пароля):
+
+```bash
+# на VPS — вставьте содержимое ~/.ssh/beget_stroistroy.pub с вашего ПК
+mkdir -p ~/.ssh && nano ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
 ```
 
 ---
