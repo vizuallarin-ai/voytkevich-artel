@@ -50,7 +50,7 @@ export function CalculatorLeadSection({
   }, [input, result]);
 
   return (
-    <section id="calculator-lead" className="mt-16 scroll-mt-28">
+    <section id="calculator-lead-detailed" className="mt-16 scroll-mt-28">
       <div className="mb-8 rounded-sm border border-wood/30 bg-wood/5 p-6 md:p-8">
         <p className="font-display text-xl md:text-2xl">Ваш предварительный расчёт готов</p>
         <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">

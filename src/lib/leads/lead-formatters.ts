@@ -93,8 +93,27 @@ export function generateLeadSummary(lead: Lead): string {
     return `Заявка с коммерческой страницы «${context.service.title}».`;
   }
 
-  if (qualification.desiredArea || qualification.desiredMaterial) {
-    return `Заявка: ${request.title}${qualification.desiredArea ? `, ${qualification.desiredArea} м²` : ""}${qualification.desiredMaterial ? `, ${qualification.desiredMaterial}` : ""}.`;
+  if (qualification.desiredArea || qualification.desiredMaterial || qualification.budget?.raw) {
+    const parts = [
+      request.title,
+      qualification.desiredArea ? `${qualification.desiredArea} м²` : null,
+      qualification.desiredMaterial,
+      qualification.budget?.raw ? `бюджет ${qualification.budget.raw}` : null,
+      qualification.hasLand === "yes"
+        ? qualification.landLocation
+          ? `участок: ${qualification.landLocation}`
+          : "есть участок"
+        : qualification.hasLand === "searching"
+          ? "участок в поиске"
+          : qualification.hasLand === "no"
+            ? "участка пока нет"
+            : null,
+    ].filter(Boolean);
+    return `Заявка: ${parts.join(", ")}.`;
+  }
+
+  if (lead.contact.messenger) {
+    return `${request.title}. Связь: ${lead.contact.messenger}. Источник: ${formatSourceType(source.sourceType).toLowerCase()}.`;
   }
 
   return `${request.title}. Источник: ${formatSourceType(source.sourceType).toLowerCase()}.`;
@@ -120,7 +139,10 @@ export function formatLeadForManager(lead: StoredLead): string {
   if (q.desiredArea) params.push(`Площадь: ${q.desiredArea} м²`);
   if (q.desiredMaterial) params.push(`Материал: ${q.desiredMaterial}`);
   if (q.budget?.raw) params.push(`Бюджет: ${q.budget.raw}`);
-  if (q.landLocation) params.push(`Участок: ${q.landLocation}`);
+  if (q.hasLand === "yes") params.push(`Участок: ${q.landLocation ?? "есть"}`);
+  else if (q.hasLand === "searching") params.push("Участок: в поиске");
+  else if (q.hasLand === "no") params.push("Участок: пока нет");
+  if (q.landLocation && q.hasLand !== "yes") params.push(`Локация: ${q.landLocation}`);
   if (params.length) {
     lines.push("", "Параметры:", ...params);
   }

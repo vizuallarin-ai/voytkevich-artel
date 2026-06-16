@@ -6,6 +6,7 @@ import type { LeadFormConfig } from "@/lib/leads/lead-source";
 import { buildLeadFormInput } from "@/lib/leads/lead-source";
 import { submitLead } from "@/lib/leads/submit-lead";
 import { brand } from "@/data/brand";
+import { messengerLabel } from "@/data/lead-form-options";
 
 export type UseLeadFormOptions = {
   config: LeadFormConfig;
@@ -60,15 +61,31 @@ export function useLeadForm(options: UseLeadFormOptions) {
     openedAt.current = Date.now();
   }, [defaultValues?.area, defaultValues?.comment]);
 
+  const validateContact = useCallback((): boolean => {
+    const next: Partial<Record<keyof LeadFormContact, string>> = {};
+    if (!values.name.trim()) next.name = "Укажите имя";
+    if (!values.phone.trim()) next.phone = "Укажите телефон";
+    setErrors(next);
+    return Object.keys(next).length === 0;
+  }, [values.name, values.phone]);
+
   const buildInput = useCallback(
-    (comment?: string): LeadFormInput =>
-      buildLeadFormInput({
-        contact: { ...values, comment: comment ?? values.comment },
+    (comment?: string): LeadFormInput => {
+      const messenger = values.messenger
+        ? messengerLabel(values.messenger)
+        : undefined;
+      return buildLeadFormInput({
+        contact: {
+          ...values,
+          messenger,
+          comment: comment ?? values.comment,
+        },
         config,
         comment,
         honeypot,
         meta: { formOpenedAt: openedAt.current },
-      }),
+      });
+    },
     [values, config, honeypot],
   );
 
@@ -118,6 +135,7 @@ export function useLeadForm(options: UseLeadFormOptions) {
       submit,
       reset,
       buildInput,
+      validateContact,
     }),
     [
       values,
@@ -131,6 +149,7 @@ export function useLeadForm(options: UseLeadFormOptions) {
       submit,
       reset,
       buildInput,
+      validateContact,
     ],
   );
 }

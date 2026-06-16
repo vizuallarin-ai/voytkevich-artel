@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/seo/breadcrumbs";
 import { CalculatorHero } from "@/components/calculator/calculator-hero";
 import { CalculatorWizardLoader } from "@/components/calculator/calculator-wizard-loader";
+import { CalculatorQuickLead } from "@/components/calculator/calculator-quick-lead";
 import { CalculatorFaq } from "@/components/calculator/calculator-faq";
 import { CalculatorSeoText } from "@/components/calculator/calculator-seo-text";
 import { FunnelHint } from "@/components/planner/funnel-hint";
@@ -29,6 +30,7 @@ export default function CalculatorPage() {
           <CalculatorHero />
         </Reveal>
         <FunnelHint page="calculator" />
+        <CalculatorQuickLead />
         <div className="mt-12">
           <CalculatorWizardLoader />
         </div>

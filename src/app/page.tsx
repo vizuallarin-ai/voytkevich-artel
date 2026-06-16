@@ -412,7 +412,7 @@ export default async function HomePage() {
           </Reveal>
           <LeadForm
             title={cta.preliminaryEstimate}
-            subtitle="Перезвоним в течение рабочего дня с ориентировочной сметой"
+            subtitle="Имя и телефон — на втором шаге уточним площадь, бюджет и участок. Ответ в течение рабочего дня."
             leadConfig={{
               sourceType: "home",
               formId: "home-lead",

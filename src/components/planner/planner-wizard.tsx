@@ -489,7 +489,7 @@ export function PlannerWizard() {
         </div>
       )}
 
-      {step === 5 && (
+      {step >= 4 && (
         <PlannerLeadSection
           draft={{ ...draft, input: editor.input }}
           summary={summary}

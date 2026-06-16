@@ -14,6 +14,8 @@ import { getBlogCta, categoryToCluster } from "@/data/blog-cta-map";
 import { BlogFAQ } from "@/components/blog/blog-faq";
 import { filterProjects } from "@/lib/filters";
 import { BlogRelatedProjects } from "@/components/blog/blog-related-projects";
+import { LeadForm } from "@/components/forms/lead-form";
+import { cta as siteCta } from "@/data/copy";
 
 type Props = { params: Promise<{ categorySlug: string }> };
 
@@ -116,6 +118,26 @@ export default async function BlogCategoryPage({ params }: Props) {
         ) : null}
 
         {faqs.length ? <BlogFAQ items={faqs} /> : null}
+
+        <section id="blog-lead" className="mt-16 scroll-mt-28 border-t border-graphite/10 pt-16">
+          <LeadForm
+            id="blog-category-lead"
+            title={category.primaryCTA}
+            subtitle="Опишите задачу — подскажем следующий шаг: расчёт, проект или консультация."
+            submitLabel={siteCta.getConsultation}
+            leadConfig={{
+              sourceType: "blog",
+              formId: "blog-category-lead",
+              formName: `Блог — категория ${category.title}`,
+              pageSlug: categorySlug,
+              requestType: "consultation",
+              requestTitle: category.primaryCTA,
+              selectedCTA: category.primaryCTA,
+              conversionGoal: "callback_request",
+              context: { blog: { title: category.title, categorySlug, clusterId: categorySlug } },
+            }}
+          />
+        </section>
       </div>
     </div>
   );

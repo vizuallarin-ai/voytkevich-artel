@@ -68,13 +68,13 @@ export function CalculatorResult({
           className="w-full"
           onClick={() => {
             onScrollToLead?.();
-            document.getElementById("calculator-lead")?.scrollIntoView({ behavior: "smooth" });
+            document.getElementById("calculator-lead-detailed")?.scrollIntoView({ behavior: "smooth" });
           }}
         >
           Получить подробный расчёт
         </Button>
         <Button asChild size="lg" variant="outline" className="w-full">
-          <Link href="#calculator-lead">{cta.sendToSpecialist}</Link>
+          <Link href="#calculator-lead-detailed">{cta.sendToSpecialist}</Link>
         </Button>
         <Button asChild size="lg" variant="ghost" className="w-full">
           <Link href="/catalog">Смотреть подходящие проекты</Link>

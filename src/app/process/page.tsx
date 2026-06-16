@@ -48,7 +48,7 @@ export default function ProcessPage() {
         </div>
       </div>
 
-      <section className="section-padding bg-muted-bg">
+      <section id="process-lead" className="section-padding bg-muted-bg scroll-mt-28">
         <div className="container-narrow max-w-lg px-5 md:px-10 lg:px-16">
           <LeadForm
             id="process-lead"

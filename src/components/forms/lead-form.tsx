@@ -12,7 +12,16 @@ import type { LeadFormConfig } from "@/lib/leads/lead-source";
 import { inferLeadConfigFromLegacy } from "@/lib/leads/lead-source";
 import { cta, privacyConsent, privacyLinkText } from "@/data/copy";
 import { pageCopy } from "@/data/positioning";
+import {
+  leadBudgetOptions,
+  leadLandOptions,
+  leadMessengerOptions,
+} from "@/data/lead-form-options";
 import { trackLeadEvent } from "@/lib/analytics/events";
+import { cn } from "@/lib/utils";
+
+const selectClassName =
+  "mt-1 flex h-11 w-full rounded-sm border border-graphite/15 bg-background px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-graphite";
 
 export function LeadForm({
   id = "lead",
@@ -50,6 +59,9 @@ export function LeadForm({
     defaultValues: {
       area: prefilledArea ?? "",
       comment: prefilledComment ?? "",
+      messenger: "call",
+      hasLand: "",
+      budget: "",
     },
     successMessage,
   });
@@ -82,18 +94,14 @@ export function LeadForm({
     });
   });
 
-  const progress = step === 0 ? 33 : step === 1 ? 66 : 100;
-
-  const stepButtonLabel =
-    step === 0
-      ? "Указать площадь и участок"
-      : step === 1
-        ? submitLabel ?? cta.preliminaryEstimate
-        : submitLabel ?? cta.preliminaryEstimate;
+  const progress = step === 0 ? 50 : 100;
+  const showLandLocation = form.values.hasLand === "yes";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (step < 2) {
+
+    if (step === 0) {
+      if (!form.validateContact()) return;
       if (!formStarted) {
         setFormStarted(true);
         trackLeadEvent("started", {
@@ -102,9 +110,10 @@ export function LeadForm({
           ctaLabel: config.selectedCTA,
         });
       }
-      setStep(step + 1);
+      setStep(1);
       return;
     }
+
     await form.submit(prefilledComment ?? form.values.comment);
     if (form.isSuccess) {
       localStorage.removeItem(`lead-${id}`);
@@ -117,6 +126,9 @@ export function LeadForm({
         <p className="heading-section text-2xl">{pageCopy.forms.successTitle}</p>
         <p className="mt-2 text-muted">
           {form.successMessage ?? pageCopy.forms.successMessage}
+        </p>
+        <p className="mt-4 text-sm text-muted">
+          Ответим в течение рабочего дня — в выбранном способе связи.
         </p>
       </div>
     );
@@ -141,7 +153,10 @@ export function LeadForm({
           aria-valuemax={100}
         />
       </div>
-      <p id={`${id}-title`} className="heading-section text-2xl md:text-3xl">
+      <p className="text-xs text-muted">
+        Шаг {step + 1} из 2 · {step === 0 ? "контакты" : "параметры дома"}
+      </p>
+      <p id={`${id}-title`} className="heading-section mt-2 text-2xl md:text-3xl">
         {title}
       </p>
       <p className="mt-2 text-sm text-muted">{subtitle}</p>
@@ -154,6 +169,7 @@ export function LeadForm({
               <Input
                 id={`${id}-name`}
                 required
+                autoComplete="name"
                 value={form.values.name}
                 onChange={(e) => form.setValue("name", e.target.value)}
                 placeholder="Как к вам обращаться"
@@ -169,6 +185,8 @@ export function LeadForm({
                 id={`${id}-phone`}
                 type="tel"
                 required
+                autoComplete="tel"
+                inputMode="tel"
                 value={form.values.phone}
                 onChange={(e) => form.setValue("phone", e.target.value)}
                 placeholder="+7 (___) ___-__-__"
@@ -178,32 +196,104 @@ export function LeadForm({
                 <p className="mt-1 text-xs text-destructive">{form.errors.phone}</p>
               ) : null}
             </div>
+            <div>
+              <Label htmlFor={`${id}-messenger`}>Как удобнее связаться</Label>
+              <select
+                id={`${id}-messenger`}
+                value={form.values.messenger ?? "call"}
+                onChange={(e) => form.setValue("messenger", e.target.value)}
+                className={selectClassName}
+              >
+                {leadMessengerOptions.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </>
         )}
         {step === 1 && (
-          <div>
-            <Label htmlFor={`${id}-area`}>Желаемая площадь, м²</Label>
-            <Input
-              id={`${id}-area`}
-              type="number"
-              value={form.values.area ?? ""}
-              onChange={(e) => form.setValue("area", e.target.value)}
-              placeholder="120–240"
-              className="mt-1"
-            />
-          </div>
-        )}
-        {step === 2 && (
-          <div>
-            <Label htmlFor={`${id}-comment`}>Комментарий</Label>
-            <textarea
-              id={`${id}-comment`}
-              value={form.values.comment ?? ""}
-              onChange={(e) => form.setValue("comment", e.target.value)}
-              placeholder="Участок, сроки, пожелания"
-              className="mt-1 flex min-h-[100px] w-full rounded-sm border border-graphite/15 bg-background px-4 py-3 text-sm"
-            />
-          </div>
+          <>
+            <div>
+              <Label htmlFor={`${id}-area`}>Желаемая площадь, м²</Label>
+              <Input
+                id={`${id}-area`}
+                type="number"
+                inputMode="numeric"
+                value={form.values.area ?? ""}
+                onChange={(e) => form.setValue("area", e.target.value)}
+                placeholder="Например, 120"
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label htmlFor={`${id}-budget`}>Ориентир по бюджету</Label>
+              <select
+                id={`${id}-budget`}
+                value={form.values.budget ?? ""}
+                onChange={(e) => form.setValue("budget", e.target.value)}
+                className={selectClassName}
+              >
+                {leadBudgetOptions.map((opt) => (
+                  <option key={opt.label} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <fieldset>
+              <legend className="text-sm font-medium">Участок</legend>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {leadLandOptions.map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => form.setValue("hasLand", opt.value)}
+                    className={cn(
+                      "rounded-full border px-3 py-2 text-sm transition",
+                      form.values.hasLand === opt.value
+                        ? "border-graphite bg-graphite text-background"
+                        : "border-graphite/15 hover:border-graphite/40",
+                    )}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </fieldset>
+            {showLandLocation ? (
+              <div>
+                <Label htmlFor={`${id}-land`}>Где участок</Label>
+                <Input
+                  id={`${id}-land`}
+                  value={form.values.landLocation ?? ""}
+                  onChange={(e) => form.setValue("landLocation", e.target.value)}
+                  placeholder="Район, посёлок, КП"
+                  className="mt-1"
+                />
+              </div>
+            ) : null}
+            <div>
+              <Label htmlFor={`${id}-comment`}>
+                Комментарий <span className="font-normal text-muted">(необязательно)</span>
+              </Label>
+              <textarea
+                id={`${id}-comment`}
+                value={form.values.comment ?? ""}
+                onChange={(e) => form.setValue("comment", e.target.value)}
+                placeholder="Сроки, материал, что важно"
+                className="mt-1 flex min-h-[88px] w-full rounded-sm border border-graphite/15 bg-background px-4 py-3 text-sm"
+              />
+            </div>
+            <button
+              type="button"
+              className="text-sm text-muted underline-offset-4 hover:underline"
+              onClick={() => setStep(0)}
+            >
+              ← Изменить контакты
+            </button>
+          </>
         )}
       </div>
 
@@ -217,7 +307,11 @@ export function LeadForm({
       )}
 
       <Button type="submit" className="mt-6 w-full" size="lg" disabled={form.isSubmitting}>
-        {form.isSubmitting ? "Отправляем…" : step < 2 ? stepButtonLabel : submitLabel ?? cta.preliminaryEstimate}
+        {form.isSubmitting
+          ? "Отправляем…"
+          : step === 0
+            ? "Далее: параметры дома"
+            : (submitLabel ?? cta.preliminaryEstimate)}
       </Button>
       {footnote && <p className="mt-3 text-center text-xs text-muted">{footnote}</p>}
       <p className="mt-3 text-center text-xs text-muted">

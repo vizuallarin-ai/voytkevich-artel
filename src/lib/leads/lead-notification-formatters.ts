@@ -42,8 +42,22 @@ export function formatLeadNotificationSummary(lead: Lead): string {
     case "service-page":
       return `Заявка с коммерческой страницы «${context.service?.title ?? request.title}».`;
     default:
-      return generateLeadSummary(lead);
+      return buildCallbackSummary(lead);
   }
+}
+
+function buildCallbackSummary(lead: Lead): string {
+  const { request, source, qualification, contact } = lead;
+  const parts = [request.title];
+  if (qualification.desiredArea) parts.push(`${qualification.desiredArea} м²`);
+  if (qualification.budget?.raw) parts.push(`бюджет ${qualification.budget.raw}`);
+  if (qualification.hasLand === "yes") {
+    parts.push(qualification.landLocation ? `участок: ${qualification.landLocation}` : "есть участок");
+  } else if (qualification.hasLand === "searching") {
+    parts.push("участок в поиске");
+  }
+  if (contact.messenger) parts.push(`связь: ${contact.messenger}`);
+  return `${parts.join(", ")}. Источник: ${formatSourceType(source.sourceType).toLowerCase()}.`;
 }
 
 export function formatTelegramLeadMessage(

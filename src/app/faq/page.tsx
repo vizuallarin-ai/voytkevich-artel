@@ -35,6 +35,7 @@ export default function FaqPage() {
             ))}
           </Accordion>
         </div>
+        <div id="faq-lead" className="scroll-mt-28">
         <LeadForm
           id="faq-lead"
           title="Задать вопрос архитектору"
@@ -51,6 +52,7 @@ export default function FaqPage() {
             conversionGoal: "callback_request",
           }}
         />
+        </div>
       </div>
     </div>
   );
