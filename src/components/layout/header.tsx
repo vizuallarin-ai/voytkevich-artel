@@ -3,34 +3,26 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { Menu, Phone, X } from "lucide-react";
+import { ChevronDown, Menu, Phone, X } from "lucide-react";
 import { brand } from "@/data/brand";
+import { siteNavGroups } from "@/data/site-nav";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { MagneticButton } from "@/components/animations/magnetic-button";
 import { cta } from "@/data/copy";
 
-const nav = [
-  { href: "/catalog", label: "Каталог" },
-  { href: "/calculator", label: "Калькулятор" },
-  { href: "/planirovka", label: "Планировщик" },
-  { href: "/process", label: "Процесс" },
-  { href: "/about", label: "О компании" },
-  { href: "/blog", label: "Блог" },
-  { href: "/cases", label: "Кейсы" },
-  { href: "/faq", label: "FAQ" },
-];
-
 export function Header() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [menuPath, setMenuPath] = useState<string | null>(null);
+  const [openGroup, setOpenGroup] = useState<string | null>(null);
 
   const open = menuPath !== null && menuPath === pathname;
 
   const setOpen = useCallback(
     (next: boolean) => {
       setMenuPath(next ? pathname : null);
+      if (!next) setOpenGroup(null);
     },
     [pathname],
   );
@@ -49,6 +41,9 @@ export function Header() {
       document.body.style.overflow = prev;
     };
   }, [open]);
+
+  const isActive = (href: string) =>
+    href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
     <header
@@ -71,18 +66,40 @@ export function Header() {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-8 lg:flex" aria-label="Основная навигация">
-          {nav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "text-sm transition-colors hover:text-wood",
-                pathname.startsWith(item.href) ? "text-foreground" : "text-muted",
-              )}
-            >
-              {item.label}
-            </Link>
+        <nav className="hidden items-center gap-1 xl:flex" aria-label="Основная навигация">
+          {siteNavGroups.map((group) => (
+            <div key={group.id} className="group relative">
+              <button
+                type="button"
+                className={cn(
+                  "flex items-center gap-1 rounded-sm px-3 py-2 text-sm transition hover:bg-muted-bg/80 hover:text-foreground",
+                  group.items.some((i) => isActive(i.href)) ? "text-foreground" : "text-muted",
+                )}
+                aria-haspopup="true"
+              >
+                {group.label}
+                <ChevronDown className="h-3.5 w-3.5 opacity-60" aria-hidden />
+              </button>
+              <div className="invisible absolute left-0 top-full z-50 min-w-[15rem] pt-2 opacity-0 transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                <div className="rounded-sm border border-graphite/10 bg-background p-2 shadow-lg">
+                  {group.items.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={cn(
+                        "block rounded-sm px-3 py-2 transition hover:bg-muted-bg",
+                        isActive(item.href) ? "text-foreground" : "text-muted",
+                      )}
+                    >
+                      <span className="text-sm font-medium">{item.label}</span>
+                      {item.description ? (
+                        <span className="mt-0.5 block text-xs text-muted">{item.description}</span>
+                      ) : null}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
           ))}
         </nav>
 
@@ -120,27 +137,47 @@ export function Header() {
             aria-label="Закрыть меню"
             onClick={() => setOpen(false)}
           />
-          <div className="relative z-50 glass max-h-[calc(100dvh-4.5rem)] overflow-y-auto border-t border-graphite/10 px-5 py-6 lg:hidden">
-            <nav className="flex flex-col gap-1" aria-label="Мобильная навигация">
-              {nav.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="rounded-sm px-2 py-3 text-lg transition hover:bg-muted-bg/80"
-                  onClick={() => setOpen(false)}
-                >
-                  {item.label}
-                </Link>
+          <div className="relative z-50 glass max-h-[calc(100dvh-4.5rem)] overflow-y-auto border-t border-graphite/10 px-5 py-4 lg:hidden">
+            <nav className="flex flex-col gap-4" aria-label="Мобильная навигация">
+              {siteNavGroups.map((group) => (
+                <div key={group.id}>
+                  <button
+                    type="button"
+                    className="flex w-full items-center justify-between py-2 text-left text-xs font-medium uppercase tracking-wider text-muted"
+                    onClick={() => setOpenGroup(openGroup === group.id ? null : group.id)}
+                    aria-expanded={openGroup === group.id}
+                  >
+                    {group.label}
+                    <ChevronDown
+                      className={cn("h-4 w-4 transition", openGroup === group.id && "rotate-180")}
+                      aria-hidden
+                    />
+                  </button>
+                  {openGroup === group.id ? (
+                    <div className="mt-1 flex flex-col gap-0.5 border-l border-graphite/10 pl-3">
+                      {group.items.map((item) => (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          className="rounded-sm py-2.5 text-base transition hover:text-wood"
+                          onClick={() => setOpen(false)}
+                        >
+                          {item.label}
+                        </Link>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
               ))}
               <a
                 href={`tel:${brand.phone}`}
-                className="mt-2 flex items-center gap-2 rounded-sm px-2 py-3 text-base text-muted"
+                className="flex items-center gap-2 border-t border-graphite/10 pt-4 text-base text-muted"
                 onClick={() => setOpen(false)}
               >
                 <Phone className="h-5 w-5" aria-hidden />
                 {brand.phoneDisplay}
               </a>
-              <Button asChild className="mt-4 w-full" size="lg">
+              <Button asChild className="w-full" size="lg">
                 <Link href="/#lead" onClick={() => setOpen(false)}>
                   {cta.preliminaryEstimate}
                 </Link>

@@ -1,8 +1,7 @@
 "use client";
 
 import type { LeadMagnet, LeadMagnetSubmitContext } from "@/types/lead-magnet";
-import { Button } from "@/components/ui/button";
-import { getLeadMagnetTypeLabel, trackLeadMagnetEvent } from "@/lib/lead-magnets";
+import { getLeadMagnetTypeLabel } from "@/lib/lead-magnets";
 import { LeadMagnetModal } from "./lead-magnet-modal";
 
 type Props = {
@@ -13,23 +12,6 @@ type Props = {
 };
 
 export function LeadMagnetCard({ magnet, context, prefilledArea, compact }: Props) {
-  const trigger = (
-    <Button
-      className="w-full sm:w-auto"
-      size={compact ? "sm" : "default"}
-      onClick={() =>
-        trackLeadMagnetEvent("lead_magnet_clicked", {
-          leadMagnetId: magnet.id,
-          leadMagnetType: magnet.type,
-          pageType: context.pageType,
-          pageSlug: context.pageSlug,
-        })
-      }
-    >
-      {magnet.cta.primaryLabel}
-    </Button>
-  );
-
   return (
     <article className="flex h-full flex-col rounded-sm border border-graphite/10 bg-background p-5 md:p-6">
       <span className="label-caps text-wood">{getLeadMagnetTypeLabel(magnet.type)}</span>
@@ -50,7 +32,9 @@ export function LeadMagnetCard({ magnet, context, prefilledArea, compact }: Prop
           magnet={magnet}
           context={context}
           prefilledArea={prefilledArea}
-          trigger={trigger}
+          label={magnet.cta.primaryLabel}
+          size={compact ? "sm" : "default"}
+          className="w-full sm:w-auto"
         />
       </div>
       {magnet.legalNote ? (

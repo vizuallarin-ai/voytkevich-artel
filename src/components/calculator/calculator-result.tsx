@@ -11,6 +11,7 @@ import {
   formatPriceRange,
 } from "@/lib/calculator";
 import { Button } from "@/components/ui/button";
+import { scrollToAnchor } from "@/components/providers/smooth-scroll";
 import { cta } from "@/data/copy";
 import { pageCopy } from "@/data/positioning";
 
@@ -64,11 +65,12 @@ export function CalculatorResult({
 
       <div className="mt-8 flex flex-col gap-2">
         <Button
+          type="button"
           size="lg"
           className="w-full"
           onClick={() => {
             onScrollToLead?.();
-            document.getElementById("calculator-lead-detailed")?.scrollIntoView({ behavior: "smooth" });
+            window.setTimeout(() => scrollToAnchor("calculator-lead-detailed"), 150);
           }}
         >
           Получить подробный расчёт

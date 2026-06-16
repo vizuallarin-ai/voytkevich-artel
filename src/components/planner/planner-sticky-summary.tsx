@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { AreaSummary } from "@/lib/planner-area";
 import { buildPlannerCalculatorUrl, type PlannerDraft } from "@/lib/planner";
 import { trackPlannerEvent } from "@/lib/planner-analytics";
+import { scrollToAnchor } from "@/components/providers/smooth-scroll";
 import { Button } from "@/components/ui/button";
 import { formatNumber } from "@/lib/utils";
 
@@ -45,9 +46,7 @@ export function PlannerStickySummary({
         <Button
           size="lg"
           className="w-full sm:w-auto sm:shrink-0"
-          onClick={() =>
-            document.getElementById("planner-lead")?.scrollIntoView({ behavior: "smooth" })
-          }
+          onClick={() => scrollToAnchor("planner-lead")}
         >
           Отправить
         </Button>

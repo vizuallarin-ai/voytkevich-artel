@@ -7,23 +7,21 @@ import { cn } from "@/lib/utils";
 type NavItem = {
   href: string;
   label: string;
-  /** query param group= for leads filters */
   group?: string;
 };
 
 type NavSection = {
   title: string;
+  description?: string;
   items: NavItem[];
 };
 
 const SECTIONS: NavSection[] = [
   {
-    title: "CRM",
-    items: [{ href: "/dashboard", label: "Обзор" }],
-  },
-  {
-    title: "Лиды",
+    title: "Работа с заявками",
+    description: "Для менеджера и руководителя",
     items: [
+      { href: "/dashboard", label: "Обзор" },
       { href: "/dashboard/leads", label: "Все заявки" },
       { href: "/dashboard/leads", label: "Новые", group: "new" },
       { href: "/dashboard/leads", label: "Горячие", group: "hot" },
@@ -37,12 +35,13 @@ const SECTIONS: NavSection[] = [
     items: [{ href: "/dashboard/analytics", label: "Воронка и KPI" }],
   },
   {
-    title: "SEO-платформа",
+    title: "SEO (админ)",
+    description: "Таксономия и очередь публикаций",
     items: [
-      { href: "/dashboard/seo", label: "Обзор системы" },
+      { href: "/dashboard/seo", label: "Обзор SEO" },
       { href: "/dashboard/seo/roadmap", label: "Очередь публикаций" },
       { href: "/dashboard/seo/taxonomy", label: "Таксономия" },
-      { href: "/dashboard/seo/taxonomy/matrix", label: "Матрица комбинаций" },
+      { href: "/dashboard/seo/taxonomy/matrix", label: "Матрица URL" },
     ],
   },
 ];
@@ -53,28 +52,16 @@ function itemHref(item: NavItem): string {
 }
 
 function isActive(pathname: string, group: string | null, item: NavItem): boolean {
-  if (item.href === "/dashboard") {
-    return pathname === "/dashboard";
-  }
-  if (item.href === "/dashboard/analytics") {
-    return pathname.startsWith("/dashboard/analytics");
-  }
-  if (item.href === "/dashboard/seo") {
-    return pathname === "/dashboard/seo";
-  }
-  if (item.href === "/dashboard/seo/roadmap") {
-    return pathname.startsWith("/dashboard/seo/roadmap");
-  }
+  if (item.href === "/dashboard") return pathname === "/dashboard";
+  if (item.href === "/dashboard/analytics") return pathname.startsWith("/dashboard/analytics");
+  if (item.href === "/dashboard/seo/roadmap") return pathname.startsWith("/dashboard/seo/roadmap");
   if (item.href === "/dashboard/seo/taxonomy/matrix") {
     return pathname.startsWith("/dashboard/seo/taxonomy/matrix");
   }
-  if (item.href === "/dashboard/seo/taxonomy") {
-    return pathname === "/dashboard/seo/taxonomy";
-  }
+  if (item.href === "/dashboard/seo/taxonomy") return pathname === "/dashboard/seo/taxonomy";
+  if (item.href === "/dashboard/seo") return pathname === "/dashboard/seo";
   if (item.href === "/dashboard/leads") {
-    if (pathname.startsWith("/dashboard/leads/")) {
-      return !item.group;
-    }
+    if (pathname.startsWith("/dashboard/leads/")) return !item.group;
     if (!pathname.startsWith("/dashboard/leads")) return false;
     if (item.group) return group === item.group;
     return !group;
@@ -88,10 +75,15 @@ export function DashboardNav() {
   const group = searchParams.get("group");
 
   return (
-    <nav className="flex gap-1 overflow-x-auto px-3 py-3 lg:block lg:flex-1 lg:space-y-6 lg:overflow-y-auto lg:py-4">
+    <nav className="flex gap-1 overflow-x-auto px-3 py-3 lg:block lg:flex-1 lg:space-y-5 lg:overflow-y-auto lg:py-4">
       {SECTIONS.map((section) => (
         <div key={section.title} className="shrink-0 lg:shrink">
-          <p className="label-caps mb-2 hidden px-3 text-[10px] text-muted lg:block">{section.title}</p>
+          <div className="mb-2 hidden px-3 lg:block">
+            <p className="label-caps text-[10px] text-muted">{section.title}</p>
+            {section.description ? (
+              <p className="mt-0.5 text-[11px] leading-snug text-muted/80">{section.description}</p>
+            ) : null}
+          </div>
           <ul className="flex gap-1 lg:block lg:space-y-0.5">
             {section.items.map((item) => {
               const active = isActive(pathname, group, item);

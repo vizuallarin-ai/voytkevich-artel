@@ -29,6 +29,8 @@ export function LeadForm({
   subtitle = pageCopy.forms.defaultSubtitle,
   prefilledArea,
   prefilledComment,
+  managerNote,
+  commentPlaceholder = "Например: участок, сроки, материал, что важно в доме",
   source,
   submitLabel,
   footnote,
@@ -39,14 +41,19 @@ export function LeadForm({
   title?: string;
   subtitle?: string;
   prefilledArea?: string;
+  /** @deprecated Технические данные — используйте managerNote */
   prefilledComment?: string;
-  /** @deprecated Use leadConfig — kept for backward compatibility */
+  /** Служебная заметка для менеджера (не показывается клиенту) */
+  managerNote?: string;
+  commentPlaceholder?: string;
+  /** @deprecated Use leadConfig */
   source?: string;
   submitLabel?: string;
   footnote?: string;
   leadConfig?: LeadFormConfig;
   successMessage?: string;
 }) {
+  const internalNote = managerNote ?? prefilledComment;
   const config = useMemo(
     () =>
       leadConfig ??
@@ -58,7 +65,7 @@ export function LeadForm({
     config,
     defaultValues: {
       area: prefilledArea ?? "",
-      comment: prefilledComment ?? "",
+      comment: "",
       messenger: "call",
       hasLand: "",
       budget: "",
@@ -80,11 +87,8 @@ export function LeadForm({
 
   useEffect(() => {
     form.setValue("area", prefilledArea ?? form.values.area);
-    if (prefilledComment !== undefined) {
-      form.setValue("comment", prefilledComment);
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- sync prefilled props only
-  }, [prefilledArea, prefilledComment]);
+  }, [prefilledArea]);
 
   useFormAutosave(`lead-${id}`, form.values, (saved) => {
     Object.entries(saved).forEach(([key, value]) => {
@@ -114,7 +118,9 @@ export function LeadForm({
       return;
     }
 
-    await form.submit(prefilledComment ?? form.values.comment);
+    const userComment = form.values.comment?.trim();
+    const mergedComment = [internalNote, userComment].filter(Boolean).join("\n\n---\n\n");
+    await form.submit(mergedComment || undefined);
     if (form.isSuccess) {
       localStorage.removeItem(`lead-${id}`);
     }
@@ -282,7 +288,7 @@ export function LeadForm({
                 id={`${id}-comment`}
                 value={form.values.comment ?? ""}
                 onChange={(e) => form.setValue("comment", e.target.value)}
-                placeholder="Сроки, материал, что важно"
+                placeholder={commentPlaceholder}
                 className="mt-1 flex min-h-[88px] w-full rounded-sm border border-graphite/15 bg-background px-4 py-3 text-sm"
               />
             </div>
