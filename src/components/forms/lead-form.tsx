@@ -30,7 +30,7 @@ export function LeadForm({
   prefilledArea,
   prefilledComment,
   managerNote,
-  commentPlaceholder = "Например: участок, сроки, материал, что важно в доме",
+  commentPlaceholder = "Например: сроки, материал, что важно в доме, особые пожелания",
   source,
   submitLabel,
   footnote,

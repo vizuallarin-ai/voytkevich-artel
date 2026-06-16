@@ -65,7 +65,7 @@ export function CalculatorLeadSection({
         subtitle="Передадим выбранные параметры, диапазон стоимости и срок — уточним участок и комплектацию."
         prefilledArea={String(input.area)}
         managerNote={comment}
-        commentPlaceholder="Например: когда планируете строить, есть ли участок, что уточнить по расчёту"
+        commentPlaceholder="Например: когда планируете строить, что уточнить по расчёту, особые пожелания"
         submitLabel={cta.sendToSpecialist}
         footnote="Сначала уточним вводные. Без навязчивых звонков и обещаний цены без анализа участка."
         leadConfig={{

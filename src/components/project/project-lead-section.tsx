@@ -32,7 +32,7 @@ export function ProjectLeadSection({
         subtitle="Оставьте контакты — уточним участок, комплектацию, материал и подготовим предварительный расчёт."
         prefilledArea={String(project.specs.area)}
         managerNote={comment}
-        commentPlaceholder="Например: район участка, сроки, изменения в планировке"
+        commentPlaceholder="Например: изменения в планировке, сроки, особые пожелания"
         submitLabel="Отправить проект на расчёт"
         footnote="Сначала уточним вводные. Без навязчивых звонков и обещаний цены без расчёта."
         leadConfig={{
