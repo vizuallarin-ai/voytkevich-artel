@@ -25,26 +25,32 @@ function scrollToHash(hash: string, lenis?: Lenis | null) {
 }
 
 export function SmoothScrollProvider({ children }: { children: React.ReactNode }) {
-  useEffect(() => {
+    useEffect(() => {
     const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
-    const useLenis = !prefersReduced && !coarsePointer;
+    // Opera / Chromium-форки: Lenis иногда ломает якоря и скролл
+    const isOpera = /\bOPR\/|Opera/i.test(navigator.userAgent);
+    const useLenis = !prefersReduced && !coarsePointer && !isOpera;
 
     let lenis: Lenis | null = null;
 
     if (useLenis) {
-      lenis = new Lenis({
-        duration: 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        smoothWheel: true,
-      });
-      window.__lenis = lenis;
+      try {
+        lenis = new Lenis({
+          duration: 1.2,
+          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          smoothWheel: true,
+        });
+        window.__lenis = lenis;
 
-      function raf(time: number) {
-        lenis?.raf(time);
+        function raf(time: number) {
+          lenis?.raf(time);
+          requestAnimationFrame(raf);
+        }
         requestAnimationFrame(raf);
+      } catch {
+        window.__lenis = undefined;
       }
-      requestAnimationFrame(raf);
     } else {
       window.__lenis = undefined;
     }

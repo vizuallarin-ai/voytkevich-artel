@@ -16,7 +16,7 @@ export function Hero() {
   const reduced = useReducedMotion();
 
   return (
-    <section className="relative min-h-[88dvh] overflow-hidden sm:min-h-screen">
+    <section className="relative min-h-[88vh] min-h-[88dvh] overflow-hidden sm:min-h-screen">
       <div className="absolute inset-0">
         <Image
           src={heroHome.src}
@@ -29,7 +29,7 @@ export function Hero() {
         <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/50 to-background" />
       </div>
 
-      <div className="container-narrow relative z-10 flex min-h-[88dvh] flex-col justify-end px-5 pb-28 pt-28 sm:min-h-screen sm:pb-24 sm:pt-32 md:px-10 md:pb-24 lg:px-16">
+      <div className="container-narrow relative z-10 flex min-h-[88vh] min-h-[88dvh] flex-col justify-end px-5 pb-28 pt-28 sm:min-h-screen sm:pb-24 sm:pt-32 md:px-10 md:pb-24 lg:px-16">
         <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-end lg:gap-10">
           <div className="order-2 lg:order-1">
             <motion.p

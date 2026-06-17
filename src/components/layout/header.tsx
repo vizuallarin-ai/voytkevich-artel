@@ -137,7 +137,7 @@ export function Header() {
             aria-label="Закрыть меню"
             onClick={() => setOpen(false)}
           />
-          <div className="relative z-50 glass max-h-[calc(100dvh-4.5rem)] overflow-y-auto border-t border-graphite/10 px-5 py-4 lg:hidden">
+          <div className="relative z-50 glass max-h-[calc(100vh-4.5rem)] max-h-[calc(100dvh-4.5rem)] overflow-y-auto border-t border-graphite/10 px-5 py-4 lg:hidden">
             <nav className="flex flex-col gap-4" aria-label="Мобильная навигация">
               {siteNavGroups.map((group) => (
                 <div key={group.id}>
