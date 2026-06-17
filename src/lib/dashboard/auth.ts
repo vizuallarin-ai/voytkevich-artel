@@ -3,13 +3,11 @@ import type { DashboardRole } from "@/lib/dashboard/roles";
 export const DASHBOARD_COOKIE = "dashboard_token";
 export const DEFAULT_DASHBOARD_USERNAME = "stroistroy";
 export const DEFAULT_MANAGER_USERNAME = "manager";
-export const DEFAULT_DIRECTOR_USERNAME = "director";
 
-const SESSION_MESSAGE = "stroistroy-dashboard-v2";
+const SESSION_MESSAGE = "stroistroy-dashboard-v3";
 
 const ROLE_PREFIX: Record<DashboardRole, string> = {
   manager: "m",
-  director: "d",
   admin: "a",
 };
 
@@ -49,15 +47,6 @@ function getCredentialSets(): CredentialSet[] {
     });
   }
 
-  const directorPass = process.env.DASHBOARD_DIRECTOR_PASSWORD?.trim();
-  if (directorPass) {
-    sets.push({
-      username: (process.env.DASHBOARD_DIRECTOR_USERNAME ?? DEFAULT_DIRECTOR_USERNAME).trim(),
-      password: directorPass,
-      role: "director",
-    });
-  }
-
   return sets;
 }
 
@@ -65,7 +54,6 @@ export function isDashboardAuthConfigured(): boolean {
   return Boolean(
     process.env.DASHBOARD_PASSWORD?.trim() ||
       process.env.DASHBOARD_MANAGER_PASSWORD?.trim() ||
-      process.env.DASHBOARD_DIRECTOR_PASSWORD?.trim() ||
       process.env.DASHBOARD_ACCESS_TOKEN?.trim(),
   );
 }
@@ -84,16 +72,12 @@ export function verifyDashboardCredentials(
 
 function getSecretForRole(role: DashboardRole): string {
   if (role === "admin") return process.env.DASHBOARD_PASSWORD?.trim() ?? "";
-  if (role === "manager") return process.env.DASHBOARD_MANAGER_PASSWORD?.trim() ?? "";
-  return process.env.DASHBOARD_DIRECTOR_PASSWORD?.trim() ?? "";
+  return process.env.DASHBOARD_MANAGER_PASSWORD?.trim() ?? "";
 }
 
 function getUsernameForRole(role: DashboardRole): string {
   if (role === "admin") return getDashboardUsername();
-  if (role === "manager") {
-    return (process.env.DASHBOARD_MANAGER_USERNAME ?? DEFAULT_MANAGER_USERNAME).trim();
-  }
-  return (process.env.DASHBOARD_DIRECTOR_USERNAME ?? DEFAULT_DIRECTOR_USERNAME).trim();
+  return (process.env.DASHBOARD_MANAGER_USERNAME ?? DEFAULT_MANAGER_USERNAME).trim();
 }
 
 /** Session cookie value after login with username + password. */
@@ -136,7 +120,6 @@ export async function verifyDashboardToken(
   const prefix = token.charAt(0);
   const roleByPrefix: Record<string, DashboardRole> = {
     m: "manager",
-    d: "director",
     a: "admin",
   };
   const role = roleByPrefix[prefix];
@@ -149,7 +132,7 @@ export async function verifyDashboardToken(
 
 export function getDashboardAuthWarning(): string | null {
   if (process.env.NODE_ENV === "production" && !isDashboardAuthConfigured()) {
-    return "Dashboard не защищён: задайте DASHBOARD_PASSWORD или пароли ролей в env.";
+    return "Dashboard не защищён: задайте DASHBOARD_PASSWORD или DASHBOARD_MANAGER_PASSWORD в env.";
   }
   return null;
 }

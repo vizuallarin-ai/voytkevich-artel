@@ -22,7 +22,7 @@ type NavSection = {
 const SECTIONS: NavSection[] = [
   {
     title: "Работа с заявками",
-    description: "Для менеджера и руководителя",
+    description: "Для менеджера",
     minRole: "manager",
     items: [
       { href: "/dashboard", label: "Обзор" },
@@ -36,11 +36,12 @@ const SECTIONS: NavSection[] = [
   },
   {
     title: "Аналитика",
-    minRole: "director",
+    description: "Воронка и KPI",
+    minRole: "admin",
     items: [{ href: "/dashboard/analytics", label: "Воронка и KPI" }],
   },
   {
-    title: "SEO (админ)",
+    title: "SEO",
     description: "Таксономия и очередь публикаций",
     minRole: "admin",
     items: [

@@ -1,15 +1,13 @@
-export type DashboardRole = "manager" | "director" | "admin";
+export type DashboardRole = "manager" | "admin";
 
 export const DASHBOARD_ROLE_LABELS: Record<DashboardRole, string> = {
   manager: "Менеджер",
-  director: "Руководитель",
-  admin: "Администратор",
+  admin: "Владелец",
 };
 
 const ROLE_RANK: Record<DashboardRole, number> = {
   manager: 1,
-  director: 2,
-  admin: 3,
+  admin: 2,
 };
 
 /** Минимальная роль для доступа к маршруту. */
@@ -21,7 +19,7 @@ export function requiredRoleForPath(pathname: string): DashboardRole {
     pathname === "/api/analytics/report" ||
     pathname === "/api/dashboard/analytics-export"
   ) {
-    return "director";
+    return "admin";
   }
   return "manager";
 }

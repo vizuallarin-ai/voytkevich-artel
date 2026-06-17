@@ -42,8 +42,8 @@ export function DashboardLoginForm() {
       <div className="w-full max-w-md rounded-sm border border-graphite/10 bg-background p-8">
         <h1 className="font-display text-2xl">Вход в CRM</h1>
         <p className="mt-2 text-sm text-muted">
-          Внутренний кабинет заявок. Логины: <strong>stroistroy</strong> (админ),{" "}
-          <strong>director</strong> (аналитика), <strong>manager</strong> (только заявки).
+          <strong>stroistroy</strong> — заявки, аналитика и SEO. <strong>manager</strong> — только
+          заявки.
         </p>
         <form onSubmit={submit} className="mt-6 space-y-4">
           <div className="space-y-2">
