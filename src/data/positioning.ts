@@ -19,7 +19,7 @@ export const positioningEssence = {
 
 export const offers = {
   /** Основной — главная, hero */
-  primary: "Дом под ключ в Иркутске — смета, этапы и контроль без сюрпризов",
+  primary: "Дом под ключ в Иркутске смета, этапы и контроль без сюрпризов",
   /** Запасной 1 — формы, реклама */
   secondaryA: "Дом под ключ, где вы понимаете цену, этапы и ход работ",
   /** Запасной 2 — SEO, лендинги */
@@ -273,6 +273,8 @@ export const pageMeta = {
 export const pageCopy = {
   hero: {
     label: "Иркутск и область · с 2014",
+    headlineLead: "Дом под ключ в Иркутске",
+    headlineRest: "смета, этапы и контроль без сюрпризов",
     headline: offers.primary,
     subheadline: positioningEssence.medium,
   },

@@ -46,7 +46,8 @@ export function Hero() {
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{ duration: 0.9, delay: 0.1 }}
           >
-            {heroCopy.headline}
+            <span className="font-semibold">{heroCopy.headlineLead}</span>{" "}
+            {heroCopy.headlineRest}
           </motion.h1>
 
           <motion.p
