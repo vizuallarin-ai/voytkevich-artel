@@ -41,6 +41,12 @@ const SECTIONS: NavSection[] = [
     items: [{ href: "/dashboard/analytics", label: "Воронка и KPI" }],
   },
   {
+    title: "Контент",
+    description: "Техническая база знаний",
+    minRole: "admin",
+    items: [{ href: "/dashboard/content/technical", label: "Технические статьи" }],
+  },
+  {
     title: "SEO",
     description: "Таксономия и очередь публикаций",
     minRole: "admin",
@@ -62,6 +68,9 @@ function itemHref(item: NavItem): string {
 function isActive(pathname: string, group: string | null, item: NavItem): boolean {
   if (item.href === "/dashboard") return pathname === "/dashboard";
   if (item.href === "/dashboard/analytics") return pathname.startsWith("/dashboard/analytics");
+  if (item.href === "/dashboard/content/technical") {
+    return pathname.startsWith("/dashboard/content/technical");
+  }
   if (item.href === "/dashboard/seo/roadmap") return pathname.startsWith("/dashboard/seo/roadmap");
   if (item.href === "/dashboard/seo/taxonomy/matrix") {
     return pathname.startsWith("/dashboard/seo/taxonomy/matrix");

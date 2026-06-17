@@ -26,6 +26,7 @@ export type LeadSourceType =
   | "about"
   | "faq"
   | "programmatic-seo"
+  | "technical-article"
   | "unknown";
 
 export type LeadCtaPosition =
@@ -157,6 +158,7 @@ export type LeadContext = {
     visibleProjectSlugs?: string[];
   };
   programmatic?: import("@/types/programmatic-page-template").ProgrammaticLeadContext;
+  technical?: import("@/types/technical-content").TechnicalLeadContext;
 };
 
 export type LeadQualification = {
