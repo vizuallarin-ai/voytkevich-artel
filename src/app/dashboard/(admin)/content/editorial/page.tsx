@@ -1,11 +1,14 @@
-import type { Metadata } from "next";
-import { EditorialContentDashboard } from "@/components/dashboard/content/editorial-content-dashboard";
+import { ContentSectionPage, contentSectionMetadata, kindFilter } from "@/components/content-cms/ContentSectionPage";
 
-export const metadata: Metadata = {
-  title: "CRM — Редакционный блог",
-  robots: { index: false, follow: false },
-};
+export const metadata = contentSectionMetadata("Редакционный блог");
 
-export default function DashboardEditorialContentPage() {
-  return <EditorialContentDashboard />;
+export default async function EditorialContentCmsPage() {
+  return (
+    <ContentSectionPage
+      title="Редакционный блог"
+      description="Истории, новости, дайджесты и авторские рубрики с маркировкой fiction."
+      filters={kindFilter(["editorial-content", "news", "digest"])}
+      showKind={true}
+    />
+  );
 }

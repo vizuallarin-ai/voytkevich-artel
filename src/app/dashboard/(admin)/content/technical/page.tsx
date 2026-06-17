@@ -1,11 +1,14 @@
-import type { Metadata } from "next";
-import { TechnicalContentDashboard } from "@/components/dashboard/content/technical-content-dashboard";
+import { ContentSectionPage, contentSectionMetadata, kindFilter } from "@/components/content-cms/ContentSectionPage";
 
-export const metadata: Metadata = {
-  title: "CRM — Техническая база знаний",
-  robots: { index: false, follow: false },
-};
+export const metadata = contentSectionMetadata("Технические статьи");
 
-export default function DashboardTechnicalContentPage() {
-  return <TechnicalContentDashboard />;
+export default async function TechnicalContentCmsPage() {
+  return (
+    <ContentSectionPage
+      title="Техническая база знаний"
+      description="How-to, гайды, чек-листы и сравнения. Все материалы noindex до expert review."
+      filters={kindFilter("technical-article")}
+      showKind={false}
+    />
+  );
 }

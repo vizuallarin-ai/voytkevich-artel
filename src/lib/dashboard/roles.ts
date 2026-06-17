@@ -12,6 +12,7 @@ const ROLE_RANK: Record<DashboardRole, number> = {
 
 /** Минимальная роль для доступа к маршруту. */
 export function requiredRoleForPath(pathname: string): DashboardRole {
+  if (pathname.startsWith("/dashboard/content")) return "admin";
   if (pathname.startsWith("/dashboard/seo")) return "admin";
   if (pathname === "/api/dashboard/test-telegram") return "admin";
   if (

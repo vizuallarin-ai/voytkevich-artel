@@ -5,6 +5,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import type { DashboardRole } from "@/lib/dashboard/roles";
 import { filterNavSectionsForRole } from "@/lib/dashboard/roles";
+import { contentCmsSections } from "@/data/content-cms-sections";
 
 type NavItem = {
   href: string;
@@ -41,13 +42,10 @@ const SECTIONS: NavSection[] = [
     items: [{ href: "/dashboard/analytics", label: "Воронка и KPI" }],
   },
   {
-    title: "Контент",
-    description: "Техническая база знаний",
+    title: "Контент CMS",
+    description: "Массовый SEO-контент",
     minRole: "admin",
-    items: [
-      { href: "/dashboard/content/technical", label: "Технические статьи" },
-      { href: "/dashboard/content/editorial", label: "Редакционный блог" },
-    ],
+    items: contentCmsSections.map((s) => ({ href: s.route, label: s.title })),
   },
   {
     title: "SEO",
@@ -71,11 +69,11 @@ function itemHref(item: NavItem): string {
 function isActive(pathname: string, group: string | null, item: NavItem): boolean {
   if (item.href === "/dashboard") return pathname === "/dashboard";
   if (item.href === "/dashboard/analytics") return pathname.startsWith("/dashboard/analytics");
-  if (item.href === "/dashboard/content/technical") {
-    return pathname.startsWith("/dashboard/content/technical");
+  if (item.href === "/dashboard/content") {
+    return pathname === "/dashboard/content";
   }
-  if (item.href === "/dashboard/content/editorial") {
-    return pathname.startsWith("/dashboard/content/editorial");
+  if (item.href.startsWith("/dashboard/content/")) {
+    return pathname === item.href || pathname.startsWith(`${item.href}/`);
   }
   if (item.href === "/dashboard/seo/roadmap") return pathname.startsWith("/dashboard/seo/roadmap");
   if (item.href === "/dashboard/seo/taxonomy/matrix") {
