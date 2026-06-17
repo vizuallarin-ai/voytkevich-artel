@@ -84,6 +84,7 @@ function inferRequestType(sourceType: LeadSourceType): LeadRequestType {
       return "service-page";
     case "catalog":
     case "catalog-category":
+    case "programmatic-seo":
       return "project-selection";
     default:
       return "callback";
@@ -201,6 +202,8 @@ function inferRequestTitle(sourceType: LeadSourceType): string {
       return "Заявка из статьи блога";
     case "home":
       return "Заявка с главной";
+    case "programmatic-seo":
+      return "Заявка с programmatic-страницы";
     default:
       return "Заявка с сайта";
   }

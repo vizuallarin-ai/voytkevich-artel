@@ -25,6 +25,7 @@ export type LeadSourceType =
   | "process"
   | "about"
   | "faq"
+  | "programmatic-seo"
   | "unknown";
 
 export type LeadCtaPosition =
@@ -155,6 +156,7 @@ export type LeadContext = {
     sort?: string;
     visibleProjectSlugs?: string[];
   };
+  programmatic?: import("@/types/programmatic-page-template").ProgrammaticLeadContext;
 };
 
 export type LeadQualification = {
