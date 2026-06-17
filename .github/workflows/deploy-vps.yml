@@ -21,4 +21,5 @@ jobs:
           script: |
             set -euo pipefail
             cd /opt/stroistroy
+            git pull origin master
             bash scripts/vps-deploy-fast.sh
