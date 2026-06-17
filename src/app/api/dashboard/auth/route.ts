@@ -5,6 +5,7 @@ import {
   verifyDashboardCredentials,
   verifyDashboardToken,
 } from "@/lib/dashboard/auth";
+import { DASHBOARD_ROLE_LABELS } from "@/lib/dashboard/roles";
 
 type AuthBody = {
   username?: string;
@@ -22,14 +23,17 @@ export async function POST(request: Request) {
   }
 
   let sessionValue: string | null = null;
+  let role = null as Awaited<ReturnType<typeof verifyDashboardToken>>;
 
   if (body.username && body.password) {
-    if (!verifyDashboardCredentials(body.username, body.password)) {
+    role = verifyDashboardCredentials(body.username, body.password);
+    if (!role) {
       return NextResponse.json({ ok: false, message: "Неверный логин или пароль" }, { status: 401 });
     }
-    sessionValue = await deriveDashboardSessionToken();
+    sessionValue = await deriveDashboardSessionToken(role);
   } else if (body.token) {
-    if (!(await verifyDashboardToken(body.token))) {
+    role = await verifyDashboardToken(body.token);
+    if (!role) {
       return NextResponse.json({ ok: false, message: "Неверный токен доступа" }, { status: 401 });
     }
     sessionValue = body.token;
@@ -37,8 +41,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, message: "Укажите логин и пароль" }, { status: 400 });
   }
 
-  const res = NextResponse.json({ ok: true });
-  res.cookies.set(DASHBOARD_COOKIE, sessionValue, {
+  const res = NextResponse.json({
+    ok: true,
+    role,
+    roleLabel: role ? DASHBOARD_ROLE_LABELS[role] : undefined,
+  });
+  res.cookies.set(DASHBOARD_COOKIE, sessionValue!, {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",

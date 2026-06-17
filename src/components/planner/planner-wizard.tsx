@@ -52,6 +52,21 @@ import type { Material } from "@/types";
 
 const materials: Material[] = [...CALCULATOR_MATERIALS];
 
+function plannerNextLabel(step: number): string {
+  switch (step) {
+    case 1:
+      return "Настроить планировку";
+    case 2:
+      return "Посмотреть схему";
+    case 3:
+      return "К итогу и расчёту";
+    case 4:
+      return "К заявке";
+    default:
+      return "Далее";
+  }
+}
+
 export function PlannerWizard() {
   const [draft, setDraft] = useState<PlannerDraft>(DEFAULT_PLANNER_DRAFT);
   const [step, setStep] = useState(1);
@@ -509,7 +524,7 @@ export function PlannerWizard() {
         )}
         {step < 5 && (
           <Button type="button" onClick={goNext} disabled={step === 1 && !draft.scenario}>
-            {step === 4 ? "К заявке" : "Далее"}
+            {plannerNextLabel(step)}
           </Button>
         )}
         <Button type="button" variant="ghost" onClick={resetAll}>

@@ -1,13 +1,22 @@
 import Link from "next/link";
 import { Suspense } from "react";
-import { getDashboardAuthWarning, isDashboardAuthConfigured } from "@/lib/dashboard/auth";
+import { cookies } from "next/headers";
+import {
+  DASHBOARD_COOKIE,
+  getDashboardAuthWarning,
+  isDashboardAuthConfigured,
+  verifyDashboardToken,
+} from "@/lib/dashboard/auth";
+import { DASHBOARD_ROLE_LABELS } from "@/lib/dashboard/roles";
 import { getStorageStatus } from "@/lib/leads/lead-service";
 import { DashboardNav } from "./dashboard-nav";
 import { brand } from "@/data/brand";
 
-export function DashboardShell({ children }: { children: React.ReactNode }) {
+export async function DashboardShell({ children }: { children: React.ReactNode }) {
   const authWarning = getDashboardAuthWarning();
   const storage = getStorageStatus();
+  const token = (await cookies()).get(DASHBOARD_COOKIE)?.value;
+  const role = (await verifyDashboardToken(token)) ?? "admin";
 
   return (
     <div className="min-h-screen bg-muted-bg lg:flex">
@@ -15,11 +24,13 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         <div className="border-b border-graphite/10 px-5 py-5">
           <p className="label-caps text-[10px] text-muted">Внутренний кабинет</p>
           <p className="mt-1 font-display text-lg leading-tight">{brand.nameShort}</p>
-          <p className="mt-0.5 text-xs text-muted">CRM · заявки с сайта</p>
+          <p className="mt-0.5 text-xs text-muted">
+            CRM · {DASHBOARD_ROLE_LABELS[role]}
+          </p>
         </div>
 
         <Suspense fallback={<div className="px-3 py-4 text-sm text-muted lg:flex-1 lg:overflow-y-auto lg:py-4">Загрузка…</div>}>
-          <DashboardNav />
+          <DashboardNav role={role} />
         </Suspense>
 
         <div className="border-t border-graphite/10 p-4 lg:mt-auto">

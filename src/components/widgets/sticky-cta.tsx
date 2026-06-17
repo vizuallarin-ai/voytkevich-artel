@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { Calculator, MessageCircle, Phone } from "lucide-react";
+import { Calculator, MessageCircle, Phone, Send } from "lucide-react";
 import { brand } from "@/data/brand";
 import { cta } from "@/data/copy";
 import { cn } from "@/lib/utils";
 import {
   trackPhoneClicked,
   trackStickyCtaClicked,
+  trackTelegramClicked,
   trackWhatsappClicked,
 } from "@/lib/analytics/cta-tracking";
 
@@ -48,6 +49,7 @@ export function StickyCta() {
   if (pathname.startsWith("/planirovka")) return null;
 
   const waHref = `https://wa.me/${brand.phoneMobile.replace(/\D/g, "")}`;
+  const tgHref = brand.telegram;
 
   return (
     <div
@@ -58,10 +60,10 @@ export function StickyCta() {
       role="region"
       aria-label="Быстрые контакты"
     >
-      <div className="grid grid-cols-3 divide-x divide-graphite/10">
+      <div className="grid grid-cols-4 divide-x divide-graphite/10">
         <a
           href={`tel:${brand.phone}`}
-          className="flex min-h-11 flex-col items-center justify-center gap-1 px-2 py-3 text-sm font-medium transition hover:bg-muted-bg/80"
+          className="flex min-h-11 flex-col items-center justify-center gap-1 px-1 py-3 text-xs font-medium transition hover:bg-muted-bg/80 sm:text-sm"
           onClick={() => {
             trackPhoneClicked("sticky_bar");
             trackStickyCtaClicked("phone", { pageType: pathname });
@@ -71,10 +73,23 @@ export function StickyCta() {
           Позвонить
         </a>
         <a
+          href={tgHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex min-h-11 flex-col items-center justify-center gap-1 px-1 py-3 text-xs font-medium transition hover:bg-muted-bg/80 sm:text-sm"
+          onClick={() => {
+            trackTelegramClicked("sticky_bar");
+            trackStickyCtaClicked("telegram", { pageType: pathname });
+          }}
+        >
+          <Send className="h-5 w-5" aria-hidden />
+          Telegram
+        </a>
+        <a
           href={waHref}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex min-h-11 flex-col items-center justify-center gap-1 px-2 py-3 text-sm font-medium transition hover:bg-muted-bg/80"
+          className="flex min-h-11 flex-col items-center justify-center gap-1 px-1 py-3 text-xs font-medium transition hover:bg-muted-bg/80 sm:text-sm"
           onClick={() => {
             trackWhatsappClicked("sticky_bar");
             trackStickyCtaClicked("whatsapp", { pageType: pathname });
@@ -85,7 +100,7 @@ export function StickyCta() {
         </a>
         <Link
           href={third.href}
-          className="flex min-h-11 flex-col items-center justify-center gap-1 px-2 py-3 text-sm font-medium transition hover:bg-muted-bg/80"
+          className="flex min-h-11 flex-col items-center justify-center gap-1 px-1 py-3 text-xs font-medium transition hover:bg-muted-bg/80 sm:text-sm"
           onClick={() =>
             trackStickyCtaClicked(third.action, {
               pageType: pathname,

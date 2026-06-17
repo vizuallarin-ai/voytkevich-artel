@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
+import type { DashboardRole } from "@/lib/dashboard/roles";
+import { filterNavSectionsForRole } from "@/lib/dashboard/roles";
 
 type NavItem = {
   href: string;
@@ -13,6 +15,7 @@ type NavItem = {
 type NavSection = {
   title: string;
   description?: string;
+  minRole: DashboardRole;
   items: NavItem[];
 };
 
@@ -20,6 +23,7 @@ const SECTIONS: NavSection[] = [
   {
     title: "Работа с заявками",
     description: "Для менеджера и руководителя",
+    minRole: "manager",
     items: [
       { href: "/dashboard", label: "Обзор" },
       { href: "/dashboard/leads", label: "Все заявки" },
@@ -32,11 +36,13 @@ const SECTIONS: NavSection[] = [
   },
   {
     title: "Аналитика",
+    minRole: "director",
     items: [{ href: "/dashboard/analytics", label: "Воронка и KPI" }],
   },
   {
     title: "SEO (админ)",
     description: "Таксономия и очередь публикаций",
+    minRole: "admin",
     items: [
       { href: "/dashboard/seo", label: "Обзор SEO" },
       { href: "/dashboard/seo/roadmap", label: "Очередь публикаций" },
@@ -69,14 +75,15 @@ function isActive(pathname: string, group: string | null, item: NavItem): boolea
   return pathname.startsWith(item.href);
 }
 
-export function DashboardNav() {
+export function DashboardNav({ role }: { role: DashboardRole }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const group = searchParams.get("group");
+  const sections = filterNavSectionsForRole(SECTIONS, role);
 
   return (
     <nav className="flex gap-1 overflow-x-auto px-3 py-3 lg:block lg:flex-1 lg:space-y-5 lg:overflow-y-auto lg:py-4">
-      {SECTIONS.map((section) => (
+      {sections.map((section) => (
         <div key={section.title} className="shrink-0 lg:shrink">
           <div className="mb-2 hidden px-3 lg:block">
             <p className="label-caps text-[10px] text-muted">{section.title}</p>
