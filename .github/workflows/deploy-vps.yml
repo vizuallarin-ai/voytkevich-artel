@@ -21,4 +21,4 @@ jobs:
           script: |
             set -euo pipefail
             cd /opt/stroistroy
-            bash scripts/vps-update.sh
+            bash scripts/vps-deploy-fast.sh

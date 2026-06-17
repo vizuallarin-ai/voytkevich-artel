@@ -60,9 +60,9 @@ else
 fi
 
 echo "==> backup cron"
-chmod +x scripts/backup-stroistroy-data.sh scripts/verify-production.sh scripts/setup-github-deploy-key.sh scripts/test-telegram.sh scripts/set-telegram-chat-id.sh 2>/dev/null || true
+chmod +x scripts/backup-stroistroy-data.sh scripts/verify-production.sh scripts/setup-github-deploy-key.sh scripts/test-telegram.sh scripts/set-telegram-chat-id.sh scripts/set-dashboard-roles.sh scripts/vps-deploy-fast.sh 2>/dev/null || true
 CRON_LINE="0 3 * * * APP_DIR=$APP_DIR $APP_DIR/scripts/backup-stroistroy-data.sh >> /var/log/stroistroy-backup.log 2>&1"
-(crontab -l 2>/dev/null | grep -v backup-stroistroy-data; echo "$CRON_LINE") | crontab -
+(crontab -l 2>/dev/null | grep -v backup-stroistroy-data || true; echo "$CRON_LINE") | crontab - 2>/dev/null || echo "WARN: crontab update skipped"
 
 echo "==> smoke test"
 bash scripts/verify-production.sh "https://$DOMAIN" || echo "WARN: some checks failed"
