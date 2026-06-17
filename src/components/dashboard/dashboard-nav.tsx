@@ -44,7 +44,10 @@ const SECTIONS: NavSection[] = [
     title: "Контент",
     description: "Техническая база знаний",
     minRole: "admin",
-    items: [{ href: "/dashboard/content/technical", label: "Технические статьи" }],
+    items: [
+      { href: "/dashboard/content/technical", label: "Технические статьи" },
+      { href: "/dashboard/content/editorial", label: "Редакционный блог" },
+    ],
   },
   {
     title: "SEO",
@@ -70,6 +73,9 @@ function isActive(pathname: string, group: string | null, item: NavItem): boolea
   if (item.href === "/dashboard/analytics") return pathname.startsWith("/dashboard/analytics");
   if (item.href === "/dashboard/content/technical") {
     return pathname.startsWith("/dashboard/content/technical");
+  }
+  if (item.href === "/dashboard/content/editorial") {
+    return pathname.startsWith("/dashboard/content/editorial");
   }
   if (item.href === "/dashboard/seo/roadmap") return pathname.startsWith("/dashboard/seo/roadmap");
   if (item.href === "/dashboard/seo/taxonomy/matrix") {

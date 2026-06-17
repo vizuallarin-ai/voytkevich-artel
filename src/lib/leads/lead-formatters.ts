@@ -20,6 +20,7 @@ export function formatSourceType(sourceType: LeadSourceType): string {
     faq: "FAQ",
     "programmatic-seo": "Programmatic SEO",
     "technical-article": "Техническая статья",
+    "editorial-content": "Редакционная статья",
     unknown: "Неизвестно",
   };
   return map[sourceType] ?? sourceType;
