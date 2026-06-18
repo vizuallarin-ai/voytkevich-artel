@@ -33,18 +33,18 @@ export function Hero() {
         <div className="flex w-full max-w-4xl flex-col items-center">
           <motion.p
             className="label-caps"
-            initial={reduced ? false : { opacity: 0, y: 20 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={reduced ? { duration: 0 } : { duration: 0.6 }}
           >
             {heroCopy.label}
           </motion.p>
 
           <motion.h1
             className="heading-display mt-4"
-            initial={reduced ? false : { opacity: 0, y: 30, filter: "blur(8px)" }}
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            transition={{ duration: 0.9, delay: 0.1 }}
+            initial={false}
+            animate={{ opacity: 1, y: 0 }}
+            transition={reduced ? { duration: 0 } : { duration: 0.7, delay: 0.05 }}
           >
             <span className="font-semibold md:whitespace-nowrap">
               <span className="block md:inline">{heroCopy.headlineLead}</span>
@@ -57,18 +57,18 @@ export function Hero() {
 
           <motion.p
             className="mt-6 max-w-2xl text-base leading-relaxed text-muted sm:text-lg"
-            initial={reduced ? false : { opacity: 0 }}
+            initial={false}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
+            transition={reduced ? { duration: 0 } : { delay: 0.15, duration: 0.6 }}
           >
             {heroCopy.subheadline}
           </motion.p>
 
           <motion.div
             className="mt-8 flex w-full max-w-md flex-col gap-3 sm:max-w-none sm:flex-row sm:flex-wrap sm:justify-center sm:gap-4"
-            initial={reduced ? false : { opacity: 0, y: 20 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.45 }}
+            transition={reduced ? { duration: 0 } : { delay: 0.2, duration: 0.6 }}
           >
             <MagneticButton className="w-full sm:w-auto">
               <Button asChild size="lg" className="w-full sm:w-auto">
@@ -88,34 +88,42 @@ export function Hero() {
         </div>
 
         <motion.div
-          className="mt-10 w-full max-w-md lg:absolute lg:bottom-24 lg:left-10 lg:mt-0 xl:left-16"
-          initial={reduced ? false : { opacity: 0, y: 24 }}
+          className="mt-10 grid w-full max-w-5xl grid-cols-1 gap-6 lg:mt-auto lg:grid-cols-2 lg:items-stretch lg:gap-8 xl:gap-10"
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.8 }}
+          transition={reduced ? { duration: 0 } : { delay: 0.25, duration: 0.7 }}
         >
-          <HeroCalculator />
+          <div className="flex w-full justify-center lg:justify-end">
+            <div className="w-full max-w-md">
+              <HeroCalculator />
+            </div>
+          </div>
+
+          <div className="flex w-full justify-center lg:justify-start">
+            <div className="glass flex w-full max-w-md flex-col rounded-sm p-5 md:p-6">
+              <p className="label-caps">Нам доверяют</p>
+              <ul
+                className="mt-4 grid flex-1 grid-cols-2 gap-x-6 gap-y-6"
+                aria-label="Ключевые факты"
+              >
+                {heroTrustFacts.map((f) => (
+                  <li key={f.label}>
+                    <p className="font-display text-xl leading-none tabular-nums md:text-2xl">
+                      {f.value}
+                    </p>
+                    <p className="mt-1 text-sm leading-snug text-muted">{f.label}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </motion.div>
 
-        <motion.ul
-          className="mt-10 flex flex-wrap justify-center gap-x-8 gap-y-4 lg:mt-auto lg:pt-10"
-          initial={reduced ? false : { opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.55 }}
-          aria-label="Ключевые факты"
-        >
-          {heroTrustFacts.map((f) => (
-            <li key={f.label} className="min-w-[6.5rem]">
-              <p className="font-display text-xl leading-none tabular-nums md:text-2xl">{f.value}</p>
-              <p className="mt-1 text-sm leading-snug text-muted">{f.label}</p>
-            </li>
-          ))}
-        </motion.ul>
-
         <motion.div
-          className="mt-6"
-          initial={reduced ? false : { opacity: 0 }}
+          className="mt-8"
+          initial={false}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
+          transition={reduced ? { duration: 0 } : { delay: 0.3, duration: 0.6 }}
         >
           <a
             href={`tel:${brand.phone}`}
@@ -128,7 +136,7 @@ export function Hero() {
 
         <a
           href="#scenarios"
-          className="mt-10 flex items-center justify-center gap-2 text-sm text-muted transition hover:text-foreground"
+          className="mt-8 flex items-center justify-center gap-2 text-sm text-muted transition hover:text-foreground"
           aria-label="Прокрутить к выбору сценария"
         >
           <ArrowDown className="h-4 w-4 animate-bounce" />
