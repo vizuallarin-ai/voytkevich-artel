@@ -25,6 +25,7 @@ import {
 import { resolveTaxonomyIndexing } from "@/lib/taxonomy/taxonomy-indexing-rules";
 import { resolveTaxonomyCanonical } from "@/lib/taxonomy/taxonomy-canonical-rules";
 import { calculateTaxonomyCombinationPriority } from "@/lib/taxonomy/taxonomy-priority";
+import { applyLhfSeoLaunch } from "@/lib/taxonomy/apply-lhf-seo-launch";
 
 type BuildOpts = {
   objectTypeId: string;
@@ -274,6 +275,23 @@ export function buildTaxonomyCombinations(): TaxonomyCombination[] {
         );
       }
     }
+
+    // LHF: material + geo (низкочастотные запросы)
+    const lhfMaterialRegions: { materialId: string; regionId: string }[] = [
+      { materialId: "frame", regionId: "baikal" },
+    ];
+    for (const { materialId, regionId } of lhfMaterialRegions) {
+      push(
+        buildOne({
+          objectTypeId: objectType.id,
+          materialId,
+          regionId,
+          level: 2,
+          pageType: "project-combination-page",
+          defaultStatus: "needs-keyword-data",
+        }),
+      );
+    }
   }
 
   return out.sort(
@@ -286,7 +304,9 @@ export function buildTaxonomyCombinations(): TaxonomyCombination[] {
 let cached: TaxonomyCombination[] | null = null;
 
 export function getTaxonomyCombinations(): TaxonomyCombination[] {
-  if (!cached) cached = buildTaxonomyCombinations();
+  if (!cached) {
+    cached = buildTaxonomyCombinations().map(applyLhfSeoLaunch);
+  }
   return cached;
 }
 

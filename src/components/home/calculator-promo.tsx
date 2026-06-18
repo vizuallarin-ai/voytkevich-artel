@@ -1,9 +1,11 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Check } from "lucide-react";
 import { Reveal } from "@/components/animations/reveal";
 import { Button } from "@/components/ui/button";
 import { calculatorPromo } from "@/data/home";
 import { cta } from "@/data/copy";
+import { homeSectionPhotos } from "@/data/images";
 import { formatPriceRange, quickHeroEstimate } from "@/lib/calculator";
 
 export function CalculatorPromo() {
@@ -14,6 +16,18 @@ export function CalculatorPromo() {
       <div className="container-narrow">
         <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
           <Reveal>
+            <div className="relative mb-8 aspect-[16/10] overflow-hidden rounded-sm border border-graphite/10 lg:mb-0">
+              <Image
+                src={homeSectionPhotos.karkasExterior}
+                alt="Каркасный дом под ключ — фасад снаружи"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.05}>
             <p className="label-caps">Калькулятор</p>
             <h2 id="calc-promo-title" className="heading-section mt-2">
               {calculatorPromo.title}
@@ -33,40 +47,36 @@ export function CalculatorPromo() {
               <Link href="/calculator">{calculatorPromo.example.cta}</Link>
             </Button>
           </Reveal>
-
-          <Reveal delay={0.1}>
-            <div className="glass rounded-sm p-8">
-              <p className="label-caps">Пример расчёта</p>
-              <dl className="mt-6 space-y-4">
-                <div className="flex justify-between border-b border-graphite/10 pb-3">
-                  <dt className="text-sm text-muted">Дом</dt>
-                  <dd className="font-medium">{calculatorPromo.example.area} м²</dd>
-                </div>
-                <div className="flex justify-between border-b border-graphite/10 pb-3">
-                  <dt className="text-sm text-muted">Материал</dt>
-                  <dd className="font-medium capitalize">{calculatorPromo.example.material}</dd>
-                </div>
-                <div className="flex justify-between border-b border-graphite/10 pb-3">
-                  <dt className="text-sm text-muted">Этажность</dt>
-                  <dd className="font-medium">{calculatorPromo.example.floors} этаж</dd>
-                </div>
-                <div className="flex justify-between border-b border-graphite/10 pb-3">
-                  <dt className="text-sm text-muted">Предварительно</dt>
-                  <dd className="font-display text-2xl">
-                    {formatPriceRange(example.priceMin, example.priceMax)}
-                  </dd>
-                </div>
-                <div className="flex justify-between">
-                  <dt className="text-sm text-muted">Срок</dt>
-                  <dd className="font-medium">от {example.months} мес.</dd>
-                </div>
-              </dl>
-              <Button asChild variant="outline" className="mt-8 w-full" size="lg">
-                <Link href="/calculator">{cta.calculateCost}</Link>
-              </Button>
-            </div>
-          </Reveal>
         </div>
+
+        <Reveal delay={0.1}>
+          <div className="glass mt-12 rounded-sm p-8">
+            <p className="label-caps">Пример расчёта</p>
+            <dl className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="border-b border-graphite/10 pb-3">
+                <dt className="text-sm text-muted">Дом</dt>
+                <dd className="mt-1 font-medium">{calculatorPromo.example.area} м²</dd>
+              </div>
+              <div className="border-b border-graphite/10 pb-3">
+                <dt className="text-sm text-muted">Материал</dt>
+                <dd className="mt-1 font-medium capitalize">{calculatorPromo.example.material}</dd>
+              </div>
+              <div className="border-b border-graphite/10 pb-3">
+                <dt className="text-sm text-muted">Предварительно</dt>
+                <dd className="mt-1 font-display text-xl">
+                  {formatPriceRange(example.priceMin, example.priceMax)}
+                </dd>
+              </div>
+              <div className="border-b border-graphite/10 pb-3">
+                <dt className="text-sm text-muted">Срок</dt>
+                <dd className="mt-1 font-medium">от {example.months} мес.</dd>
+              </div>
+            </dl>
+            <Button asChild variant="outline" className="mt-8 w-full sm:w-auto" size="lg">
+              <Link href="/calculator">{cta.calculateCost}</Link>
+            </Button>
+          </div>
+        </Reveal>
       </div>
     </section>
   );

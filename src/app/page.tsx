@@ -4,6 +4,8 @@ import type { Metadata } from "next";
 import { Hero } from "@/components/home/hero";
 import { ScenarioCards } from "@/components/home/scenario-cards";
 import { CalculatorPromo } from "@/components/home/calculator-promo";
+import { HomeGeoLinks } from "@/components/home/home-geo-links";
+import { HomeSectionImage } from "@/components/home/home-section-image";
 import { LeadForm } from "@/components/forms/lead-form";
 import { LeadMagnetsBlock } from "@/components/lead-magnets/lead-magnets-block";
 import { ProjectCard } from "@/components/catalog/project-card";
@@ -33,7 +35,7 @@ import {
 } from "@/components/ui/accordion";
 import { cms } from "@/lib/cms/local";
 import { pageMetadata } from "@/lib/seo";
-import { photos, unsplash } from "@/data/images";
+import { photos, unsplash, homeSectionPhotos } from "@/data/images";
 
 export const metadata: Metadata = pageMetadata({
   title: pageMeta.home.title,
@@ -53,14 +55,20 @@ export default async function HomePage() {
       <ScenarioCards />
 
       {/* 3. Ключевые преимущества */}
-      <section className="section-padding" aria-labelledby="benefits-title">
+      <section className="section-padding bg-muted-bg" aria-labelledby="benefits-title">
         <div className="container-narrow">
-          <Reveal>
-            <p className="label-caps">Преимущества</p>
-            <h2 id="benefits-title" className="heading-section mt-2">
-              Почему строительство с нами понятнее и спокойнее
-            </h2>
-          </Reveal>
+          <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
+            <Reveal>
+              <p className="label-caps">Преимущества</p>
+              <h2 id="benefits-title" className="heading-section mt-2">
+                Почему строительство с нами понятнее и спокойнее
+              </h2>
+            </Reveal>
+            <HomeSectionImage
+              src={homeSectionPhotos.gazobetonExterior}
+              alt="Дом из газобетона — фасад готового объекта"
+            />
+          </div>
           <Stagger className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {keyBenefits.map((b) => (
               <StaggerItem key={b.title}>
@@ -77,7 +85,7 @@ export default async function HomePage() {
       <CalculatorPromo />
 
       {/* 5. Каталог */}
-      <section id="catalog-preview" className="section-padding bg-muted-bg">
+      <section id="catalog-preview" className="section-padding">
         <div className="container-narrow">
           <Reveal>
             <p className="label-caps">Каталог</p>
@@ -123,16 +131,22 @@ export default async function HomePage() {
       </section>
 
       {/* 6. Защита от скрытых доплат */}
-      <section className="section-padding" aria-labelledby="hidden-costs-title">
+      <section className="section-padding bg-muted-bg" aria-labelledby="hidden-costs-title">
         <div className="container-narrow">
-          <Reveal>
-            <p className="label-caps">Прозрачность</p>
-            <h2 id="hidden-costs-title" className="heading-section mt-2">
-              {hiddenCostsBlock.title}
-            </h2>
-            <p className="mt-4 max-w-3xl text-muted">{hiddenCostsBlock.problem}</p>
-            <p className="mt-4 max-w-3xl text-muted">{hiddenCostsBlock.position}</p>
-          </Reveal>
+          <div className="grid gap-10 lg:grid-cols-2 lg:items-start">
+            <Reveal>
+              <p className="label-caps">Прозрачность</p>
+              <h2 id="hidden-costs-title" className="heading-section mt-2">
+                {hiddenCostsBlock.title}
+              </h2>
+              <p className="mt-4 max-w-3xl text-muted">{hiddenCostsBlock.problem}</p>
+              <p className="mt-4 max-w-3xl text-muted">{hiddenCostsBlock.position}</p>
+            </Reveal>
+            <HomeSectionImage
+              src={homeSectionPhotos.construction}
+              alt="Строительство дома — работы на объекте"
+            />
+          </div>
           <ul className="mt-10 grid gap-3 sm:grid-cols-2">
             {hiddenCostsBlock.solutions.map((item) => (
               <li
@@ -153,7 +167,7 @@ export default async function HomePage() {
       </section>
 
       {/* 7. Процесс */}
-      <section className="section-padding bg-muted-bg" aria-labelledby="process-title">
+      <section className="section-padding" aria-labelledby="process-title">
         <div className="container-narrow">
           <Reveal>
             <p className="label-caps">Процесс</p>
@@ -181,7 +195,7 @@ export default async function HomePage() {
       </section>
 
       {/* 8. Кейсы — честная заготовка */}
-      <section className="section-padding" aria-labelledby="cases-title">
+      <section className="section-padding bg-muted-bg" aria-labelledby="cases-title">
         <div className="container-narrow">
           <Reveal>
             <p className="label-caps">Примеры</p>
@@ -278,6 +292,8 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <HomeGeoLinks />
+
       {/* 10. Для кого */}
       <section className="section-padding" aria-labelledby="audience-title">
         <div className="container-narrow">
@@ -301,7 +317,7 @@ export default async function HomePage() {
       </section>
 
       {/* 11. Что входит */}
-      <section className="section-padding bg-muted-bg" aria-labelledby="scope-title">
+      <section className="section-padding" aria-labelledby="scope-title">
         <div className="container-narrow">
           <Reveal>
             <p className="label-caps">Комплектация</p>
@@ -330,7 +346,7 @@ export default async function HomePage() {
       </section>
 
       {/* 12. SEO-текст */}
-      <section className="section-padding" aria-labelledby="seo-text-title">
+      <section className="section-padding bg-muted-bg" aria-labelledby="seo-text-title">
         <div className="container-narrow max-w-3xl">
           <Reveal>
             <h2 id="seo-text-title" className="heading-section text-2xl md:text-3xl">
@@ -402,7 +418,7 @@ export default async function HomePage() {
       </section>
 
       {/* 14. Финальная форма */}
-      <section id="lead" className="section-padding">
+      <section id="lead" className="section-padding bg-muted-bg">
         <div className="container-narrow grid gap-12 lg:grid-cols-2">
           <Reveal>
             <p className="label-caps">{finalLeadBlock.label}</p>

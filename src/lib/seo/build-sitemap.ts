@@ -12,6 +12,7 @@ import { allBuiltObjects } from "@/data/built-objects";
 import { builtObjectAreas } from "@/data/built-object-areas";
 import { getBuiltObjectsForArea } from "@/lib/built-objects";
 import { SITE_URL } from "@/lib/seo";
+import { getTaxonomyCombinations } from "@/lib/taxonomy/taxonomy-combination-builder";
 
 function safeLastModified(value?: string): Date {
   if (!value) return new Date();
@@ -127,11 +128,22 @@ export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {
       }),
     );
 
+  const programmaticRoutes: MetadataRoute.Sitemap = getTaxonomyCombinations()
+    .filter((c) => c.indexing.indexable && c.indexing.sitemap && c.slug)
+    .map((c) =>
+      entry(c.url, {
+        lastModified: new Date(),
+        changeFrequency: "monthly",
+        priority: c.pageType === "project-location-page" ? 0.74 : 0.72,
+      }),
+    );
+
   return [
     ...staticRoutes,
     ...serviceRoutes,
     ...categoryRoutes,
     ...projectRoutes,
+    ...programmaticRoutes,
     ...blogCategoryRoutes,
     ...blogRoutes,
     ...caseRoutes,

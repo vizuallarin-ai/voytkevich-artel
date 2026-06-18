@@ -1,7 +1,7 @@
-/** Герой главной — реальный объект артели (брусовой дом, Хомутово, megaartel.ru) */
+/** Герой главной — фасад дома из газобетона (megaartel.ru), вид снаружи */
 export const heroHome = {
-  src: "https://megaartel.ru/wp-content/uploads/2022/03/dsc06818-scaled.jpg",
-  alt: "Брусовой загородный дом под ключ — строительная артель Александра Войткевича, Иркутск и область",
+  src: "https://megaartel.ru/wp-content/uploads/2022/05/cgp1ari_igjzuudklqob-34ooews77hsk59ieeqjrk6m0mqmrkue2g7dubvvswgiamklwgobqytzsh6n8lj0rp1v.jpg",
+  alt: "Дом из газобетона под ключ — фасад снаружи, строительная артель в Иркутске и области",
 } as const;
 
 /** Проверенные ключи Unsplash (формат photo-{key}) */
@@ -37,3 +37,11 @@ export function unsplash(
   if (size.h) params.set("h", String(size.h));
   return `https://images.unsplash.com/photo-${id}?${params}`;
 }
+
+/** Фото для секций главной */
+export const homeSectionPhotos = {
+  karkasExterior: "https://megaartel.ru/wp-content/uploads/2023/05/nwszdrlgoq4.jpg",
+  gazobetonExterior: "https://megaartel.ru/wp-content/uploads/2022/05/8.jpg",
+  construction: unsplash(photos.construction, { w: 1200, h: 800 }),
+  teamBuild: unsplash(photos.teamBuild, { w: 1200, h: 800 }),
+} as const;

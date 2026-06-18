@@ -5,7 +5,7 @@ import { clientScenarios } from "@/data/home";
 
 export function ScenarioCards() {
   return (
-    <section id="scenarios" className="section-padding bg-muted-bg" aria-labelledby="scenarios-title">
+    <section id="scenarios" className="section-padding" aria-labelledby="scenarios-title">
       <div className="container-narrow">
         <Reveal>
           <p className="label-caps">С чего начнём</p>
