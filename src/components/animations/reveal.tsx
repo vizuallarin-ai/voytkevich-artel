@@ -1,48 +1,37 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { usePreferStaticReveal } from "@/lib/motion-safe";
 
 type RevealProps = {
   children: React.ReactNode;
   className?: string;
   delay?: number;
+  /** Сохранено для совместимости API; анимация без скрытия контента */
   direction?: "up" | "down" | "left" | "right" | "none";
+  /** @deprecated blur отключён — ломал отрисовку в Opera/Safari */
   blur?: boolean;
-};
-
-const offsets = {
-  up: { y: 40 },
-  down: { y: -40 },
-  left: { x: 40 },
-  right: { x: -40 },
-  none: {},
 };
 
 export function Reveal({
   children,
   className,
   delay = 0,
-  direction = "up",
-  blur = true,
 }: RevealProps) {
-  const reduced = useReducedMotion();
+  const preferStatic = usePreferStaticReveal();
 
-  if (reduced) {
+  if (preferStatic) {
     return <div className={className}>{children}</div>;
   }
 
   return (
     <motion.div
       className={cn(className)}
-      initial={{
-        opacity: 0,
-        filter: blur ? "blur(8px)" : "none",
-        ...offsets[direction],
-      }}
-      whileInView={{ opacity: 1, y: 0, x: 0, filter: "blur(0px)" }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }}
+      initial={false}
+      whileInView={{ opacity: 1, y: 0, x: 0 }}
+      viewport={{ once: true, amount: 0.01, margin: "0px" }}
+      transition={{ duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
     </motion.div>
@@ -58,17 +47,19 @@ export function Stagger({
   className?: string;
   stagger?: number;
 }) {
-  const reduced = useReducedMotion();
-  if (reduced) return <div className={className}>{children}</div>;
+  const preferStatic = usePreferStaticReveal();
+
+  if (preferStatic) {
+    return <div className={className}>{children}</div>;
+  }
 
   return (
     <motion.div
       className={className}
-      initial="hidden"
+      initial={false}
       whileInView="visible"
-      viewport={{ once: true, margin: "-60px" }}
+      viewport={{ once: true, amount: 0.01, margin: "0px" }}
       variants={{
-        hidden: {},
         visible: { transition: { staggerChildren: stagger } },
       }}
     >
@@ -84,16 +75,21 @@ export function StaggerItem({
   children: React.ReactNode;
   className?: string;
 }) {
+  const preferStatic = usePreferStaticReveal();
+
+  if (preferStatic) {
+    return <div className={className}>{children}</div>;
+  }
+
   return (
     <motion.div
       className={className}
+      initial={false}
       variants={{
-        hidden: { opacity: 0, y: 24, filter: "blur(6px)" },
         visible: {
           opacity: 1,
           y: 0,
-          filter: "blur(0px)",
-          transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+          transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
         },
       }}
     >

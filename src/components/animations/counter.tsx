@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useInView, useReducedMotion } from "framer-motion";
+import { usePreferStaticReveal } from "@/lib/motion-safe";
 
 export function AnimatedCounter({
   value,
@@ -15,12 +16,22 @@ export function AnimatedCounter({
   duration?: number;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true });
+  const inView = useInView(ref, { once: true, amount: 0.01 });
   const reduced = useReducedMotion();
-  const [display, setDisplay] = useState(0);
+  const preferStatic = usePreferStaticReveal();
+  const [display, setDisplay] = useState(value);
+  const [hasAnimated, setHasAnimated] = useState(false);
 
   useEffect(() => {
-    if (!inView || reduced) return;
+    if (reduced || preferStatic) {
+      setDisplay(value);
+      return;
+    }
+
+    if (!inView || hasAnimated) return;
+
+    setHasAnimated(true);
+    setDisplay(0);
 
     const startTime = performance.now();
     let frameId = 0;
@@ -34,9 +45,9 @@ export function AnimatedCounter({
 
     frameId = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frameId);
-  }, [inView, value, duration, reduced]);
+  }, [inView, value, duration, reduced, hasAnimated, preferStatic]);
 
-  const shown = !inView ? 0 : reduced ? value : display;
+  const shown = preferStatic || reduced || !hasAnimated ? value : display;
 
   return (
     <span ref={ref}>
