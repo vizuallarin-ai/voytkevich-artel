@@ -88,34 +88,25 @@ export function Hero() {
         </div>
 
         <motion.div
-          className="mt-10 grid w-full max-w-5xl grid-cols-1 gap-6 lg:mt-auto lg:grid-cols-2 lg:items-stretch lg:gap-8 xl:gap-10"
+          className="mt-10 flex w-full max-w-md flex-col items-center gap-6 lg:mt-auto"
           initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={reduced ? { duration: 0 } : { delay: 0.25, duration: 0.7 }}
         >
-          <div className="flex w-full justify-center lg:justify-end">
-            <div className="w-full max-w-md">
-              <HeroCalculator />
-            </div>
-          </div>
+          <HeroCalculator />
 
-          <div className="flex w-full justify-center lg:justify-start">
-            <div className="glass flex w-full max-w-md flex-col rounded-sm p-5 md:p-6">
-              <p className="label-caps">Нам доверяют</p>
-              <ul
-                className="mt-4 grid flex-1 grid-cols-2 gap-x-6 gap-y-6"
-                aria-label="Ключевые факты"
-              >
-                {heroTrustFacts.map((f) => (
-                  <li key={f.label}>
-                    <p className="font-display text-xl leading-none tabular-nums md:text-2xl">
-                      {f.value}
-                    </p>
-                    <p className="mt-1 text-sm leading-snug text-muted">{f.label}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
+          <div className="glass w-full rounded-sm p-5 md:p-6">
+            <p className="label-caps">Нам доверяют</p>
+            <ul className="mt-4 flex flex-col gap-5" aria-label="Ключевые факты">
+              {heroTrustFacts.map((f) => (
+                <li key={f.label} className="border-t border-graphite/10 pt-5 first:border-t-0 first:pt-0">
+                  <p className="font-display text-xl leading-none tabular-nums md:text-2xl">
+                    {f.value}
+                  </p>
+                  <p className="mt-1 text-sm leading-snug text-muted">{f.label}</p>
+                </li>
+              ))}
+            </ul>
           </div>
         </motion.div>
 
