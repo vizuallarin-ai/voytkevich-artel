@@ -41,13 +41,18 @@ export function Hero() {
           </motion.p>
 
           <motion.h1
-            className="heading-display mt-4 text-balance"
+            className="heading-display mt-4"
             initial={reduced ? false : { opacity: 0, y: 30, filter: "blur(8px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{ duration: 0.9, delay: 0.1 }}
           >
-            <span className="font-semibold">{heroCopy.headlineLead}</span>{" "}
-            {heroCopy.headlineRest}
+            <span className="font-semibold md:whitespace-nowrap">
+              <span className="block md:inline">{heroCopy.headlineLead}</span>
+              <span className="block md:inline">
+                <span className="hidden md:inline"> </span>
+                {heroCopy.headlineSuffix}
+              </span>
+            </span>
           </motion.h1>
 
           <motion.p
