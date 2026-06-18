@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Phone, Mail, MapPin } from "lucide-react";
 import { brand } from "@/data/brand";
+import { YandexIksBadge } from "@/components/seo/yandex-iks-badge";
 
 const links = {
   catalog: [
@@ -94,9 +95,14 @@ export function Footer() {
             </div>
           ))}
         </div>
-        <div className="mt-12 flex flex-col gap-4 border-t border-background/10 pt-8 text-xs text-background/50 md:flex-row md:justify-between">
-          <p>© {new Date().getFullYear()} {brand.name}. Все права защищены.</p>
-          <p>Строительство домов в Иркутске · ИЖС · Ипотека</p>
+        <div className="mt-12 flex flex-col gap-6 border-t border-background/10 pt-8">
+          <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-xs text-background/50">
+              © {new Date().getFullYear()} {brand.name}. Все права защищены.
+            </p>
+            <YandexIksBadge />
+            <p className="text-xs text-background/50">Строительство домов в Иркутске · ИЖС · Ипотека</p>
+          </div>
         </div>
       </div>
     </footer>
