@@ -50,6 +50,12 @@ export const contentCmsSections: CMSSection[] = [
     route: "/dashboard/content/rubrics",
   },
   {
+    id: "prioritization",
+    title: "Приоритизация",
+    description: "Семантика, score P1–P5, очередь",
+    route: "/dashboard/content/prioritization",
+  },
+  {
     id: "calendar",
     title: "Календарь",
     description: "Планировщик публикаций и очередь",
