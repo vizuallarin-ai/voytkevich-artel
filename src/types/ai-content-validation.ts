@@ -1,0 +1,31 @@
+export type AIContentValidationResult = {
+  valid: boolean;
+  qualityLevel: "poor" | "acceptable" | "good" | "strong";
+  warnings: string[];
+  blockers: string[];
+  flags: {
+    hasCTA: boolean;
+    hasFAQ: boolean;
+    hasRelatedLinks: boolean;
+    hasMetadata: boolean;
+    hasDisclaimer: boolean;
+    hasSources: boolean;
+    hasFictionNotice: boolean;
+    hasTeasers: boolean;
+    possibleFakeClaim: boolean;
+    possibleFakeReview: boolean;
+    possibleFakeCase: boolean;
+    possibleFakeSource: boolean;
+    possibleDangerousInstruction: boolean;
+    possibleUnsupportedLegalClaim: boolean;
+    possibleExactPricePromise: boolean;
+    possibleThinContent: boolean;
+    possibleDuplicateIntent: boolean;
+    possibleDeceptiveClickbait: boolean;
+  };
+  requiredActions: string[];
+  canSaveToCMS: boolean;
+  canSendToReview: boolean;
+  canApprove: false;
+  canPublish: false;
+};

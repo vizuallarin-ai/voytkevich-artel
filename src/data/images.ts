@@ -1,7 +1,7 @@
-/** Герой главной — фасад дома из газобетона (megaartel.ru), вид снаружи */
+/** Герой главной — каркасный дом, лето, общий план (проект 112 м², Николов Посад, megaartel.ru) */
 export const heroHome = {
-  src: "https://megaartel.ru/wp-content/uploads/2022/05/cgp1ari_igjzuudklqob-34ooews77hsk59ieeqjrk6m0mqmrkue2g7dubvvswgiamklwgobqytzsh6n8lj0rp1v.jpg",
-  alt: "Дом из газобетона под ключ — фасад снаружи, строительная артель в Иркутске и области",
+  src: "https://megaartel.ru/wp-content/uploads/2022/03/5948ywhvfns.jpg",
+  alt: "Каркасный дом под ключ — летний вид в лесу, строительство в Иркутске и области",
 } as const;
 
 /** Проверенные ключи Unsplash (формат photo-{key}) */
@@ -40,8 +40,9 @@ export function unsplash(
 
 /** Фото для секций главной */
 export const homeSectionPhotos = {
-  karkasExterior: "https://megaartel.ru/wp-content/uploads/2023/05/nwszdrlgoq4.jpg",
-  gazobetonExterior: "https://megaartel.ru/wp-content/uploads/2022/05/8.jpg",
+  karkasExterior: "https://megaartel.ru/wp-content/uploads/2022/03/gxwa6egbplw.jpg",
+  gazobetonExterior:
+    "https://megaartel.ru/wp-content/uploads/2022/05/1nf7vlqykwlgyhurfffqpgzfbqolv0_oi4jxdlczpwt2rb3zzanpd9zhjwbenaib4oqgjtu0tue0mchspjnvmsem.jpg",
   construction: unsplash(photos.construction, { w: 1200, h: 800 }),
   teamBuild: unsplash(photos.teamBuild, { w: 1200, h: 800 }),
 } as const;

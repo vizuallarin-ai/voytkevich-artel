@@ -6,6 +6,11 @@ import { persistLead } from "@/lib/leads/lead-storage";
 import { handleNewLeadAutomation } from "@/lib/leads/lead-automation";
 import { logger } from "@/lib/logger";
 import { recordLeadCreatedEvent } from "@/lib/analytics/server-events";
+import {
+  enrichLeadWithContentAttribution,
+  parseContentDistributionFromUtm,
+} from "@/lib/content-distribution/lead-attribution";
+import { trackLeadFromTeaser } from "@/lib/content-distribution/publication-analytics";
 import { fetchLeads } from "@/lib/leads/lead-service";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
@@ -75,7 +80,17 @@ export async function POST(request: Request) {
     referrer: request.headers.get("referer") ?? undefined,
   };
 
-  const lead = buildLeadFromInput(input, serverMeta);
+  let lead = buildLeadFromInput(input, serverMeta);
+  lead = enrichLeadWithContentAttribution(lead);
+
+  const teaserAttribution = parseContentDistributionFromUtm(lead.analytics.utm);
+  if (teaserAttribution) {
+    trackLeadFromTeaser({
+      sourcePlatform: teaserAttribution.sourcePlatform,
+      campaignId: teaserAttribution.campaignId,
+      contentItemId: teaserAttribution.contentItemId,
+    });
+  }
 
   if (lead.status === "spam") {
     return NextResponse.json({ ok: true, leadId: `spam_${Date.now()}` });

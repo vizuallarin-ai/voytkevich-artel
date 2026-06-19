@@ -161,6 +161,7 @@ export type LeadContext = {
   programmatic?: import("@/types/programmatic-page-template").ProgrammaticLeadContext;
   technical?: import("@/types/technical-content").TechnicalLeadContext;
   editorial?: import("@/types/editorial-content").EditorialLeadContext;
+  contentDistribution?: import("@/types/content-distribution").ContentDistributionAttribution;
 };
 
 export type LeadQualification = {

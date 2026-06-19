@@ -1,0 +1,60 @@
+import type { ContentBalanceRule } from "@/types/content-scheduling";
+
+export const contentBalanceRules: ContentBalanceRule[] = [
+  {
+    id: "max-programmatic-week",
+    title: "Не больше 40% programmatic pages в неделю",
+    description: "Баланс programmatic и editorial/technical контента",
+    period: "week",
+    limits: [{ contentKind: "programmatic-page", max: 0.4 }],
+    severity: "warning",
+  },
+  {
+    id: "min-technical-week",
+    title: "Минимум 20% technical articles в неделю",
+    description: "Техническая экспертиза для E-E-A-T",
+    period: "week",
+    limits: [{ contentKind: "technical-article", min: 0.2 }],
+    severity: "warning",
+  },
+  {
+    id: "min-editorial-week",
+    title: "Минимум 1 editorial story в неделю",
+    description: "Редакционный баланс",
+    period: "week",
+    limits: [{ contentKind: "editorial-content", min: 1 }],
+    severity: "info",
+  },
+  {
+    id: "max-digest-day",
+    title: "Не больше 1 digest в день",
+    description: "Избегать перегруза дайджестами",
+    period: "day",
+    limits: [{ contentKind: "digest", max: 1 }],
+    severity: "warning",
+  },
+  {
+    id: "news-requires-source",
+    title: "News не публиковать без source",
+    description: "Проверка источника для новостей",
+    period: "day",
+    limits: [{ contentKind: "news", max: 99 }],
+    severity: "blocker",
+  },
+  {
+    id: "no-cluster-streak",
+    title: "Не публиковать 5 материалов одного cluster подряд",
+    description: "Разбавление кластеров",
+    period: "day",
+    limits: [{ contentKind: "cluster-streak", max: 5 }],
+    severity: "warning",
+  },
+  {
+    id: "programmatic-balance",
+    title: "Не публиковать 10 long-tail страниц подряд без technical/editorial",
+    description: "SEO safety — thin content risk",
+    period: "day",
+    limits: [{ contentKind: "programmatic-page", max: 10 }],
+    severity: "warning",
+  },
+];

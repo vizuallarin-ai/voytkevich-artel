@@ -222,21 +222,7 @@ export type RegionTaxonomyItem = {
   notes?: string;
 };
 
-export type ExternalContentPlatform = {
-  id: string;
-  title: string;
-  supportsAutoPublish: boolean;
-  supportsImages: boolean;
-  supportsScheduling: boolean;
-  supportsExternalLinks: boolean;
-  contentLengthLimit?: number;
-  recommendedLength?: number;
-  teaserStyle: TeaserStyle[];
-  ctaRules: string[];
-  utmSource: string;
-  adapterStatus: "active" | "needs-api" | "manual" | "future" | "disabled";
-  notes?: string;
-};
+export type { ExternalContentPlatform } from "@/types/content-distribution";
 
 export type SeoPageTypeDefinition = {
   pageType: ProgrammaticPageType;

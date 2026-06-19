@@ -17,16 +17,16 @@ export function Hero() {
   return (
     <>
       <section className="relative min-h-[100svh] overflow-hidden">
-        <div className="absolute inset-0">
+        <div className="absolute inset-0 overflow-hidden">
           <Image
             src={heroHome.src}
             alt={heroHome.alt}
             fill
             priority
-            className="object-cover object-center"
+            className="object-cover object-[center_42%] sm:object-center"
             sizes="100vw"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/55 to-background/90" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/35 via-background/50 to-background/88" />
         </div>
 
         <div className="container-narrow relative z-10 mx-auto flex min-h-[100svh] flex-col px-5 pb-8 pt-28 sm:pt-32 md:px-10 lg:px-16">

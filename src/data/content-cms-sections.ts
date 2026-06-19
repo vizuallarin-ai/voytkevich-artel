@@ -50,9 +50,15 @@ export const contentCmsSections: CMSSection[] = [
     route: "/dashboard/content/rubrics",
   },
   {
+    id: "calendar",
+    title: "Календарь",
+    description: "Планировщик публикаций и очередь",
+    route: "/dashboard/content/calendar",
+  },
+  {
     id: "queue",
     title: "Очередь",
-    description: "Публикации по приоритету",
+    description: "Публикации по приоритету (список)",
     route: "/dashboard/content/queue",
   },
   {
@@ -78,6 +84,30 @@ export const contentCmsSections: CMSSection[] = [
     title: "Источники",
     description: "Sources и fact-check",
     route: "/dashboard/content/sources",
+  },
+  {
+    id: "ai-generate",
+    title: "AI-генерация",
+    description: "Контент-завод — черновики без автопубликации",
+    route: "/dashboard/content/generate",
+  },
+  {
+    id: "ai-history",
+    title: "История AI",
+    description: "Лог генераций и validation",
+    route: "/dashboard/content/ai-history",
+  },
+  {
+    id: "distribution",
+    title: "Дистрибуция",
+    description: "Teaser-публикации на внешние площадки",
+    route: "/dashboard/content/distribution",
+  },
+  {
+    id: "visuals",
+    title: "Визуалы",
+    description: "Visual assets, шаблоны обложек и prompt builder",
+    route: "/dashboard/content/visuals",
   },
   {
     id: "settings",
