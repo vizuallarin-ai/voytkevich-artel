@@ -87,11 +87,29 @@ export function compareTextContent(before: string, after: string): DiffChange {
   };
 }
 
+function headingKey(h: { level: number; text: string }): string {
+  return `${h.level}:${h.text}`;
+}
+
+function diffHeadingArrays(
+  before: { level: number; text: string }[],
+  after: { level: number; text: string }[],
+): DiffChange<{ level: number; text: string }> {
+  const beforeKeys = new Set(before.map(headingKey));
+  const afterKeys = new Set(after.map(headingKey));
+  return {
+    added: after.filter((h) => !beforeKeys.has(headingKey(h))),
+    removed: before.filter((h) => !afterKeys.has(headingKey(h))),
+    changed: [],
+    moved: [],
+  };
+}
+
 export function compareHeadings(
   before: ContentLike,
   after: ContentLike,
 ): DiffChange<{ level: number; text: string }> {
-  return diffArrays(extractHeadings(before), extractHeadings(after));
+  return diffHeadingArrays(extractHeadings(before), extractHeadings(after));
 }
 
 export function compareMetadata(before: ContentLike, after: ContentLike): DiffChange {
@@ -203,6 +221,10 @@ export function buildContentDiff(before: ContentLike, after: ContentLike): Conte
   if (canonical.changed) {
     seoCriticalChanges.push("canonical");
     protectedElementsAffected.push("canonical");
+  }
+  if (before.url && after.url && before.url !== after.url) {
+    seoCriticalChanges.push("url-changed");
+    protectedElementsAffected.push("url");
   }
   if (headings.removed.some((h) => h.level === 1)) {
     seoCriticalChanges.push("h1-removed");

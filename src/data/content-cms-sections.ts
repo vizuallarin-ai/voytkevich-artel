@@ -62,6 +62,18 @@ export const contentCmsSections: CMSSection[] = [
     route: "/dashboard/content/analytics",
   },
   {
+    id: "refresh",
+    title: "Refresh",
+    description: "Обновление контента, briefs, review, rollback",
+    route: "/dashboard/content/refresh",
+  },
+  {
+    id: "experiments",
+    title: "Experiments",
+    description: "SEO/CTA эксперименты с guardrails",
+    route: "/dashboard/content/experiments",
+  },
+  {
     id: "calendar",
     title: "Календарь",
     description: "Планировщик публикаций и очередь",

@@ -158,31 +158,43 @@ export function validateAIDraftAgainstBrief(
   const errors: string[] = [];
   const warnings: string[] = [];
 
-  if (draft.url && brief.protectedElements.some((p) => p.startsWith("URL:"))) {
+  if (draft.url && brief.protectedElements.some((p) => p.toLowerCase().includes("url"))) {
     errors.push("Draft must not change protected URL");
   }
 
   if (
     draft.indexing?.canonicalUrl &&
-    brief.protectedElements.some((p) => p.startsWith("Canonical:"))
+    brief.protectedElements.some((p) => p.toLowerCase().includes("canonical"))
   ) {
     errors.push("Draft must not change protected canonical");
   }
 
   if (!brief.objective.trim()) errors.push("Brief objective missing");
   if (brief.protectedElements.length === 0) warnings.push("No protected elements in brief");
+  if (brief.currentProblem.evidence.length === 0) errors.push("Brief evidence missing");
 
   return { valid: errors.length === 0, errors, warnings };
 }
 
-type ContentWithBody = Partial<CMSContentItem> & { body?: string };
+type ContentWithBody = Partial<CMSContentItem> & {
+  body?: string;
+  sections?: { id?: string; title?: string; body?: string }[];
+};
+
+function extractDraftText(draft: ContentWithBody): string {
+  const parts = [draft.body ?? ""];
+  for (const section of draft.sections ?? []) {
+    parts.push(section.title ?? "", section.body ?? "");
+  }
+  return parts.join("\n");
+}
 
 export function detectUnsupportedAIClaims(
   draft: Partial<CMSContentItem>,
   sources: ContentSourceRecord[],
 ): string[] {
-  const body = (draft as ContentWithBody).body ?? "";
-  const pricePattern = /\d+\s*(₽|руб|тыс)/gi;
+  const body = extractDraftText(draft as ContentWithBody);
+  const pricePattern = /\d+[\d\s]*(₽|руб\.?|рублей|тыс\.?|млн)/gi;
   if (pricePattern.test(body)) {
     const hasPriceSource = sources.some(
       (s) => s.status === "verified" && s.supportsClaims.some((c) => c.includes("price")),

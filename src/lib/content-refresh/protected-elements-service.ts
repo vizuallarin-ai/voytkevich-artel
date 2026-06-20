@@ -86,9 +86,9 @@ export function detectProtectedElements(
     });
   }
 
+  const related = contentItem.related ?? {};
   const relatedCount =
-    (contentItem.related.projects?.length ?? 0) +
-    (contentItem.related.technicalArticles?.length ?? 0);
+    (related.projects?.length ?? 0) + (related.technicalArticles?.length ?? 0);
   if (relatedCount > 0) {
     elements.push({
       id: "internal-links",

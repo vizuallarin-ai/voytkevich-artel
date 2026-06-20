@@ -9,6 +9,7 @@
     "lint": "eslint",
     "test:indexation": "npx tsx --test src/lib/seo-indexation/__tests__/indexability.test.ts",
     "test:analytics": "npx tsx --test src/lib/content-analytics/__tests__/content-analytics.test.ts",
+    "test:refresh": "npx tsx --test src/lib/content-refresh/__tests__/content-refresh.test.ts",
     "scrape:megaartel": "node scripts/scrape-megaartel-projects.mjs"
   },
   "dependencies": {
