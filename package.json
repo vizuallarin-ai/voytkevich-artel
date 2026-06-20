@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "test:indexation": "npx tsx --test src/lib/seo-indexation/__tests__/indexability.test.ts",
     "scrape:megaartel": "node scripts/scrape-megaartel-projects.mjs"
   },
   "dependencies": {

@@ -70,10 +70,16 @@ export function SeoPlatformOverview() {
 
       <div className="flex flex-wrap gap-3">
         <Link
-          href="/dashboard/seo/roadmap"
+          href="/dashboard/seo/indexation"
           className="rounded-sm bg-graphite px-4 py-2 text-sm text-background transition hover:bg-graphite/90"
         >
-          Очередь публикаций →
+          Indexation →
+        </Link>
+        <Link
+          href="/dashboard/seo/sitemaps"
+          className="rounded-sm border border-graphite/15 px-4 py-2 text-sm transition hover:bg-sand"
+        >
+          Sitemaps →
         </Link>
         <Link
           href="/dashboard/seo/roadmap"

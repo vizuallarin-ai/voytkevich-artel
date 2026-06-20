@@ -1,0 +1,15 @@
+export type UrlLifecycleStatus =
+  | "planned"
+  | "draft"
+  | "review"
+  | "approved"
+  | "published"
+  | "indexable"
+  | "sitemap-listed"
+  | "crawled"
+  | "indexed"
+  | "deindexed"
+  | "redirected"
+  | "archived"
+  | "removed"
+  | "canonicalized-away";

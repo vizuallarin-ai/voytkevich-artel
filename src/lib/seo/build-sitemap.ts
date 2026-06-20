@@ -12,6 +12,7 @@ import { allBuiltObjects } from "@/data/built-objects";
 import { builtObjectAreas } from "@/data/built-object-areas";
 import { getBuiltObjectsForArea } from "@/lib/built-objects";
 import { SITE_URL } from "@/lib/seo";
+import { getIndexableSitemapEntries } from "@/lib/seo-indexation/sitemap-service";
 import { getTaxonomyCombinations } from "@/lib/taxonomy/taxonomy-combination-builder";
 
 function safeLastModified(value?: string): Date {
@@ -31,7 +32,7 @@ function entry(
   };
 }
 
-export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {
+async function buildUnfilteredSitemapEntries(): Promise<MetadataRoute.Sitemap> {
   const projects = await cms.getProjects();
   const posts = getPublishedPosts(await cms.getAllBlogPosts());
 
@@ -150,6 +151,11 @@ export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {
     ...caseCategoryRoutes,
     ...objectsMapAreaRoutes,
   ];
+}
+
+export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {
+  const unfiltered = await buildUnfilteredSitemapEntries();
+  return getIndexableSitemapEntries(unfiltered);
 }
 
 export function buildFallbackSitemapEntries(): MetadataRoute.Sitemap {
