@@ -19,35 +19,33 @@ export function AnimatedCounter({
   const inView = useInView(ref, { once: true, amount: 0.01 });
   const reduced = useReducedMotion();
   const preferStatic = usePreferStaticReveal();
+  const staticMode = Boolean(preferStatic || reduced);
   const [display, setDisplay] = useState(value);
-  const [hasAnimated, setHasAnimated] = useState(false);
+  const hasAnimatedRef = useRef(false);
 
   useEffect(() => {
-    if (reduced || preferStatic) {
-      setDisplay(value);
-      return;
-    }
+    if (staticMode) return;
+    if (!inView || hasAnimatedRef.current) return;
 
-    if (!inView || hasAnimated) return;
-
-    setHasAnimated(true);
-    setDisplay(0);
-
-    const startTime = performance.now();
     let frameId = 0;
+    const startTime = performance.now();
 
-    const tick = (now: number) => {
+    frameId = requestAnimationFrame(function tick(now) {
+      if (!hasAnimatedRef.current) {
+        hasAnimatedRef.current = true;
+        setDisplay(0);
+      }
+
       const progress = Math.min((now - startTime) / (duration * 1000), 1);
       const eased = 1 - Math.pow(1 - progress, 3);
       setDisplay(value * eased);
       if (progress < 1) frameId = requestAnimationFrame(tick);
-    };
+    });
 
-    frameId = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frameId);
-  }, [inView, value, duration, reduced, hasAnimated, preferStatic]);
+  }, [inView, value, duration, staticMode]);
 
-  const shown = preferStatic || reduced || !hasAnimated ? value : display;
+  const shown = staticMode || !hasAnimatedRef.current ? value : display;
 
   return (
     <span ref={ref}>

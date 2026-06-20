@@ -27,3 +27,37 @@ export type ContentSource = {
   notes?: string;
   createdAt: string;
 };
+
+export type ContentSourceStatus =
+  | "unverified"
+  | "verified"
+  | "outdated"
+  | "conflicting"
+  | "unavailable"
+  | "rejected";
+
+export type ContentSourceRecord = {
+  id: string;
+  contentItemId: string;
+  updateBriefId?: string;
+
+  title: string;
+  url?: string;
+  publisher?: string;
+  publishedAt?: string;
+  accessedAt: string;
+
+  sourceType:
+    | "official"
+    | "regulation"
+    | "manufacturer"
+    | "expert"
+    | "internal"
+    | "research"
+    | "media"
+    | "other";
+
+  status: ContentSourceStatus;
+  supportsClaims: string[];
+  notes?: string;
+};

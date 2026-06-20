@@ -18,6 +18,7 @@ function isProtectedApi(pathname: string, method: string): boolean {
   if (pathname.startsWith("/api/dashboard/content-calendar")) return true;
   if (pathname.startsWith("/api/dashboard/content-prioritization")) return true;
   if (pathname.startsWith("/api/dashboard/seo-indexation")) return true;
+  if (pathname.startsWith("/api/dashboard/content-analytics")) return true;
   return false;
 }
 
