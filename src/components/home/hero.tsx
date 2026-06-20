@@ -6,7 +6,6 @@ import { motion, useReducedMotion } from "framer-motion";
 import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MagneticButton } from "@/components/animations/magnetic-button";
-import { HeroCalculator } from "@/components/home/hero-calculator";
 import { cta, heroCopy } from "@/data/copy";
 import { heroTrustFacts } from "@/data/home";
 import { heroHome } from "@/data/images";
@@ -29,47 +28,47 @@ export function Hero() {
           <div className="absolute inset-0 bg-gradient-to-b from-background/35 via-background/50 to-background/88" />
         </div>
 
-        <div className="container-narrow relative z-10 mx-auto flex min-h-[100svh] flex-col px-5 pb-8 pt-28 sm:pt-32 md:px-10 lg:px-16">
-          <div className="flex flex-1 flex-col items-center justify-center text-center">
-            <motion.p
-              className="label-caps"
-              initial={false}
-              animate={{ opacity: 1, y: 0 }}
-              transition={reduced ? { duration: 0 } : { duration: 0.6 }}
-            >
-              {heroCopy.label}
-            </motion.p>
+        <div className="container-narrow relative z-10 mx-auto flex min-h-[100svh] flex-col items-center justify-center px-5 py-28 text-center md:px-10 lg:px-16">
+          <motion.p
+            className="label-caps"
+            initial={false}
+            animate={{ opacity: 1, y: 0 }}
+            transition={reduced ? { duration: 0 } : { duration: 0.6 }}
+          >
+            {heroCopy.label}
+          </motion.p>
 
-            <motion.h1
-              className="heading-display mt-4"
-              initial={false}
-              animate={{ opacity: 1, y: 0 }}
-              transition={reduced ? { duration: 0 } : { duration: 0.7, delay: 0.05 }}
-            >
-              <span className="font-semibold md:whitespace-nowrap">
-                <span className="block md:inline">{heroCopy.headlineLead}</span>
-                <span className="block md:inline">
-                  <span className="hidden md:inline"> </span>
-                  {heroCopy.headlineSuffix}
-                </span>
+          <motion.h1
+            className="heading-display mt-4 max-w-4xl"
+            initial={false}
+            animate={{ opacity: 1, y: 0 }}
+            transition={reduced ? { duration: 0 } : { duration: 0.7, delay: 0.05 }}
+          >
+            <span className="font-semibold md:whitespace-nowrap">
+              <span className="block md:inline">{heroCopy.headlineLead}</span>
+              <span className="block md:inline">
+                <span className="hidden md:inline"> </span>
+                {heroCopy.headlineSuffix}
               </span>
-            </motion.h1>
+            </span>
+          </motion.h1>
 
-            <motion.p
-              className="mt-6 max-w-2xl text-base leading-relaxed text-muted sm:text-lg"
-              initial={false}
-              animate={{ opacity: 1 }}
-              transition={reduced ? { duration: 0 } : { delay: 0.15, duration: 0.6 }}
-            >
-              {heroCopy.subheadline}
-            </motion.p>
+          <motion.p
+            className="mt-6 max-w-2xl text-base leading-relaxed text-muted sm:text-lg"
+            initial={false}
+            animate={{ opacity: 1 }}
+            transition={reduced ? { duration: 0 } : { delay: 0.15, duration: 0.6 }}
+          >
+            {heroCopy.subheadline}
+          </motion.p>
 
-            <motion.div
-              className="mt-8 flex w-full max-w-md flex-col gap-3 sm:max-w-none sm:flex-row sm:flex-wrap sm:justify-center sm:gap-4"
-              initial={false}
-              animate={{ opacity: 1, y: 0 }}
-              transition={reduced ? { duration: 0 } : { delay: 0.2, duration: 0.6 }}
-            >
+          <motion.div
+            className="mt-8 flex w-full max-w-md flex-col items-center gap-3 sm:max-w-none"
+            initial={false}
+            animate={{ opacity: 1, y: 0 }}
+            transition={reduced ? { duration: 0 } : { delay: 0.2, duration: 0.6 }}
+          >
+            <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:justify-center sm:gap-4">
               <MagneticButton className="w-full sm:w-auto">
                 <Button asChild size="lg" className="w-full sm:w-auto">
                   <Link href="/calculator">{cta.calculateCost}</Link>
@@ -80,31 +79,25 @@ export function Hero() {
                   <Link href="/catalog">{cta.discussPlot}</Link>
                 </Button>
               </MagneticButton>
-            </motion.div>
-
-            <p className="mt-3 max-w-lg text-sm leading-snug text-muted">
-              Сначала вводные — потом цифра. Не обещаем цену без расчёта.
-            </p>
-          </div>
-
-          <motion.div
-            className="mt-8 w-full shrink-0"
-            initial={false}
-            animate={{ opacity: 1, y: 0 }}
-            transition={reduced ? { duration: 0 } : { delay: 0.25, duration: 0.7 }}
-          >
-            <HeroCalculator className="w-full" />
+            </div>
+            <Button asChild variant="ghost" size="lg" className="text-muted hover:text-foreground">
+              <Link href="/calculator">Калькулятор</Link>
+            </Button>
           </motion.div>
 
-          <a
-            href="#scenarios"
-            className="mt-6 flex items-center justify-center gap-2 pb-4 text-sm text-muted transition hover:text-foreground"
-            aria-label="Прокрутить к выбору сценария"
-          >
-            <ArrowDown className="h-4 w-4 animate-bounce" />
-            Листайте вниз
-          </a>
+          <p className="mt-3 max-w-lg text-sm leading-snug text-muted">
+            Сначала вводные — потом цифра. Не обещаем цену без расчёта.
+          </p>
         </div>
+
+        <a
+          href="#scenarios"
+          className="absolute bottom-6 left-0 right-0 z-10 flex items-center justify-center gap-2 text-sm text-muted transition hover:text-foreground"
+          aria-label="Прокрутить к выбору сценария"
+        >
+          <ArrowDown className="h-4 w-4 animate-bounce" />
+          Листайте вниз
+        </a>
       </section>
 
       <section
