@@ -25,6 +25,12 @@ export function requiredRoleForPath(pathname: string): DashboardRole {
   if (pathname.startsWith("/dashboard/search") || pathname.startsWith("/api/dashboard/search")) {
     return "admin";
   }
+  if (
+    pathname.startsWith("/dashboard/recommendations") ||
+    pathname.startsWith("/api/dashboard/recommendations")
+  ) {
+    return "admin";
+  }
   return "manager";
 }
 

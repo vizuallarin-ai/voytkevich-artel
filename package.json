@@ -12,6 +12,7 @@
     "test:refresh": "npx tsx --test src/lib/content-refresh/__tests__/content-refresh.test.ts",
     "test:knowledge-graph": "npx tsx --test src/lib/knowledge-graph/__tests__/knowledge-graph.test.ts",
     "test:search": "npx tsx --test src/lib/search/__tests__/search.test.ts",
+    "test:recommendations": "npx tsx --test src/lib/recommendations/__tests__/recommendations.test.ts",
     "scrape:megaartel": "node scripts/scrape-megaartel-projects.mjs"
   },
   "dependencies": {

@@ -25,6 +25,7 @@ function isProtectedApi(pathname: string, method: string): boolean {
   if (pathname.startsWith("/api/dashboard/internal-linking")) return true;
   if (pathname.startsWith("/api/dashboard/clusters/architecture")) return true;
   if (pathname.startsWith("/api/dashboard/search")) return true;
+  if (pathname.startsWith("/api/dashboard/recommendations")) return true;
   return false;
 }
 

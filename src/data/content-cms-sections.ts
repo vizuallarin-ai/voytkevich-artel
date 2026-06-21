@@ -92,6 +92,12 @@ export const contentCmsSections: CMSSection[] = [
     route: "/dashboard/search",
   },
   {
+    id: "recommendations",
+    title: "Recommendations",
+    description: "Personalization, rules, quality, privacy и review queue",
+    route: "/dashboard/recommendations",
+  },
+  {
     id: "calendar",
     title: "Календарь",
     description: "Планировщик публикаций и очередь",
