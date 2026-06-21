@@ -21,6 +21,9 @@ function isProtectedApi(pathname: string, method: string): boolean {
   if (pathname.startsWith("/api/dashboard/content-analytics")) return true;
   if (pathname.startsWith("/api/dashboard/content-refresh")) return true;
   if (pathname.startsWith("/api/dashboard/content-experiments")) return true;
+  if (pathname.startsWith("/api/dashboard/knowledge-graph")) return true;
+  if (pathname.startsWith("/api/dashboard/internal-linking")) return true;
+  if (pathname.startsWith("/api/dashboard/clusters/architecture")) return true;
   return false;
 }
 

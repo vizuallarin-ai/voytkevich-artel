@@ -74,6 +74,18 @@ export const contentCmsSections: CMSSection[] = [
     route: "/dashboard/content/experiments",
   },
   {
+    id: "knowledge-graph",
+    title: "Knowledge Graph",
+    description: "Сущности, связи, pillar-cluster, валидация графа",
+    route: "/dashboard/content/knowledge-graph",
+  },
+  {
+    id: "internal-linking",
+    title: "Internal Linking",
+    description: "Перелинковка, orphans, batch review и rollback",
+    route: "/dashboard/content/internal-linking",
+  },
+  {
     id: "calendar",
     title: "Календарь",
     description: "Планировщик публикаций и очередь",
