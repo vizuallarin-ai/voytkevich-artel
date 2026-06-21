@@ -86,6 +86,12 @@ export const contentCmsSections: CMSSection[] = [
     route: "/dashboard/content/internal-linking",
   },
   {
+    id: "search",
+    title: "Search",
+    description: "Hybrid search, index, queries, RAG assistant analytics",
+    route: "/dashboard/search",
+  },
+  {
     id: "calendar",
     title: "Календарь",
     description: "Планировщик публикаций и очередь",

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { ChevronDown, Menu, Phone, X } from "lucide-react";
+import { GlobalSearchTrigger } from "@/components/search/GlobalSearchTrigger";
 import { brand } from "@/data/brand";
 import { siteNavGroups } from "@/data/site-nav";
 import { cn } from "@/lib/utils";
@@ -103,7 +104,8 @@ export function Header() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-3 lg:flex">
+        <div className="hidden items-center gap-2 lg:flex">
+          <GlobalSearchTrigger className="hidden xl:flex" />
           <a
             href={`tel:${brand.phone}`}
             className="hidden items-center gap-1.5 text-sm text-muted transition hover:text-foreground xl:flex"
@@ -177,6 +179,13 @@ export function Header() {
                 <Phone className="h-5 w-5" aria-hidden />
                 {brand.phoneDisplay}
               </a>
+              <Link
+                href="/search"
+                className="flex items-center gap-2 text-base text-muted"
+                onClick={() => setOpen(false)}
+              >
+                Поиск по сайту
+              </Link>
               <Button asChild className="w-full" size="lg">
                 <Link href="/#lead" onClick={() => setOpen(false)}>
                   {cta.preliminaryEstimate}
